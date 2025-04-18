@@ -31,14 +31,14 @@ class SplashScreen2 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                OnboardingScreen2()
+                OnboardingScreen2(this)
             }
         }
     }
 }
 
 @Composable
-fun OnboardingScreen2() {
+fun OnboardingScreen2(activity: ComponentActivity? = null) {
 
         val diagonalGradient = Brush.linearGradient(
             colors = listOf(Color(0xFFEBB5C9), Color(0xFFFDF9FB)),
@@ -73,8 +73,11 @@ fun OnboardingScreen2() {
 
             Spacer(modifier = Modifier.weight(2f))
 
-            GradientButton2()
-
+            GradientButton2{
+                activity?.let {
+                    it.startActivity(Intent(it, OnboardingScreen1::class.java))
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -113,7 +116,7 @@ fun GradientTitle2() {
 }
 
 @Composable
-fun GradientButton2() {
+fun GradientButton2( onClick: () -> Unit ) {
     val gradientColors = listOf(Color( 0xFFE7D8DE), Color(0xFFA7379E))
 
 
@@ -123,7 +126,7 @@ fun GradientButton2() {
             .height(56.dp)
             .clip(RoundedCornerShape(50))
             .background(Brush.horizontalGradient(gradientColors))
-            .clickable { },
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(

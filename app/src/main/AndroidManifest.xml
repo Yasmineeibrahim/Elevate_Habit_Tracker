@@ -24,6 +24,12 @@
             android:label="SplashScreen2"
             android:theme="@style/Theme.Elevate" />
 
+        <activity android:name=".OnboardingScreen1"
+            android:exported="false"
+            android:label="OnboardingScreen1"
+            android:theme="@style/Theme.Elevate" />
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
