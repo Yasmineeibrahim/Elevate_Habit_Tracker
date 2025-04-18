@@ -3,45 +3,133 @@ package com.elevate
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.elevate.ui.theme.ElevateTheme
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.elevate.ui.theme.Poppins
 
 class SplashScreen1 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            ElevateTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            MaterialTheme {
+                OnboardingScreen()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun OnboardingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(horizontal = 24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.weight(2f))
+
+            GradientTitle()
+
+            Text(
+                text = "Elevate every day.",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(top = 1.dp),
+                color = Color.Gray,
+                textAlign = TextAlign.Center,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.Normal,
+            )
+
+            Spacer(modifier = Modifier.weight(2f))
+
+            GradientButton()
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+@Composable
+fun GradientTitle() {
+    val gradientColors = listOf(Color(0xFFA7379E), Color(0xFFBD99A2))
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        text = buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(
+                    brush = Brush.linearGradient(gradientColors),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = Poppins,
+                    fontSize = 50.sp
+
+                )
+            ) {
+                append("E")
+            }
+            withStyle(
+                style = SpanStyle(
+                    color = Color.Black,
+                    fontFamily = Poppins,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 36.sp
+                )
+            ) {
+                append("levate")
+            }
+        },
+        textAlign = TextAlign.Center
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    ElevateTheme {
-        Greeting("Android")
+fun GradientButton() {
+    val gradientColors = listOf(Color(0xFFA7379E), Color(0xFFE7D8DE))
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .clip(RoundedCornerShape(50))
+            .background(Brush.horizontalGradient(gradientColors))
+            .clickable { /* Handle click */ },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Get Started",
+            color = Color.Black,
+            fontFamily = Poppins,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun OnboardingPreview() {
+   MaterialTheme {
+        OnboardingScreen()
     }
 }
