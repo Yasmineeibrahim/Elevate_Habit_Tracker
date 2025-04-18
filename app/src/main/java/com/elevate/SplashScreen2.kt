@@ -23,25 +23,32 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.geometry.Offset
 import com.elevate.ui.theme.Poppins
 
-class SplashScreen1 : ComponentActivity() {
+class SplashScreen2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                OnboardingScreen(this)
+                OnboardingScreen2()
             }
         }
     }
 }
 
 @Composable
-fun OnboardingScreen(activity: ComponentActivity? = null) {
+fun OnboardingScreen2() {
+
+        val diagonalGradient = Brush.linearGradient(
+            colors = listOf(Color(0xFFEBB5C9), Color(0xFFFDF9FB)),
+    start =Offset(0f, 0f),
+    end = Offset.Infinite
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(diagonalGradient)
             .padding(horizontal = 24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -52,7 +59,7 @@ fun OnboardingScreen(activity: ComponentActivity? = null) {
         ) {
             Spacer(modifier = Modifier.weight(2f))
 
-            GradientTitle()
+            GradientTitle2()
 
             Text(
                 text = "Elevate every day.",
@@ -66,11 +73,8 @@ fun OnboardingScreen(activity: ComponentActivity? = null) {
 
             Spacer(modifier = Modifier.weight(2f))
 
-            GradientButton {
-                activity?.let {
-                    it.startActivity(Intent(it, SplashScreen2::class.java))
-                }
-            }
+            GradientButton2()
+
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -78,13 +82,13 @@ fun OnboardingScreen(activity: ComponentActivity? = null) {
 }
 
 @Composable
-fun GradientTitle() {
+fun GradientTitle2() {
     val gradientColors = listOf(Color(0xFFA7379E), Color(0xFFBD99A2))
     Text(
         text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
-                    brush = Brush.linearGradient(gradientColors),
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontFamily = Poppins,
                     fontSize = 50.sp
@@ -109,8 +113,8 @@ fun GradientTitle() {
 }
 
 @Composable
-fun GradientButton(onClick: () -> Unit) {
-    val gradientColors = listOf(Color(0xFFA7379E), Color(0xFFE7D8DE))
+fun GradientButton2() {
+    val gradientColors = listOf(Color( 0xFFE7D8DE), Color(0xFFA7379E))
 
 
     Box(
@@ -119,7 +123,7 @@ fun GradientButton(onClick: () -> Unit) {
             .height(56.dp)
             .clip(RoundedCornerShape(50))
             .background(Brush.horizontalGradient(gradientColors))
-            .clickable { onClick() },
+            .clickable { },
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -134,8 +138,8 @@ fun GradientButton(onClick: () -> Unit) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun OnboardingPreview() {
-   MaterialTheme {
-        OnboardingScreen()
+fun OnboardingPreview2() {
+    MaterialTheme {
+        OnboardingScreen2()
     }
 }
