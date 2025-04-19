@@ -64,40 +64,45 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
                 painter = painterResource(id = R.drawable.drinkk),
                 contentDescription = "Drink Illustration",
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .height(450.dp),
                 contentScale = ContentScale.FillWidth
-
             )
             Spacer(modifier = Modifier.height(25.dp))
             Text(
                 text = "Improve your sleep quality",
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 color = Color.Black,
                 fontFamily = Poppins,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-Column (
-    modifier = Modifier.fillMaxWidth()
-){ Text(
-    text = "Improve your sleep quality by creating a relaxing bedtime routine, staying consistent with your schedule, and avoiding screens before bed.\nWake up feeling refreshed and ready for the day.",
-    textAlign = TextAlign.Start,
-    style = TextStyle(fontSize = 16.sp,
-        color = Color.DarkGray,
-        fontFamily = Poppins,
-
-        fontWeight = FontWeight.Normal
-    )
-)
-}  }
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Improve your sleep quality by creating a relaxing bedtime routine, staying consistent with your schedule, and avoiding screens before bed. Wake up feeling refreshed and ready for the day.",
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(top = 22.dp),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = Color.DarkGray,
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.Normal
+                    )
+                )
+            }
+        }
 
 
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.End
         ) {
-            Spacer(modifier = Modifier.height(26.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             IconButton(
                 onClick = {
