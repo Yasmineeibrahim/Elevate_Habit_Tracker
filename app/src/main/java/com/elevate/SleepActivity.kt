@@ -6,19 +6,33 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.elevate.ui.theme.Poppins
 
 class SleepActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,27 +64,35 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
                 painter = painterResource(id = R.drawable.drinkk),
                 contentDescription = "Drink Illustration",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(500.dp)
-            )
+                    .fillMaxWidth(),
+                contentScale = ContentScale.FillWidth
 
+            )
             Spacer(modifier = Modifier.height(25.dp))
 
             Text(
                 text = "Improve your sleep quality",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
+                fontFamily = Poppins,
             )
 
-            Spacer(modifier = Modifier.height(35.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+Column (
+    modifier = Modifier.fillMaxWidth()
+){ Text(
+    text = "Improve your sleep quality by creating a relaxing bedtime routine, staying consistent with your schedule, and avoiding screens before bed.\nWake up feeling refreshed and ready for the day.",
+    textAlign = TextAlign.Start,
+    style = TextStyle(fontSize = 16.sp,
+        color = Color.DarkGray,
+        fontFamily = Poppins,
 
-            Text(
-                text = "Improve your sleep quality by creating a relaxing bedtime routine, staying consistent with your schedule, and avoiding screens before bed.\nWake up feeling refreshed and ready for the day.",
-                fontSize = 17.sp,
-                color = Color.DarkGray
-            )
-        }
+        fontWeight = FontWeight.Normal
+    )
+)
+}  }
+
 
         Column(
             modifier = Modifier.fillMaxWidth(),
