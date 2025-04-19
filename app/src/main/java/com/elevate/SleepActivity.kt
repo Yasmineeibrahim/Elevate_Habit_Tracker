@@ -1,28 +1,20 @@
 package com.elevate
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,6 +33,8 @@ class SleepActivity : ComponentActivity() {
 
 @Composable
 fun SleepScreen(onNextClicked: () -> Unit = {}) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +42,6 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
             .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -59,7 +52,6 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(500.dp)
-
             )
 
             Spacer(modifier = Modifier.height(25.dp))
@@ -80,39 +72,28 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
             )
         }
 
-
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.End
         ) {
-            Spacer(modifier = Modifier.height(26.dp)) // Adjust this value as needed
+            Spacer(modifier = Modifier.height(26.dp))
 
             IconButton(
                 onClick = {
-                    val activity = null
-                    activity?.let {
-                        val intent = Intent(it, TakeoffActivity::class.java)
-                        it.startActivity(intent)
-                    }
+                    val intent = Intent(context, TakeoffActivity::class.java)
+                    context.startActivity(intent)
                 },
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
                     .background(Color(0xFFE39EBF))
-            ) @androidx.compose.runtime.Composable {
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_play),
                     contentDescription = "Next",
                     tint = Color.Black
                 )
-
-            }}}}
-
-
-
-
-
-
-
-
+            }
+        }
+    }
+}
