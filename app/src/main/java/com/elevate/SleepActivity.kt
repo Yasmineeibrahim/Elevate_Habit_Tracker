@@ -69,7 +69,6 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
 
             )
             Spacer(modifier = Modifier.height(25.dp))
-
             Text(
                 text = "Improve your sleep quality",
                 fontSize = 24.sp,
