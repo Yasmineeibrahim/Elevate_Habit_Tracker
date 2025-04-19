@@ -33,12 +33,15 @@
             android:exported="false"
             android:label="OnboardingScreen1"
             android:theme="@style/Theme.Elevate" />
+        <activity android:name=".SleepActivity"
+            android:exported="false"
+            android:label="SleepScreen"
+            android:theme="@style/Theme.Elevate" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

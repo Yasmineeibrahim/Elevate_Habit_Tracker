@@ -81,7 +81,6 @@ fun OnboardingContent1(activity: ComponentActivity? = null) {
                 )
 
             }
-
             // Play Button
             Column(
                 modifier = Modifier
@@ -93,7 +92,7 @@ fun OnboardingContent1(activity: ComponentActivity? = null) {
                 IconButton(
                     onClick = {
                         activity?.let {
-                            val intent = Intent(it, TakeoffActivity::class.java)
+                            val intent = Intent(it, SleepActivity::class.java)
                             it.startActivity(intent)
                         }
                     },
