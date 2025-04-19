@@ -1,5 +1,6 @@
 package com.elevate
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -44,7 +45,12 @@ class TakeoffActivity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
             Toast.makeText(this, "Selected: ${selectedHabits.map { it.title }}", Toast.LENGTH_SHORT).show()
+
+            if (selectedHabits.any { it.title == "Reading" }) {
+                startActivity(Intent(this, ReadingInitActivity::class.java))
+            }
         }
+
 
         fab.setOnClickListener {
             Toast.makeText(this, "add new habit", Toast.LENGTH_SHORT).show()
