@@ -81,7 +81,6 @@ fun OnboardingContent1(activity: ComponentActivity? = null) {
                 )
 
             }
-
             // Play Button
             Column(
                 modifier = Modifier
