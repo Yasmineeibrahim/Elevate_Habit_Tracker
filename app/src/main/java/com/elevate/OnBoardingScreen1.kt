@@ -1,5 +1,6 @@
 package com.elevate
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,14 +29,14 @@ class OnboardingScreen1 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                OnboardingContent1()
+                OnboardingContent1(this)
             }
         }
     }
 }
 
 @Composable
-fun OnboardingContent1() {
+fun OnboardingContent1(activity: ComponentActivity? = null) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -90,7 +91,12 @@ fun OnboardingContent1() {
                 Spacer(modifier = Modifier.height(26.dp)) // Adjust this value as needed
 
                 IconButton(
-                    onClick = { /* TODO: Navigate forward */ },
+                    onClick = {
+                        activity?.let {
+                            val intent = Intent(it, TakeoffActivity::class.java)
+                            it.startActivity(intent)
+                        }
+                    },
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape)
