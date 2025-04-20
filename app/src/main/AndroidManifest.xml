@@ -37,6 +37,7 @@
             android:exported="false"
             android:label="SleepScreen"
             android:theme="@style/Theme.Elevate" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
