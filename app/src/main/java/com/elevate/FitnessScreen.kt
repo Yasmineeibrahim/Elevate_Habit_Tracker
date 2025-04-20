@@ -1,5 +1,4 @@
-package com.elevate
-
+package com.elevate.ui.theme
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
@@ -16,10 +16,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import org.w3c.dom.Text
+import com.android.habittracker.R // ← غيّره لو اسم الباكدج بتاعك مختلف
 
 @Composable
 fun FitnessScreen() {
@@ -28,10 +29,10 @@ fun FitnessScreen() {
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.Top
     ) {
         Image(
-            painter = painterResource(id = R.drawable.image), // ← تأكد إن اسم الصورة هو image
+            painter = painterResource(id = R.drawable.image), // ← تأكد إن الصورة موجودة في res/drawable
             contentDescription = "Workout Image",
             modifier = Modifier
                 .fillMaxWidth()
@@ -43,8 +44,7 @@ fun FitnessScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Push Your Limits," +
-                    " Reach Your Goals.",
+            text = "Push Your Limits,\nReach Your Goals.",
             fontSize = 35.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
@@ -56,7 +56,7 @@ fun FitnessScreen() {
             text = "Turn your fitness dreams into reality! Set clear exercise goals, track your progress, and stay motivated every step of the way. Whether you're aiming for strength, endurance, or overall wellness, consistent effort leads to lasting results. Keep moving forward and achieve your best self.",
             fontSize = 20.sp,
             color = Color.Gray,
-            lineHeight = 40.sp
+            lineHeight = 30.sp
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -76,4 +76,10 @@ fun FitnessScreen() {
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FitnessScreenPreview() {
+    FitnessScreen()
 }
