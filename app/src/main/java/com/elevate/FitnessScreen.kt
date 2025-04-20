@@ -34,12 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.elevate.ui.theme.Poppins
 
-class SleepActivity : ComponentActivity() {
+class FitnessScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                SleepScreen()
+                FitnessScreen()
             }
         }
     }
