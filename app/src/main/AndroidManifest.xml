@@ -33,10 +33,23 @@
             android:exported="false"
             android:label="OnboardingScreen1"
             android:theme="@style/Theme.Elevate" />
+
+        <activity android:name=".FitnessScreen"
+            android:exported="false"
+            android:label="FitnessScreen"
+            android:theme="@style/Theme.Elevate"/>
+
+        <activity android:name=".OnboardingScreen"
+            android:exported="false"
+            android:label="OnboardingScreen"
+            android:theme="@style/Theme.Elevate"/>
+
         <activity android:name=".SleepActivity"
             android:exported="false"
             android:label="SleepScreen"
             android:theme="@style/Theme.Elevate" />
+
+
 
         <activity
             android:name=".MainActivity"

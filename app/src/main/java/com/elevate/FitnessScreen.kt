@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.elevate.ui.theme.Poppins
@@ -39,82 +41,92 @@ class FitnessScreen : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                FitnessScreen()
+                FitnessScreenContent(this)
             }
         }
     }
 }
 
-@Composable
-fun FitnessScreen(onNextClicked: () -> Unit = {}) {
-    val context = LocalContext.current
 
-    Column(
+@Composable
+fun FitnessScreenContent(activity: ComponentActivity? = null) {
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+            .background(Color(0xFFF9F9F9))
+            .padding(horizontal = 24.dp),
+        contentAlignment = Alignment.Center
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painter = painterResource(id = R.drawable.image),
-                contentDescription = "Drink Illustration",
+                contentDescription = "Onboarding Image",
                 modifier = Modifier
                     .fillMaxWidth(),
                 contentScale = ContentScale.FillWidth
-
             )
-            Spacer(modifier = Modifier.height(25.dp))
-            Text(
-                text = "Push Your Limits,Reach Your Goals.",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                fontFamily = Poppins,
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-            Column (
+            Column(
                 modifier = Modifier.fillMaxWidth()
-            ){ Text(
-                text = "Turn your fitness dreams into reality! Set clear exercise goals, track your progress, and stay motivated every step of the way. Whether you're aiming for strength, endurance, or overall wellness, consistent effort leads to lasting results. Keep moving forward and achieve your best self.",
-                textAlign = TextAlign.Start,
-                style = TextStyle(fontSize = 16.sp,
-                    color = Color.DarkGray,
-                    fontFamily = Poppins,
-
-                    fontWeight = FontWeight.Normal
-                )
-            )
-            }  }
-
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.End
-        ) {
-            Spacer(modifier = Modifier.height(26.dp))
-
-            IconButton(
-                onClick = {
-                    val intent = Intent(context, TakeoffActivity::class.java)
-                    context.startActivity(intent)
-                },
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFE39EBF))
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_play),
-                    contentDescription = "Next",
-                    tint = Color.Black
+                Text(
+                    text = "Push Your Limits , Reach Your Goals",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    fontFamily = Poppins,
                 )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "\"Turn your fitness dreams into reality ! Set clear exercies goals , track your progress , and stay motivated every step of the way . Whether you're aiming for strength , edurance , or overall wellness , consistent effort leads to lasting results . keep moving forward and achieve your best self ! \" ",
+
+                    textAlign = TextAlign.Start,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = Color.DarkGray,
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.Normal
+                    )
+                )
+
             }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.End
+            ) {
+                Spacer(modifier = Modifier.height(80.dp)) // Adjust this value as needed
+
+                IconButton(
+                    onClick = {  activity?.let {
+                        val intent = Intent(it, OnboardingScreen::class.java)
+                        it.startActivity(intent)
+                    }
+                    },
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFE39EBF))
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_play),
+                        contentDescription = "Next",
+                        tint = Color.Black
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
+    }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun FitnessScreenPreview() {
+    MaterialTheme {
+        FitnessScreenContent()
     }
 }

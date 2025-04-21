@@ -103,7 +103,7 @@ fun OnboardingContent1(activity: ComponentActivity? = null) {
                 IconButton(
                     onClick = {
                         activity?.let {
-                            val intent = Intent(it, SleepActivity::class.java)
+                            val intent = Intent(it, FitnessScreen::class.java)
                             it.startActivity(intent)
                         }
                     },

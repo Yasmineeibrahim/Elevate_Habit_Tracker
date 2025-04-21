@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.elevate.ui.theme.Poppins
@@ -102,7 +103,7 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.End
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             IconButton(
                 onClick = {
@@ -120,6 +121,14 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
                     tint = Color.Black
                 )
             }
+            Spacer(modifier = Modifier.height(50.dp))
         }
+    }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun SleepActivityPreview() {
+    MaterialTheme {
+        SleepScreen()
     }
 }
