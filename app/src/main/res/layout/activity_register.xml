@@ -127,7 +127,6 @@
             app:backgroundTint="@null" />
 
 
-
         <!-- Or Divider -->
         <TextView
             android:id="@+id/or_divider"
