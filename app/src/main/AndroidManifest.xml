@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Elevate"
         tools:targetApi="31">
         <activity
+            android:name=".Register"
+            android:exported="false" />
+        <activity
             android:name=".ReadingInitActivity"
             android:exported="false" />
         <activity
@@ -33,29 +36,27 @@
             android:exported="false"
             android:label="OnboardingScreen1"
             android:theme="@style/Theme.Elevate" />
-
-        <activity android:name=".FitnessScreen"
+        <activity
+            android:name=".FitnessScreen"
             android:exported="false"
             android:label="FitnessScreen"
-            android:theme="@style/Theme.Elevate"/>
-
-        <activity android:name=".OnboardingScreen"
+            android:theme="@style/Theme.Elevate" />
+        <activity
+            android:name=".OnboardingScreen"
             android:exported="false"
             android:label="OnboardingScreen"
-            android:theme="@style/Theme.Elevate"/>
-
-        <activity android:name=".SleepActivity"
+            android:theme="@style/Theme.Elevate" />
+        <activity
+            android:name=".SleepActivity"
             android:exported="false"
             android:label="SleepScreen"
             android:theme="@style/Theme.Elevate" />
-
-
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
