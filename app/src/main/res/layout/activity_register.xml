@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FAFAFA">
 
     <LinearLayout
@@ -36,16 +37,12 @@
             android:id="@+id/first_name"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="12dp"
-            android:hint="First name"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:background="@android:drawable/edit_text"
-            android:backgroundTint="#FFEDEF"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:inputType="textPersonName" />
-
+            android:layout_marginTop="24dp"
+            android:hint=" first name"
+            android:background="@drawable/edit_text_bg"
+            android:paddingStart="40dp"
+            android:drawableLeft="@drawable/person_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24"
+            android:inputType="textPersonName"/>
 
         <!-- Last Name -->
         <EditText
@@ -53,14 +50,11 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="12dp"
-            android:hint="Last name"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:background="@android:drawable/edit_text"
-            android:backgroundTint="#FFEDEF"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:inputType="textPersonName" />
+            android:hint=" last name"
+            android:background="@drawable/edit_text_bg"
+            android:paddingStart="40dp"
+            android:drawableLeft="@drawable/person_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24"
+            android:inputType="textPersonName"/>
 
         <!-- Email -->
         <EditText
@@ -68,29 +62,24 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="12dp"
-            android:hint="First name"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:background="@android:drawable/edit_text"
-            android:backgroundTint="#FFEDEF"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:inputType="textPersonName" />
+            android:hint=" email"
+            android:background="@drawable/edit_text_bg"
+            android:paddingStart="40dp"
+            android:drawableLeft="@drawable/mail_24dp_000000_FILL0_wght400_GRAD0_opsz24"
+            android:inputType="textEmailAddress"/>
 
         <!-- Password -->
         <EditText
-            android:id="@+id/pass"
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="12dp"
-            android:hint="First name"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:background="@android:drawable/edit_text"
-            android:backgroundTint="#FFEDEF"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:inputType="textPersonName" />
+            android:hint=" Password"
+            android:background="@drawable/edit_text_bg"
+            android:paddingStart="40dp"
+            android:drawableLeft="@drawable/ic_lock"
+            android:drawableEnd="@drawable/visibility_off_24dp_000000_FILL0_wght400_GRAD0_opsz24"
+            android:inputType="textPassword"/>
 
         <!-- Terms & Conditions -->
         <CheckBox
@@ -111,7 +100,7 @@
             android:textSize="14sp" />
 
         <!-- Register Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -122,7 +111,8 @@
             android:textColor="#000000"
             android:textStyle="bold"
             android:gravity="center"
-            android:backgroundTint="@null" />
+            android:background="@drawable/gradient_button"
+            app:backgroundTint="@null" />
 
 
 
@@ -146,13 +136,15 @@
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                android:src="@drawable/" />
 
             <Space android:layout_width="24dp" android:layout_height="0dp"/>
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                android:src="@drawable/google" />
         </LinearLayout>
 
         <LinearLayout

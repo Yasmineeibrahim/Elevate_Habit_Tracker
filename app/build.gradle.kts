@@ -16,8 +16,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildFeatures{
-        compose= true
+
+    buildFeatures {
+        compose = true
         viewBinding = true
     }
 
@@ -30,28 +31,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-        var kotlinCompilerExtentionVersion = "1.5.10"
     }
-    composeOptions{
-        kotlinCompilerExtensionVersion="1.5.13"
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14" // خليها هنا بس
     }
+
     kotlinOptions {
         jvmTarget = "11"
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
