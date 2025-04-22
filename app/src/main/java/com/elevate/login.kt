@@ -9,11 +9,17 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class login : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +32,7 @@ class login : AppCompatActivity() {
             insets
         }
 
+        auth = Firebase.auth
 
         val email = findViewById<EditText>(R.id.email)
         val password = findViewById<EditText>(R.id.password)
@@ -39,7 +46,13 @@ class login : AppCompatActivity() {
         }
 
         forgotPass.setOnClickListener {
-
+            val userEmail = email.text.toString()
+            Firebase.auth.sendPasswordResetEmail(email.toString())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "email sent!", Toast.LENGTH_SHORT).show()
+                    }
+                }
         }
 
 
@@ -55,7 +68,24 @@ class login : AppCompatActivity() {
             else {
                 // هنا ممكن تبعتي البيانات لسيرفر أو تفتحي صفحة جديدة
                 Toast.makeText(this, "Login Successfully 🎉", Toast.LENGTH_LONG).show()
+
+
+                login(email,password)
             }
         }
+    }
+
+    private fun login(email: EditText, password: EditText?) {
+        auth.signInWithEmailAndPassword(email.toString(), password.toString())
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    if (auth.currentUser!!.isEmailVerified) {
+                        startActivity(Intent(this, TakeoffActivity::class.java))
+                        finish()
+                    } else
+                        Toast.makeText(this, "check your email!!!!!!!", Toast.LENGTH_SHORT).show()
+                } else
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+            }
     }
 }
