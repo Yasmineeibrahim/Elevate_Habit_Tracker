@@ -13,27 +13,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-
 
 class Register : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth // Moved here to be accessible throughout the class
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_register)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        auth = Firebase.auth
-
+        auth = FirebaseAuth.getInstance()
 
         val firstName = findViewById<EditText>(R.id.first_name)
         val lastName = findViewById<EditText>(R.id.last_name)
@@ -44,11 +41,9 @@ class Register : AppCompatActivity() {
         val loginText = findViewById<TextView>(R.id.login_text)
 
         loginText.setOnClickListener {
-            startActivity(Intent(this,login::class.java))
+            startActivity(Intent(this, login::class.java))
             finish()
         }
-
-
 
         registerButton.setOnClickListener {
             val fName = firstName.text.toString()
@@ -62,24 +57,19 @@ class Register : AppCompatActivity() {
             } else if (!isChecked) {
                 Toast.makeText(this, "You must accept the terms to continue", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Registered Successfully 🎉", Toast.LENGTH_LONG).show()
-                
-                addNewUser(email.toString(), password.toString())
+                addNewUser(userEmail, userPassword)
             }
         }
-
-
     }
 
     private fun addNewUser(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email,password)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful)
+                if (task.isSuccessful) {
                     Toast.makeText(this, "User added!", Toast.LENGTH_SHORT).show()
-                else
-                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, task.exception?.message ?: "Registration failed", Toast.LENGTH_SHORT).show()
+                }
             }
-
-
     }
 }
