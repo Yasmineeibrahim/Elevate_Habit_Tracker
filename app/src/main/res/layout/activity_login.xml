@@ -18,8 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hey there,"
+            android:paddingTop="34dp"
+            android:fontFamily="@font/poppins_regular"
             android:textColor="#000"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:layout_marginTop="24dp"/>
 
         <TextView
@@ -27,7 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Welcome back"
-            android:textStyle="bold"
+            android:fontFamily="@font/poppins_bold"
+            android:paddingTop="6dp"
             android:textSize="20sp"
             android:textColor="#000"
             android:layout_marginTop="4dp"/>
@@ -37,11 +40,14 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:hint=" email"
             android:background="@drawable/edit_text_bg"
-            android:paddingStart="40dp"
-            android:drawableLeft="@drawable/mail_24dp_000000_FILL0_wght400_GRAD0_opsz24"
+            android:paddingStart="12dp"
+            android:drawablePadding="12dp"
+            android:fontFamily="@font/poppins_regular"
+            android:textSize="16dp"
+            android:drawableLeft="@drawable/baseline_email_24"
             android:inputType="textEmailAddress"/>
 
         <!-- Password -->
@@ -52,9 +58,12 @@
             android:layout_marginTop="20dp"
             android:hint=" Password"
             android:background="@drawable/edit_text_bg"
-            android:paddingStart="40dp"
-            android:drawableLeft="@drawable/ic_lock"
-            android:drawableEnd="@drawable/visibility_off_24dp_000000_FILL0_wght400_GRAD0_opsz24"
+            android:paddingStart="12dp"
+            android:fontFamily="@font/poppins_regular"
+            android:textSize="16dp"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawableEnd="@drawable/visibility_off_24"
+            android:drawablePadding="12dp"
             android:inputType="textPassword"/>
 
 
@@ -64,7 +73,8 @@
             android:id="@+id/forget_pass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_regular"
             android:text="@string/forgot_your_password"
             android:textColor="#817676"
             android:textSize="14sp" />
@@ -82,7 +92,8 @@
             app:iconGravity="textStart"
             android:text="Login"
             android:textColor="#000000"
-            android:textStyle="bold"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="16dp"
             android:gravity="center"
             android:background="@drawable/gradient_button"
             app:backgroundTint="@null" />
@@ -91,40 +102,61 @@
 
         <!-- Or Divider -->
         <TextView
-            android:id="@+id/or_divider"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Or"
-            android:layout_marginTop="40dp"
-            android:textSize="14sp"
-            android:textColor="#aaa" />
+        android:id="@+id/or_divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="or"
+        android:layout_marginTop="80dp"
+        android:textSize="16dp"
+        android:fontFamily="@font/poppins_regular"
+        android:textColor="#aaa" />
 
         <!-- Social Login -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="34dp">
 
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/facebook" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="0.5dp"
+                app:strokeColor="#000000">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/facebook" />
+            </com.google.android.material.card.MaterialCardView>
 
             <Space android:layout_width="24dp" android:layout_height="0dp"/>
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/google" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="0.5dp"
+                app:strokeColor="#000000">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/google" />
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="30dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,7 +165,7 @@
                 android:textColor="#817676"
                 android:layout_marginTop="16dp"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:fontFamily="@font/poppins_semibold"/>
 
             <Space android:layout_width="2dp" android:layout_height="0dp"/>
 
@@ -144,6 +176,7 @@
                 android:text="signup "
                 android:textColor="#E64343"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppins_semibold"
                 android:textSize="14sp"
                 android:textStyle="bold"/>
         </LinearLayout>

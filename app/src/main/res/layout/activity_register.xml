@@ -46,7 +46,7 @@
             android:fontFamily="@font/poppins_regular"
             android:textSize="16dp"
             android:paddingStart="12dp"
-            android:drawableLeft="@drawable/person_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24"
+            android:drawableLeft="@drawable/person_icon"
             android:drawablePadding="12dp"
             android:inputType="textPersonName"/>
 
@@ -63,7 +63,7 @@
             android:background="@drawable/edit_text_bg"
             android:paddingStart="12dp"
             android:drawablePadding="12dp"
-            android:drawableLeft="@drawable/person_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24"
+            android:drawableLeft="@drawable/person_icon"
             android:inputType="textPersonName"/>
 
         <!-- Email -->
