@@ -62,10 +62,24 @@ class Register : AppCompatActivity() {
             } else if (!isChecked) {
                 Toast.makeText(this, "You must accept the terms to continue", Toast.LENGTH_SHORT).show()
             } else {
-                // هنا ممكن تبعتي البيانات لسيرفر أو تفتحي صفحة جديدة
                 Toast.makeText(this, "Registered Successfully 🎉", Toast.LENGTH_LONG).show()
+                
+                addNewUser(email.toString(), password.toString())
             }
         }
+
+
+    }
+
+    private fun addNewUser(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email,password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful)
+                    Toast.makeText(this, "User added!", Toast.LENGTH_SHORT).show()
+                else
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+            }
+
 
     }
 }
