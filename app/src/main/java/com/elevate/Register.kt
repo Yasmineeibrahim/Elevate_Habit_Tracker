@@ -12,11 +12,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.auth.FirebaseAuth
-
 class Register : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth // Moved here to be accessible throughout the class
+   // private lateinit var auth: FirebaseAuth // Moved here to be accessible throughout the class
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +28,7 @@ class Register : AppCompatActivity() {
             insets
         }
 
-        auth = FirebaseAuth.getInstance()
+       // auth = FirebaseAuth.getInstance()
 
         val firstName = findViewById<EditText>(R.id.first_name)
         val lastName = findViewById<EditText>(R.id.last_name)
@@ -57,19 +55,19 @@ class Register : AppCompatActivity() {
             } else if (!isChecked) {
                 Toast.makeText(this, "You must accept the terms to continue", Toast.LENGTH_SHORT).show()
             } else {
-                addNewUser(userEmail, userPassword)
+               // addNewUser(userEmail, userPassword)
             }
         }
     }
 
-    private fun addNewUser(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "User added!", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, task.exception?.message ?: "Registration failed", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
+//    private fun addNewUser(email: String, password: String) {
+//        auth.createUserWithEmailAndPassword(email, password)
+//            .addOnCompleteListener(this) { task ->
+//                if (task.isSuccessful) {
+//                    Toast.makeText(this, "User added!", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    Toast.makeText(this, task.exception?.message ?: "Registration failed", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//    }
 }
