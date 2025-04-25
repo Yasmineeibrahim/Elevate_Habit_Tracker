@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126116992972",
+    "project_id": "elevatehabitstracker",
+    "storage_bucket": "elevatehabitstracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126116992972:android:b1386f944c9d2772416f69",
+        "android_client_info": {
+          "package_name": "com.elevate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3NWdbATJYMJm-VCKXI11RLHzsEBh1M8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
