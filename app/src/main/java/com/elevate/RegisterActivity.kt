@@ -22,6 +22,12 @@ class RegisterActivity : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = Firebase.auth
 
+        // Set up login text click listener
+        binding.loginText.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
         binding.registerButton.setOnClickListener {
             val email = binding.email.text?.toString()?.trim() ?: ""
             val password = binding.password.text?.toString()?.trim() ?: ""
@@ -39,7 +45,9 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        startActivity(Intent(this, TakeoffActivity::class.java))
+                        // After successful registration, go to LoginActivity
+                        Toast.makeText(this, "Registration successful! Please login", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, LoginActivity::class.java))
                         finish()
                     } else {
                         val errorMessage = when {
