@@ -107,7 +107,7 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
 
             IconButton(
                 onClick = {
-                    val intent = Intent(context, Register::class.java)
+                    val intent = Intent(context, RegisterActivity::class.java)
                     context.startActivity(intent)
                 },
                 modifier = Modifier
