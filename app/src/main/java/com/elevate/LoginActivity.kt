@@ -35,8 +35,9 @@ class LoginActivity : AppCompatActivity() {
 
         // Sign in with email and password
         binding.loginButton.setOnClickListener {
-            val email = binding.email.text.toString()
-            val password = binding.password.text.toString()
+            val email = binding.email.editText?.text.toString()
+            val password = binding.password.editText?.text.toString()
+
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 Firebase.auth.signInWithEmailAndPassword(email, password)
@@ -54,5 +55,6 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 }

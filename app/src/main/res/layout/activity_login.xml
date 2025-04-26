@@ -37,35 +37,47 @@
             android:layout_marginTop="4dp"/>
 
         <!-- Email -->
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:hint=" email"
-            android:background="@drawable/edit_text_bg"
-            android:paddingStart="12dp"
-            android:drawablePadding="12dp"
             android:fontFamily="@font/poppins_regular"
-            android:textSize="16dp"
-            android:drawableLeft="@drawable/baseline_email_24"
-            android:inputType="textEmailAddress"/>
+            android:textSize="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:drawableLeft="@drawable/baseline_email_24"
+                android:paddingStart="12dp"
+                android:drawablePadding="12dp"
+                android:background="@drawable/edit_text_bg"
+                android:ems="15"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Password -->
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint=" Password"
-            android:background="@drawable/edit_text_bg"
-            android:paddingStart="12dp"
             android:fontFamily="@font/poppins_regular"
             android:textSize="16dp"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawableEnd="@drawable/visibility_off_24"
-            android:drawablePadding="12dp"
-            android:inputType="textPassword"/>
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/black">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:background="@drawable/edit_text_bg"
+                android:drawableStart="@drawable/ic_lock"
+                android:paddingStart="12dp"
+                android:drawablePadding="12dp"
+                android:ems="15"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
 
