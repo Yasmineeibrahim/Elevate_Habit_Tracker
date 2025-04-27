@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val intent=Intent(this, SplashScreen1::class.java)
+        val intent=Intent(this, AchievementsActivity::class.java)
         startActivity(intent)
 
     }

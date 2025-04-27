@@ -39,7 +39,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 
     kotlinOptions {
@@ -73,4 +73,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // Animated Navigation Bar
+    implementation("com.exyte:animated-navigation-bar:1.0.0")
 }
