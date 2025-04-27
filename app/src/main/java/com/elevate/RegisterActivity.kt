@@ -29,8 +29,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.registerButton.setOnClickListener {
-            val email = binding.email.text?.toString()?.trim() ?: ""
-            val password = binding.password.text?.toString()?.trim() ?: ""
+            val email = binding.email.editText?.text.toString()
+            val password = binding.password.editText?.text.toString()
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
