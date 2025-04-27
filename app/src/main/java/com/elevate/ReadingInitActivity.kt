@@ -1,5 +1,6 @@
 package com.elevate
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -20,7 +21,6 @@ class ReadingInitActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
 
     }
 }
