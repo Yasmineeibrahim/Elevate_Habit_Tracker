@@ -44,4 +44,5 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="forgot_your_password"><u>Forgot your password?</u></string>
+    <string name="title_activity_achievements">AchievementsActivity</string>
 </resources>
