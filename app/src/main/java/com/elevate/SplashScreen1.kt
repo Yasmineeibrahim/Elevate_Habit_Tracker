@@ -24,8 +24,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.elevate.ui.theme.Poppins
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class SplashScreen1 : ComponentActivity() {
+
+    override fun onStart() {
+        super.onStart()
+        val currentUser = Firebase.auth.currentUser
+        if (currentUser != null) {
+            // المستخدم مسجل دخول بالفعل
+            val intent = Intent(this, TakeoffActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
