@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import com.elevate.ui.theme.ElevateTheme
+import com.elevate.ui.theme.Poppins
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.utils.noRippleClickable
 import kotlinx.coroutines.launch
@@ -55,7 +57,7 @@ class AchievementsActivity : ComponentActivity() {
 
 @Composable
 fun AchievementsScreen() {
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableStateOf(1) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -145,168 +147,57 @@ fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> 
 fun MonthHeader() {
     // Months in order from January (0) to December (11)
     val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-    
-    // Get the current month (0-11)
     val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH)
     val currentMonth = months[currentMonthIndex]
-    
-    // Get the current year
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-    var selectedMonth by remember { mutableStateOf(currentMonth) }
-    val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
-    val density = LocalDensity.current
-
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Text(
             text = "Month",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
             color = Color.Gray,
-            modifier = Modifier.padding(bottom = 16.dp, top = 22.dp)
+            modifier = Modifier.padding(bottom = 16.dp, top = 22.dp),
+            fontFamily = Poppins
+
         )
 
+        // Pink icon with current month centered above
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),
             contentAlignment = Alignment.Center
         ) {
-            // Fixed center icon
             Image(
                 painter = painterResource(id = R.drawable.pink_icon),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(56.dp)
                     .align(Alignment.Center)
             )
-
-            // Scrollable months
-            Row(
+            Text(
+                text = currentMonth,
+                fontSize = 32.sp,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Black,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(scrollState)
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures { change, dragAmount ->
-                            coroutineScope.launch {
-                                scrollState.scrollBy(-dragAmount)
-                            }
-                        }
-                    },
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Add padding at the start to center the first item
-                Spacer(modifier = Modifier.width(120.dp))
-                
-                // Add months at the end for wrapping
-                months.takeLast(3).forEach { month ->
-                    MonthItem(
-                        month = month,
-                        isSelected = month == selectedMonth,
-                        onClick = {
-                            selectedMonth = month
-                            coroutineScope.launch {
-                                with(density) {
-                                    val itemWidth = 32.dp
-                                    val screenWidth = 360.dp
-                                    val scrollTo = (months.indexOf(month) * itemWidth).toPx().toInt() - 
-                                                 (screenWidth.toPx().toInt() / 2) + 
-                                                 (itemWidth.toPx().toInt() / 2)
-                                    scrollState.animateScrollTo(scrollTo)
-                                }
-                            }
-                        }
-                    )
-                }
-                
-                // Main months
-                months.forEach { month ->
-                    MonthItem(
-                        month = month,
-                        isSelected = month == selectedMonth,
-                        onClick = {
-                            selectedMonth = month
-                            coroutineScope.launch {
-                                with(density) {
-                                    val itemWidth = 32.dp
-                                    val screenWidth = 360.dp
-                                    val scrollTo = (months.indexOf(month) * itemWidth).toPx().toInt() - 
-                                                 (screenWidth.toPx().toInt() / 2) + 
-                                                 (itemWidth.toPx().toInt() / 2)
-                                    scrollState.animateScrollTo(scrollTo)
-                                }
-                            }
-                        }
-                    )
-                }
-                
-                // Add months at the beginning for wrapping
-                months.take(3).forEach { month ->
-                    MonthItem(
-                        month = month,
-                        isSelected = month == selectedMonth,
-                        onClick = {
-                            selectedMonth = month
-                            coroutineScope.launch {
-                                with(density) {
-                                    val itemWidth = 32.dp
-                                    val screenWidth = 360.dp
-                                    val scrollTo = (months.indexOf(month) * itemWidth).toPx().toInt() - 
-                                                 (screenWidth.toPx().toInt() / 2) + 
-                                                 (itemWidth.toPx().toInt() / 2)
-                                    scrollState.animateScrollTo(scrollTo)
-                                }
-                            }
-                        }
-                    )
-                }
-                
-                // Add padding at the end to center the last item
-                Spacer(modifier = Modifier.width(120.dp))
-            }
+                    .align(Alignment.Center)
+                    .zIndex(1f)
+            )
         }
 
         Text(
             text = currentYear.toString(),
-            fontSize = 16.sp,
+            fontSize = 14.sp,
             color = Color.Black,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-    }
-}
-
-@Composable
-private fun MonthItem(
-    month: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.5f else 1f,
-        animationSpec = tween(300),
-        label = "scale"
-    )
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .wrapContentWidth()
-            .scale(scale)
-            .noRippleClickable(onClick = onClick)
-    ) {
-        Text(
-            text = month,
-            fontSize = if (isSelected) 36.sp else 16.sp,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = Color.Black,
-            maxLines = 1,
-            overflow = TextOverflow.Visible,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .zIndex(1f)
+            modifier = Modifier.padding(bottom = 16.dp),
+            fontFamily = Poppins,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
@@ -324,7 +215,9 @@ fun ProductivitySection() {
                 text = "Collect the stars and let's see how productive you are!",
                 fontSize = 11.sp,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
+                fontFamily = Poppins,
+                fontWeight = FontWeight.SemiBold,
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -336,10 +229,9 @@ fun ProductivitySection() {
                         contentDescription = "Stars",
                         modifier = Modifier.size(100.dp)
                     )
-                    Spacer(modifier = Modifier.width(12.dp))
                     Column {
-                        Text("My Stars", fontSize = 13.sp, color = Color.White)
-                        Text("10", fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        Text("My Stars ", fontSize = 15.sp, color = Color.White, fontFamily = Poppins, fontWeight = FontWeight.SemiBold)
+                        Text("10", fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.White, fontFamily = Poppins)
                     }
                 }
 
@@ -364,7 +256,9 @@ fun ProductivitySection() {
                     Text(
                         "You still have time,\nkeep up the spirit!",
                         fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.8f)
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
@@ -378,7 +272,8 @@ fun MissionsSection() {
         "October Missions",
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+        fontFamily = Poppins
     )
     MissionCard(title = "Complete 7 habits", stars = "1 star", buttonText = "Collect")
     MissionCard(title = "Make 15 days streak", stars = "2 star")

@@ -49,6 +49,7 @@ class TakeoffActivity : AppCompatActivity() {
             if (selectedHabits.any { it.title == "Reading" }) {
                 startActivity(Intent(this, ReadingInitActivity::class.java))
             }
+
         }
 
 
