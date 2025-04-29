@@ -5,6 +5,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         }
         val intent=Intent(this, SplashScreen1::class.java)
         startActivity(intent)
-
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(application)
     }
 }

@@ -76,4 +76,8 @@ dependencies {
 
     // Animated Navigation Bar
     implementation("com.exyte:animated-navigation-bar:1.0.0")
+    implementation(libs.facebook.login)
+
+
+
 }
