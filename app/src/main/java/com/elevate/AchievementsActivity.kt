@@ -4,11 +4,31 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -25,7 +45,7 @@ import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.utils.noRippleClickable
-import java.util.*
+import java.util.Calendar
 
 class AchievementsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,7 +122,13 @@ fun AchievementsScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             if (availableMissions.isNotEmpty()) {
-                Text("Missions", fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.padding(bottom = 8.dp), fontFamily = Poppins)
+                Text(
+                    "Missions",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontFamily = Poppins
+                )
                 availableMissions.forEach { (title, starsLabel, starsValue) ->
                     MissionCard(title, starsLabel, false) {
                         onMissionCollected(title, starsValue)
@@ -126,17 +152,33 @@ fun AchievementsScreen() {
                     .fillMaxWidth()
                     .height(72.dp)
                     .background(Color(0xFFD983BB), RoundedCornerShape(36.dp))
-                    .shadow(8.dp, RoundedCornerShape(36.dp), spotColor = Color(0xFFD983BB).copy(alpha = 0.5f)),
+                    .shadow(
+                        8.dp,
+                        RoundedCornerShape(36.dp),
+                        spotColor = Color(0xFFD983BB).copy(alpha = 0.5f)
+                    ),
                 ballColor = Color.White,
                 barColor = Color(0xFFD983BB)
             ) {
-                BottomNavItem(selected = selectedIndex == 0, iconId = R.drawable.ic_home, label = "Home") {
+                BottomNavItem(
+                    selected = selectedIndex == 0,
+                    iconId = R.drawable.ic_home,
+                    label = "Home"
+                ) {
                     selectedIndex = 0
                 }
-                BottomNavItem(selected = selectedIndex == 1, iconId = R.drawable.ic_achievements, label = "Achievements") {
+                BottomNavItem(
+                    selected = selectedIndex == 1,
+                    iconId = R.drawable.ic_achievements,
+                    label = "Achievements"
+                ) {
                     selectedIndex = 1
                 }
-                BottomNavItem(selected = selectedIndex == 2, iconId = R.drawable.person_icon, label = "Profile") {
+                BottomNavItem(
+                    selected = selectedIndex == 2,
+                    iconId = R.drawable.person_icon,
+                    label = "Profile"
+                ) {
                     selectedIndex = 2
                 }
             }
@@ -170,18 +212,49 @@ fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> 
 
 @Composable
 fun MonthHeader() {
-    val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    val months =
+        listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
     val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH)
     val currentMonth = months[currentMonthIndex]
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-        Text("Month", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.padding(top = 22.dp, bottom = 16.dp), fontFamily = Poppins)
-        Box(modifier = Modifier.fillMaxWidth().height(60.dp), contentAlignment = Alignment.Center) {
-            Image(painter = painterResource(id = R.drawable.pink_icon), contentDescription = null, modifier = Modifier.size(56.dp).align(Alignment.Center))
-            Text(text = currentMonth, fontSize = 32.sp, fontFamily = Poppins, fontWeight = FontWeight.SemiBold, color = Color.Black, modifier = Modifier.align(Alignment.Center).zIndex(1f))
+        Text(
+            "Month",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 22.dp, bottom = 16.dp),
+            fontFamily = Poppins
+        )
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp), contentAlignment = Alignment.Center) {
+            Image(
+                painter = painterResource(id = R.drawable.pink_icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(56.dp)
+                    .align(Alignment.Center)
+            )
+            Text(
+                text = currentMonth,
+                fontSize = 32.sp,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Black,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .zIndex(1f)
+            )
         }
-        Text(currentYear.toString(), fontSize = 14.sp, color = Color.Black, fontFamily = Poppins, fontWeight = FontWeight.SemiBold)
+        Text(
+            currentYear.toString(),
+            fontSize = 14.sp,
+            color = Color.Black,
+            fontFamily = Poppins,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }
 
@@ -194,20 +267,66 @@ fun ProductivitySection(starsCount: Int) {
             .padding(16.dp)
     ) {
         Column {
-            Text("Collect the stars and let's see how productive you are!", fontSize = 11.sp, color = Color.White, fontFamily = Poppins, fontWeight = FontWeight.SemiBold)
+            Text(
+                "Collect the stars and let's see how productive you are!",
+                fontSize = 11.sp,
+                color = Color.White,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.SemiBold
+            )
             Spacer(Modifier.height(12.dp))
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                    Image(painter = painterResource(R.drawable.ic_star_girl), contentDescription = "Stars", modifier = Modifier.size(100.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_star_girl),
+                        contentDescription = "Stars",
+                        modifier = Modifier.size(100.dp)
+                    )
                     Column {
-                        Text("My Stars", fontSize = 15.sp, color = Color.White, fontFamily = Poppins, fontWeight = FontWeight.SemiBold)
-                        Text(starsCount.toString(), fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.White, fontFamily = Poppins)
+                        Text(
+                            "My Stars",
+                            fontSize = 15.sp,
+                            color = Color.White,
+                            fontFamily = Poppins,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            starsCount.toString(),
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontFamily = Poppins
+                        )
                     }
                 }
-                Box(modifier = Modifier.height(56.dp).width(1.dp).background(Color.White.copy(alpha = 0.5f)))
-                Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                    Text("Your productivity\nlevel is still low", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    Text("You still have time,\nkeep up the spirit!", fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f), fontFamily = Poppins, fontWeight = FontWeight.SemiBold)
+                Box(
+                    modifier = Modifier
+                        .height(56.dp)
+                        .width(1.dp)
+                        .background(Color.White.copy(alpha = 0.5f))
+                )
+                Column(modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp)) {
+                    Text(
+                        "Your productivity\nlevel is still low",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        "You still have time,\nkeep up the spirit!",
+                        fontSize = 12.sp,
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
         }
@@ -256,7 +375,12 @@ fun MissionCard(title: String, stars: String, collected: Boolean, onCollect: () 
 @Composable
 fun CompletedMissionsSection(collected: Set<String>) {
     if (collected.isNotEmpty()) {
-        Text("Completed Missions", fontWeight = FontWeight.Bold, fontSize = 16.sp, fontFamily = Poppins)
+        Text(
+            "Completed Missions",
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            fontFamily = Poppins
+        )
         Spacer(modifier = Modifier.height(8.dp))
         for (title in collected) {
             MissionCard(title, "✔", collected = true) { }
