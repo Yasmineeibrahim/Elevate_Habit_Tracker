@@ -23,6 +23,7 @@ class TakeoffActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.habitsRecyclerView)
         fab = findViewById(R.id.fab)
         nextButton = findViewById(R.id.nextButton)
+
         val habitList = listOf(
             Habit("Exercise", R.drawable.exercise),
             Habit("Reading", R.drawable.reading),
@@ -33,28 +34,50 @@ class TakeoffActivity : AppCompatActivity() {
         )
 
         val adapter = HabitAdapter(habitList) { habit ->
-            if (habit.isSelected) {
-                selectedHabits.add(habit)
-            } else {
-                selectedHabits.remove(habit)
-            }
+            if (habit.isSelected) selectedHabits.add(habit)
+            else selectedHabits.remove(habit)
         }
 
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
         nextButton.setOnClickListener {
-            Toast.makeText(this, "Selected: ${selectedHabits.map { it.title }}", Toast.LENGTH_SHORT).show()
-
-            if (selectedHabits.any { it.title == "Reading" }) {
-                startActivity(Intent(this, ReadingInitActivity::class.java))
+            if (selectedHabits.isEmpty()) {
+                Toast.makeText(this, "Please select at least one habit", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
+            startHabitChain(0)
         }
 
-
         fab.setOnClickListener {
-            Toast.makeText(this, "add new habit", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, NewHabitActivity::class.java))
+        }
+    }
+
+    private fun startHabitChain(index: Int) {
+        if (index >= selectedHabits.size) {
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
+            return
+        }
+
+        val currentHabit = selectedHabits[index]
+        val intent = when (currentHabit.title) {
+            "Reading" -> Intent(this, ReadingInitActivity::class.java)
+            "Drinking water" -> Intent(this, DrinkingWaterActivity::class.java)
+            "Sleeping Schedule" -> Intent(this, SleepingScheduleActivity::class.java)
+            else -> null
+        }
+
+        intent?.putExtra("NEXT_INDEX", index + 1)
+        intent?.putExtra("HABIT_LIST", ArrayList(selectedHabits.map { it.title }))
+
+        if (intent != null) {
+            startActivity(intent)
+            finish()
+        } else {
+            startHabitChain(index + 1)
         }
     }
 }
