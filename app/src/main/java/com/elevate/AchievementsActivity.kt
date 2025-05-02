@@ -120,6 +120,17 @@ fun AchievementsScreen() {
 }
 
 @Composable
+fun AnimatedNavigationBar(
+    selectedIndex: Int,
+    modifier: Modifier,
+    ballColor: Color,
+    barColor: Color,
+    content: @Composable () -> Unit
+) {
+    TODO("Not yet implemented")
+}
+
+@Composable
 fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier

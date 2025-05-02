@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <!-- Illustration -->
+            <ImageView
+                android:layout_width="306dp"
+                android:layout_height="306dp"
+                android:contentDescription="Drinking water"
+                android:scaleType="fitXY"
+                android:src="@drawable/prayer" />
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Prayer"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center"
+                android:text=" start building a habit that connects you with Allah and fills your life with peace and purpose"
+                android:textColor="#888888"
+                android:textSize="14sp" />
+
+
+            <!-- 3. Start Time -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Which prayers would you like to track? *"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="8dp"
+                    app:cardBackgroundColor="#DDDDDD"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <Spinner
+                        android:id="@+id/yesNoSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:entries="@array/yes_no_options"
+                        android:background="#DDDDDD"
+                        android:paddingHorizontal="12dp"
+                        android:popupBackground="#FFFFFF"
+                        android:textAlignment="center" />
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+
+            <!-- 4. End Time -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Would you like daily reminders for each prayer?*"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="8dp"
+                    app:cardBackgroundColor="#DDDDDD"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <Spinner
+                        android:id="@+id/yesNoSpinner2"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:entries="@array/yes_no_options"
+                        android:background="#DDDDDD"
+                        android:paddingHorizontal="12dp"
+                        android:popupBackground="#FFFFFF"
+                        android:textAlignment="center" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- 5. Preferred Time -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Would you like a gentle reminder if you miss a prayer?"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="8dp"
+                    app:cardBackgroundColor="#DDDDDD"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <Spinner
+                        android:id="@+id/yesNoSpinner3"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:entries="@array/yes_no_options"
+                        android:background="#DDDDDD"
+                        android:paddingHorizontal="12dp"
+                        android:popupBackground="#FFFFFF"
+                        android:textAlignment="center" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/continue_button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/gradient_button"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Continue"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:backgroundTint="@null" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
