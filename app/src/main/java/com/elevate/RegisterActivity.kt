@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.elevate.databinding.ActivityRegister2Binding
+import com.facebook.*
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -13,21 +17,47 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegister2Binding
     private lateinit var auth: FirebaseAuth
+    private lateinit var callbackManager: CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegister2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize Firebase Auth
         auth = Firebase.auth
+        callbackManager = CallbackManager.Factory.create()
 
-        // Set up login text click listener
+        // Navigate to LoginActivity
         binding.loginText.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
+        // Facebook Login via MaterialCardView
+        binding.facebookCardView.setOnClickListener {
+            LoginManager.getInstance().logInWithReadPermissions(
+                this,
+                listOf("email", "public_profile")
+            )
+        }
+
+        // Handle Facebook Login result
+        LoginManager.getInstance().registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult) {
+                    handleFacebookAccessToken(result.accessToken)
+                }
+
+                override fun onCancel() {
+                    Toast.makeText(this@RegisterActivity, "Facebook login canceled", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onError(error: FacebookException) {
+                    Toast.makeText(this@RegisterActivity, "Facebook login failed: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        // Email/Password Registration
         binding.registerButton.setOnClickListener {
             val email = binding.email.editText?.text.toString()
             val password = binding.password.editText?.text.toString()
@@ -45,7 +75,6 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        // After successful registration, go to LoginActivity
                         Toast.makeText(this, "Registration successful! Please login", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, LoginActivity::class.java))
                         finish()
@@ -66,5 +95,26 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, "Registration failed: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+
+    // Facebook login result must go to callbackManager
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+    }
+
+    // Link Facebook login to Firebase Auth
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Facebook login success", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, TakeoffActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Facebook auth failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }

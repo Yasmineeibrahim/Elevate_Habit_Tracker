@@ -34,7 +34,7 @@ class SplashScreen1 : ComponentActivity() {
         val currentUser = Firebase.auth.currentUser
         if (currentUser != null) {
             // المستخدم مسجل دخول بالفعل
-            val intent = Intent(this, TakeoffActivity::class.java)
+            val intent = Intent(this, AchievementsActivity::class.java)
             startActivity(intent)
             finish()
         }

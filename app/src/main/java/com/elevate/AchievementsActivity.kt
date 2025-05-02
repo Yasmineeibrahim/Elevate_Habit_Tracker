@@ -1,46 +1,53 @@
 package com.elevate
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.utils.noRippleClickable
-import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.text.SimpleDateFormat
 
 class AchievementsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,9 +62,52 @@ class AchievementsActivity : ComponentActivity() {
     }
 }
 
+// SharedPreferences helpers
+fun saveCompletedMissions(context: Context, missions: Set<String>) {
+    context.getSharedPreferences("achievements", Context.MODE_PRIVATE)
+        .edit()
+        .putStringSet("completed_missions", missions)
+        .apply()
+}
+
+fun loadCompletedMissions(context: Context): MutableSet<String> {
+    val prefs = context.getSharedPreferences("achievements", Context.MODE_PRIVATE)
+    return prefs.getStringSet("completed_missions", emptySet())?.toMutableSet() ?: mutableSetOf()
+}
+
+fun saveStarsCount(context: Context, stars: Int) {
+    context.getSharedPreferences("achievements", Context.MODE_PRIVATE)
+        .edit()
+        .putInt("stars_count", stars)
+        .apply()
+}
+
+fun loadStarsCount(context: Context): Int {
+    val prefs = context.getSharedPreferences("achievements", Context.MODE_PRIVATE)
+    return prefs.getInt("stars_count", 0)
+}
+
 @Composable
 fun AchievementsScreen() {
+    val context = LocalContext.current
     var selectedIndex by remember { mutableStateOf(1) }
+    var starsCount by remember { mutableStateOf(loadStarsCount(context)) }
+    val collectedMissions = remember { mutableStateOf(loadCompletedMissions(context)) }
+
+    fun onMissionCollected(title: String, stars: Int) {
+        if (!collectedMissions.value.contains(title)) {
+            starsCount += stars
+            collectedMissions.value.add(title)
+            saveCompletedMissions(context, collectedMissions.value)
+            saveStarsCount(context, starsCount)
+        }
+    }
+
+    val availableMissions = listOf(
+        Triple("Complete 7 habits", "1 star", 1),
+        Triple("Make 15 days streak", "2 star", 2),
+        Triple("Make 30 day streak", "3 star", 3)
+    ).filterNot { collectedMissions.value.contains(it.first) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -70,11 +120,26 @@ fun AchievementsScreen() {
         ) {
             MonthHeader()
             Spacer(modifier = Modifier.height(12.dp))
-            ProductivitySection()
+            ProductivitySection(starsCount)
             Spacer(modifier = Modifier.height(16.dp))
-            MissionsSection()
+
+            if (availableMissions.isNotEmpty()) {
+                Text(
+                    "Missions",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontFamily = Poppins
+                )
+                availableMissions.forEach { (title, starsLabel, starsValue) ->
+                    MissionCard(title, starsLabel, false) {
+                        onMissionCollected(title, starsValue)
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
-            CompletedMissionsSection()
+            CompletedMissionsSection(collectedMissions.value)
         }
 
         Box(
@@ -90,52 +155,49 @@ fun AchievementsScreen() {
                     .height(72.dp)
                     .background(Color(0xFFD983BB), RoundedCornerShape(36.dp))
                     .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(36.dp),
+                        8.dp,
+                        RoundedCornerShape(36.dp),
                         spotColor = Color(0xFFD983BB).copy(alpha = 0.5f)
                     ),
                 ballColor = Color.White,
                 barColor = Color(0xFFD983BB)
             ) {
-                BottomNavItem(
+                BottomNavItemForAchievements(
                     selected = selectedIndex == 0,
                     iconId = R.drawable.ic_home,
                     label = "Home"
-                ) { selectedIndex = 0 }
-
-                BottomNavItem(
+                ) {
+                    selectedIndex = 0
+                }
+                BottomNavItemForAchievements(
                     selected = selectedIndex == 1,
                     iconId = R.drawable.ic_achievements,
                     label = "Achievements"
-                ) { selectedIndex = 1 }
-
-                BottomNavItem(
-                    selected = selectedIndex == 2,
+                ) {
+                    selectedIndex = 1
+                }
+                BottomNavItemForAchievements(
+                    selected = selectedIndex == 2,  // Updated this to match the Profile index
                     iconId = R.drawable.person_icon,
                     label = "Profile"
-                ) { selectedIndex = 2 }
+                ) {
+                    selectedIndex = 2
+                    // Navigate to ProfileActivity when Profile tab is selected
+                    val intent = Intent(context, ProfileActivity::class.java)
+                    context.startActivity(intent)
+                }
             }
         }
     }
 }
 
+// In AchievementsActivity.kt
 @Composable
-fun AnimatedNavigationBar(
-    selectedIndex: Int,
-    modifier: Modifier,
-    ballColor: Color,
-    barColor: Color,
-    content: @Composable () -> Unit
-) {
-    TODO("Not yet implemented")
-}
-
-@Composable
-fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
+fun BottomNavItemForAchievements(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .noRippleClickable { onClick() },
+            .clickable { onClick() }, // fallback clickable
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -143,7 +205,9 @@ fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> 
                 painter = painterResource(id = iconId),
                 contentDescription = label,
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(if (selected) Color.White else Color.White.copy(alpha = 0.7f))
+                colorFilter = ColorFilter.tint(
+                    if (selected) Color.White else Color.White.copy(alpha = 0.7f)
+                )
             )
             Text(
                 text = label,
@@ -154,35 +218,27 @@ fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> 
     }
 }
 
+
 @Composable
 fun MonthHeader() {
-    // Months in order from January (0) to December (11)
-    val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    val months =
+        listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
     val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH)
     val currentMonth = months[currentMonthIndex]
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Month",
+            "Month",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
-            modifier = Modifier.padding(bottom = 16.dp, top = 22.dp),
+            modifier = Modifier.padding(top = 22.dp, bottom = 16.dp),
             fontFamily = Poppins
-
         )
-
-        // Pink icon with current month centered above
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp), contentAlignment = Alignment.Center) {
             Image(
                 painter = painterResource(id = R.drawable.pink_icon),
                 contentDescription = null,
@@ -201,12 +257,10 @@ fun MonthHeader() {
                     .zIndex(1f)
             )
         }
-
         Text(
-            text = currentYear.toString(),
+            currentYear.toString(),
             fontSize = 14.sp,
             color = Color.Black,
-            modifier = Modifier.padding(bottom = 16.dp),
             fontFamily = Poppins,
             fontWeight = FontWeight.SemiBold
         )
@@ -214,7 +268,7 @@ fun MonthHeader() {
 }
 
 @Composable
-fun ProductivitySection() {
+fun ProductivitySection(starsCount: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -223,41 +277,52 @@ fun ProductivitySection() {
     ) {
         Column {
             Text(
-                text = "Collect the stars and let's see how productive you are!",
+                "Collect the stars and let's see how productive you are!",
                 fontSize = 11.sp,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 12.dp),
                 fontFamily = Poppins,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.SemiBold
             )
+            Spacer(Modifier.height(12.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Image(
                         painter = painterResource(R.drawable.ic_star_girl),
                         contentDescription = "Stars",
                         modifier = Modifier.size(100.dp)
                     )
                     Column {
-                        Text("My Stars ", fontSize = 15.sp, color = Color.White, fontFamily = Poppins, fontWeight = FontWeight.SemiBold)
-                        Text("10", fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.White, fontFamily = Poppins)
+                        Text(
+                            "My Stars",
+                            fontSize = 15.sp,
+                            color = Color.White,
+                            fontFamily = Poppins,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            starsCount.toString(),
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontFamily = Poppins
+                        )
                     }
                 }
-
                 Box(
                     modifier = Modifier
                         .height(56.dp)
                         .width(1.dp)
                         .background(Color.White.copy(alpha = 0.5f))
                 )
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 12.dp)
-                ) {
+                Column(modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp)) {
                     Text(
                         "Your productivity\nlevel is still low",
                         fontSize = 14.sp,
@@ -278,29 +343,12 @@ fun ProductivitySection() {
 }
 
 @Composable
-fun MissionsSection() {
-    Text(
-        "October Missions",
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
-        fontFamily = Poppins
-    )
-    MissionCard(title = "Complete 7 habits", stars = "1 star", buttonText = "Collect")
-    MissionCard(title = "Make 15 days streak", stars = "2 star")
-    MissionCard(title = "Make 30 day streak", stars = "3 star")
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Text("More ▼", color = Color.Gray)
-    }
-}
-
-@Composable
-fun MissionCard(title: String, stars: String, buttonText: String? = null) {
+fun MissionCard(title: String, stars: String, collected: Boolean, onCollect: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp), clip = false)
+            .shadow(8.dp, RoundedCornerShape(12.dp))
             .background(Color.White, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
@@ -316,9 +364,9 @@ fun MissionCard(title: String, stars: String, buttonText: String? = null) {
                 Text(title, fontWeight = FontWeight.Medium, fontSize = 14.sp)
                 Text("Get $stars", fontSize = 12.sp, color = Color.Gray)
             }
-            buttonText?.let {
+            if (!collected) {
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { onCollect() },
                     shape = RoundedCornerShape(50),
                     border = BorderStroke(1.dp, Color(0xFFD983BB)),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -326,7 +374,7 @@ fun MissionCard(title: String, stars: String, buttonText: String? = null) {
                         contentColor = Color(0xFFD983BB)
                     )
                 ) {
-                    Text(it, fontSize = 14.sp)
+                    Text("Collect", fontSize = 14.sp)
                 }
             }
         }
@@ -334,10 +382,19 @@ fun MissionCard(title: String, stars: String, buttonText: String? = null) {
 }
 
 @Composable
-fun CompletedMissionsSection() {
-    Text("Completed Missions", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-    Spacer(modifier = Modifier.height(8.dp))
-    MissionCard(title = "Make 7 days streak", stars = "1 star", buttonText = "Collected")
+fun CompletedMissionsSection(collected: Set<String>) {
+    if (collected.isNotEmpty()) {
+        Text(
+            "Completed Missions",
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            fontFamily = Poppins
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        for (title in collected) {
+            MissionCard(title, "✔", collected = true) { }
+        }
+    }
 }
 
 @Preview(showBackground = true)

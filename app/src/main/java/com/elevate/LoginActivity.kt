@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             // Navigate to TakeOffActivity
-                            val intent = Intent(this, TakeoffActivity::class.java)
+                            val intent = Intent(this, AchievementsActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
