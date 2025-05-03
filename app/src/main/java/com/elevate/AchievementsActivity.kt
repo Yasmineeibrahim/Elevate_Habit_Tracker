@@ -182,9 +182,11 @@ fun AchievementsScreen() {
                     label = "Profile"
                 ) {
                     selectedIndex = 2
-                    // Navigate to ProfileActivity when Profile tab is selected
-                    val intent = Intent(context, ProfileActivity::class.java)
-                    context.startActivity(intent)
+                    // Only start ProfileActivity if we're not already in it
+                    if (context !is ProfileActivity) {
+                        val intent = Intent(context, ProfileActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 }
             }
         }

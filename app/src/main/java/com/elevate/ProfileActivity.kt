@@ -54,6 +54,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.elevate.utils.updateLocale
@@ -62,10 +63,12 @@ class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        
+        val viewModel = ProfileViewModel(applicationContext)
+        
         setContent {
             ElevateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    val viewModel = null
                     ProfileScreen(viewModel)
                 }
             }
@@ -74,11 +77,11 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfileScreen(viewModel: Unit) {
+fun ProfileScreen(viewModel: ProfileViewModel?) {
     var selectedIndex by remember { mutableStateOf(2) }
     val context = LocalContext.current
     val preferences = remember { SharedPreferencesHelper(context) }
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    var notificationsEnabled by remember { mutableStateOf(viewModel?.notificationsEnabled ?: true) }
     var languageExpanded by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf("English") }
 
@@ -151,8 +154,11 @@ fun ProfileScreen(viewModel: Unit) {
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it
-                        preferences.setNotificationsEnabled(it) },
+                    onCheckedChange = { enabled ->
+                        notificationsEnabled = enabled
+                        viewModel?.toggleNotifications(enabled)
+                        preferences.setNotificationsEnabled(enabled)
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color(0xFFFF7EB6),
                         uncheckedThumbColor = Color.Gray,
@@ -280,6 +286,8 @@ fun ProfileScreen(viewModel: Unit) {
                     label = "Home"
                 ) {
                     selectedIndex = 0
+                    val intent = Intent(context, AchievementsActivity::class.java)
+                    context.startActivity(intent)
                 }
                 BottomNavItem(
                     selected = selectedIndex == 1,
@@ -310,7 +318,19 @@ fun AnimatedNavigationBar(
     barColor: Color,
     content: @Composable () -> Unit
 ) {
-    TODO("Not yet implemented")
+    Box(
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            content()
+        }
+    }
 }
 
 @Composable
@@ -333,13 +353,16 @@ fun StatItem(value: String, label: String) {
 
 @Composable
 fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
-    Box(
+    Row(
         modifier = Modifier
-            .fillMaxSize()
             .clickable { onClick() },
-        contentAlignment = Alignment.Center
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Image(
                 painter = painterResource(id = iconId),
                 contentDescription = label,
@@ -348,6 +371,7 @@ fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> 
                     if (selected) Color.White else Color.White.copy(alpha = 0.7f)
                 )
             )
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = label,
                 fontSize = 12.sp,
@@ -361,6 +385,6 @@ fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> 
 @Composable
 fun ProfileScreenPreview() {
     ElevateTheme {
-        ProfileScreen(viewModel = ViewModel)
+        ProfileScreen(viewModel = null)
     }
 }
