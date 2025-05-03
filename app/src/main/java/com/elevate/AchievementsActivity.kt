@@ -91,6 +91,7 @@ fun loadStarsCount(context: Context): Int {
 @Composable
 fun AchievementsScreen() {
     val context = LocalContext.current
+    var currentScreen by remember { mutableStateOf("achievements") }
     var starsCount by remember { mutableStateOf(loadStarsCount(context)) }
     val collectedMissions = remember { mutableStateOf(loadCompletedMissions(context)) }
 
@@ -110,36 +111,42 @@ fun AchievementsScreen() {
     ).filterNot { collectedMissions.value.contains(it.first) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(Color(0xFFFFF0F5))
-                .padding(16.dp)
-                .padding(bottom = 72.dp)
-        ) {
-            MonthHeader()
-            Spacer(modifier = Modifier.height(12.dp))
-            ProductivitySection(starsCount)
-            Spacer(modifier = Modifier.height(16.dp))
+        when (currentScreen) {
+            "home" -> HomeScreen()
+            "achievements" -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .background(Color(0xFFFFF0F5))
+                        .padding(16.dp)
+                        .padding(bottom = 72.dp)
+                ) {
+                    MonthHeader()
+                    Spacer(modifier = Modifier.height(12.dp))
+                    ProductivitySection(starsCount)
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            if (availableMissions.isNotEmpty()) {
-                Text(
-                    "Missions",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    fontFamily = Poppins
-                )
-                availableMissions.forEach { (title, starsLabel, starsValue) ->
-                    MissionCard(title, starsLabel, false) {
-                        onMissionCollected(title, starsValue)
+                    if (availableMissions.isNotEmpty()) {
+                        Text(
+                            "Missions",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            fontFamily = Poppins
+                        )
+                        availableMissions.forEach { (title, starsLabel, starsValue) ->
+                            MissionCard(title, starsLabel, false) {
+                                onMissionCollected(title, starsValue)
+                            }
+                        }
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    CompletedMissionsSection(collectedMissions.value)
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-            CompletedMissionsSection(collectedMissions.value)
+            "profile" -> ProfileScreen(null)
         }
 
         Box(
@@ -148,10 +155,20 @@ fun AchievementsScreen() {
                 .fillMaxWidth()
         ) {
             BottomNavigationBar(
-                currentScreen = "achievements",
-                onNavigate = { /* Handle navigation if needed */ }
+                currentScreen = currentScreen,
+                onNavigate = { screen ->
+                    currentScreen = screen
+                }
             )
         }
+    }
+}
+
+@Composable
+fun HomeScreen() {
+    // Add your home screen content here
+    Box(modifier = Modifier.fillMaxSize()) {
+        Text("Home Screen")
     }
 }
 

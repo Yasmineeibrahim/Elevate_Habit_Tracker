@@ -1,9 +1,6 @@
 package com.elevate.components
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -13,13 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.elevate.AchievementsActivity
-import com.elevate.ProfileActivity
 import com.elevate.R
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.utils.noRippleClickable
@@ -29,7 +23,6 @@ fun BottomNavigationBar(
     currentScreen: String,
     onNavigate: (String) -> Unit
 ) {
-    val context = LocalContext.current
     var selectedIndex by remember { mutableStateOf(getIndexForScreen(currentScreen)) }
     
     Box(
@@ -53,7 +46,6 @@ fun BottomNavigationBar(
             ) {
                 selectedIndex = 0
                 onNavigate("home")
-                navigateToActivity(context, AchievementsActivity::class.java)
             }
             
             NavigationItem(
@@ -63,7 +55,6 @@ fun BottomNavigationBar(
             ) {
                 selectedIndex = 1
                 onNavigate("achievements")
-                navigateToActivity(context, AchievementsActivity::class.java)
             }
             
             NavigationItem(
@@ -73,7 +64,6 @@ fun BottomNavigationBar(
             ) {
                 selectedIndex = 2
                 onNavigate("profile")
-                navigateToActivity(context, ProfileActivity::class.java)
             }
         }
     }
@@ -121,13 +111,5 @@ private fun getIndexForScreen(screen: String): Int {
         "achievements" -> 1
         "profile" -> 2
         else -> 0
-    }
-}
-
-private fun navigateToActivity(context: Context, activityClass: Class<*>) {
-    if (context.javaClass != activityClass) {
-        val intent = Intent(context, activityClass)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        context.startActivity(intent)
     }
 } 
