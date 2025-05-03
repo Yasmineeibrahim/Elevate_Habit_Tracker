@@ -174,10 +174,7 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 12.dp)
-                        .clickable {  selectedLanguage = "Arabic"
-                            preferences.setSelectedLanguage("Arabic")
-                            context.updateLocale("ar") // or "en" for English
-                             }
+                        .clickable { languageExpanded = !languageExpanded }
                 ) {
                     Box(
                         modifier = Modifier
@@ -194,7 +191,13 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                 }
 
                 if (languageExpanded) {
-                    Column(modifier = Modifier.padding(start = 40.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 40.dp)
+                            .background(Color.White, RoundedCornerShape(8.dp))
+                            .padding(8.dp)
+                    ) {
                         Text(
                             text = "Arabic",
                             fontWeight = if (selectedLanguage == "Arabic") FontWeight.Bold else FontWeight.Normal,
@@ -203,6 +206,9 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                                 .padding(vertical = 8.dp)
                                 .clickable {
                                     selectedLanguage = "Arabic"
+                                    preferences.setSelectedLanguage("Arabic")
+                                    context.updateLocale("ar")
+                                    languageExpanded = false
                                 }
                         )
                         Text(
@@ -213,6 +219,9 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                                 .padding(vertical = 8.dp)
                                 .clickable {
                                     selectedLanguage = "English"
+                                    preferences.setSelectedLanguage("English")
+                                    context.updateLocale("en")
+                                    languageExpanded = false
                                 }
                         )
                     }
