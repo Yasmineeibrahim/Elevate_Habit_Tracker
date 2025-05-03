@@ -1,4 +1,5 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Elevate</string>
     <string name="title_activity_splash_screen1">SplashScreen1</string>
     <!-- Strings used for fragments for navigation -->
@@ -11,6 +12,13 @@
         <item>Yes</item>
         <item>No</item>
     </string-array>
+
+
+        <string name="facebook_app_id" tools:ignore="DuplicateDefinition">123456789012345</string>
+        <string name="facebook_client_token" tools:ignore="DuplicateDefinition">your_facebook_client_token</string>
+        <string name="fb_login_protocol_scheme">fb123456789012345</string>
+
+
 
 
     <string name="lorem_ipsum">
@@ -51,4 +59,5 @@
     </string>
     <string name="forgot_your_password"><u>Forgot your password?</u></string>
     <string name="title_activity_achievements">AchievementsActivity</string>
+
 </resources>

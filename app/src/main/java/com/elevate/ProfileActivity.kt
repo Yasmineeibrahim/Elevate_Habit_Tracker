@@ -8,13 +8,38 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,12 +50,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
-import com.exyte.animatednavbar.AnimatedNavigationBar
+import com.elevate.utils.updateLocale
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +65,8 @@ class ProfileActivity : ComponentActivity() {
         setContent {
             ElevateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    ProfileScreen()
+                    val viewModel = null
+                    ProfileScreen(viewModel)
                 }
             }
         }
@@ -47,9 +74,10 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(viewModel: Unit) {
     var selectedIndex by remember { mutableStateOf(2) }
     val context = LocalContext.current
+    val preferences = remember { SharedPreferencesHelper(context) }
     var notificationsEnabled by remember { mutableStateOf(true) }
     var languageExpanded by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf("English") }
@@ -123,7 +151,8 @@ fun ProfileScreen() {
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it },
+                    onCheckedChange = { notificationsEnabled = it
+                        preferences.setNotificationsEnabled(it) },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color(0xFFFF7EB6),
                         uncheckedThumbColor = Color.Gray,
@@ -139,7 +168,10 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 12.dp)
-                        .clickable { languageExpanded = !languageExpanded }
+                        .clickable {  selectedLanguage = "Arabic"
+                            preferences.setSelectedLanguage("Arabic")
+                            context.updateLocale("ar") // or "en" for English
+                             }
                 ) {
                     Box(
                         modifier = Modifier
@@ -185,7 +217,10 @@ fun ProfileScreen() {
 
             Button(
                 onClick = {
-                    // Logout logic here
+                        preferences.clearAll()
+                        val intent = Intent(context, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        context.startActivity(intent)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -268,6 +303,17 @@ fun ProfileScreen() {
 }
 
 @Composable
+fun AnimatedNavigationBar(
+    selectedIndex: Int,
+    modifier: Modifier,
+    ballColor: Color,
+    barColor: Color,
+    content: @Composable () -> Unit
+) {
+    TODO("Not yet implemented")
+}
+
+@Composable
 fun StatItem(value: String, label: String) {
     Box(
         modifier = Modifier
@@ -315,6 +361,6 @@ fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> 
 @Composable
 fun ProfileScreenPreview() {
     ElevateTheme {
-        ProfileScreen()
+        ProfileScreen(viewModel = ViewModel)
     }
 }

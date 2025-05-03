@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "578279013236",
-    "project_id": "habit-tracker-a52e4",
-    "storage_bucket": "habit-tracker-a52e4.firebasestorage.app"
+    "project_number": "328585894397",
+    "project_id": "elevate-89ae8",
+    "storage_bucket": "elevate-89ae8.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:578279013236:android:bc6b30c278f10b8ef80a21",
+        "mobilesdk_app_id": "1:328585894397:android:bba1e35322fb29e9646194",
         "android_client_info": {
           "package_name": "com.elevate"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "578279013236-ori87kimb05f1bi6190fagkasmhl8u1u.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDVWmbq0-Mp0VkXtoyPIf3MuAaoD6hUhT4"
+          "current_key": "AIzaSyCt9lqPJqR8EF3bQxYQmjs-eAWoQXTfeDM"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "578279013236-ori87kimb05f1bi6190fagkasmhl8u1u.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -73,10 +73,14 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation ("com.google.firebase:firebase-messaging:23.2.0")
 
     // Animated Navigation Bar
     implementation("com.exyte:animated-navigation-bar:1.0.0")
     implementation(libs.facebook.login)
+
+    implementation ("com.facebook.android:facebook-login:[8,9)")
+
 
 
 
