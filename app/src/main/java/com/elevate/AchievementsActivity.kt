@@ -48,6 +48,7 @@ import com.elevate.ui.theme.Poppins
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.utils.noRippleClickable
 import java.util.Calendar
+import com.elevate.components.BottomNavigationBar
 
 class AchievementsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +91,6 @@ fun loadStarsCount(context: Context): Int {
 @Composable
 fun AchievementsScreen() {
     val context = LocalContext.current
-    var selectedIndex by remember { mutableStateOf(1) }
     var starsCount by remember { mutableStateOf(loadStarsCount(context)) }
     val collectedMissions = remember { mutableStateOf(loadCompletedMissions(context)) }
 
@@ -146,80 +146,14 @@ fun AchievementsScreen() {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            AnimatedNavigationBar(
-                selectedIndex = selectedIndex,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp)
-                    .background(Color(0xFFD983BB), RoundedCornerShape(36.dp))
-                    .shadow(
-                        8.dp,
-                        RoundedCornerShape(36.dp),
-                        spotColor = Color(0xFFD983BB).copy(alpha = 0.5f)
-                    ),
-                ballColor = Color.White,
-                barColor = Color(0xFFD983BB)
-            ) {
-                BottomNavItemForAchievements(
-                    selected = selectedIndex == 0,
-                    iconId = R.drawable.ic_home,
-                    label = "Home"
-                ) {
-                    selectedIndex = 0
-                }
-                BottomNavItemForAchievements(
-                    selected = selectedIndex == 1,
-                    iconId = R.drawable.ic_achievements,
-                    label = "Achievements"
-                ) {
-                    selectedIndex = 1
-                }
-                BottomNavItemForAchievements(
-                    selected = selectedIndex == 2,  // Updated this to match the Profile index
-                    iconId = R.drawable.person_icon,
-                    label = "Profile"
-                ) {
-                    selectedIndex = 2
-                    // Only start ProfileActivity if we're not already in it
-                    if (context !is ProfileActivity) {
-                        val intent = Intent(context, ProfileActivity::class.java)
-                        context.startActivity(intent)
-                    }
-                }
-            }
-        }
-    }
-}
-
-// In AchievementsActivity.kt
-@Composable
-fun BottomNavItemForAchievements(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable { onClick() }, // fallback clickable
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = iconId),
-                contentDescription = label,
-                modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(
-                    if (selected) Color.White else Color.White.copy(alpha = 0.7f)
-                )
-            )
-            Text(
-                text = label,
-                fontSize = 12.sp,
-                color = if (selected) Color.White else Color.White.copy(alpha = 0.7f)
+            BottomNavigationBar(
+                currentScreen = "achievements",
+                onNavigate = { /* Handle navigation if needed */ }
             )
         }
     }
 }
-
 
 @Composable
 fun MonthHeader() {

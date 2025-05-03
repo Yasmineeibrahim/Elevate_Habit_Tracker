@@ -58,6 +58,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.elevate.utils.updateLocale
+import com.elevate.components.BottomNavigationBar
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +79,6 @@ class ProfileActivity : ComponentActivity() {
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel?) {
-    var selectedIndex by remember { mutableStateOf(2) }
     val context = LocalContext.current
     val preferences = remember { SharedPreferencesHelper(context) }
     var notificationsEnabled by remember { mutableStateOf(viewModel?.notificationsEnabled ?: true) }
@@ -268,67 +268,11 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(16.dp)
         ) {
-            AnimatedNavigationBar(
-                selectedIndex = selectedIndex,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp)
-                    .background(Color(0xFFD983BB), RoundedCornerShape(36.dp))
-                    .shadow(8.dp, RoundedCornerShape(36.dp), spotColor = Color(0xFFD983BB).copy(alpha = 0.5f)),
-                ballColor = Color.White,
-                barColor = Color(0xFFD983BB)
-            ) {
-                BottomNavItem(
-                    selected = selectedIndex == 0,
-                    iconId = R.drawable.ic_home,
-                    label = "Home"
-                ) {
-                    selectedIndex = 0
-                    val intent = Intent(context, AchievementsActivity::class.java)
-                    context.startActivity(intent)
-                }
-                BottomNavItem(
-                    selected = selectedIndex == 1,
-                    iconId = R.drawable.ic_achievements,
-                    label = "Achievements"
-                ) {
-                    selectedIndex = 1
-                    val intent = Intent(context, AchievementsActivity::class.java)
-                    context.startActivity(intent)
-                }
-                BottomNavItem(
-                    selected = selectedIndex == 2,
-                    iconId = R.drawable.person_icon,
-                    label = "Profile"
-                ) {
-                    selectedIndex = 2
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun AnimatedNavigationBar(
-    selectedIndex: Int,
-    modifier: Modifier,
-    ballColor: Color,
-    barColor: Color,
-    content: @Composable () -> Unit
-) {
-    Box(
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            content()
+            BottomNavigationBar(
+                currentScreen = "profile",
+                onNavigate = { /* Handle navigation if needed */ }
+            )
         }
     }
 }
@@ -347,36 +291,6 @@ fun StatItem(value: String, label: String) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(value, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.Black)
             Text(label, color = Color.Gray, fontSize = 12.sp)
-        }
-    }
-}
-
-@Composable
-fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .clickable { onClick() },
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Image(
-                painter = painterResource(id = iconId),
-                contentDescription = label,
-                modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(
-                    if (selected) Color.White else Color.White.copy(alpha = 0.7f)
-                )
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = label,
-                fontSize = 12.sp,
-                color = if (selected) Color.White else Color.White.copy(alpha = 0.7f)
-            )
         }
     }
 }
