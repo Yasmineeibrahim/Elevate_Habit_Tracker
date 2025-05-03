@@ -231,10 +231,15 @@ private fun HabitCard(
             }
             if (expanded) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Row {
-                    TabButton("Today", selectedTab == 0) { onTabSelected(0) }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TabButton("This Month", selectedTab == 1) { onTabSelected(1) }
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row {
+                        TabButton("Today", selectedTab == 0) { onTabSelected(0) }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TabButton("This Month", selectedTab == 1) { onTabSelected(1) }
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
