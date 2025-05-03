@@ -161,14 +161,6 @@ fun AchievementsScreen() {
 }
 
 @Composable
-fun HomeScreen() {
-    // Add your home screen content here
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text("Home Screen")
-    }
-}
-
-@Composable
 fun MonthHeader() {
     val months =
         listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
