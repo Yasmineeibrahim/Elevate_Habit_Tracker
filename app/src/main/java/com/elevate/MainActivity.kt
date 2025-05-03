@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MaterialTheme {
                 // Navigate to AchievementsActivity
-                startActivity(Intent(this, AchievementsActivity::class.java))
+                startActivity(Intent(this, SplashScreen1::class.java))
                 finish()
             }
         }
