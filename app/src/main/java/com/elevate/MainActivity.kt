@@ -12,6 +12,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // Update streak count
+        val preferences = SharedPreferencesHelper(this)
+        preferences.updateStreak()
+
         // Move navigation logic here, before setContent
         startActivity(Intent(this, SplashScreen1::class.java))
         finish()

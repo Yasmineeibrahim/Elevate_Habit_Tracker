@@ -132,7 +132,7 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 StatItem(loadStarsCount(context).toString(), stringResource(R.string.profile_total_stars))
-                StatItem("627", stringResource(R.string.profile_streaks))
+                StatItem(preferences.getCurrentStreak().toString(), stringResource(R.string.profile_streaks))
                 StatItem(preferences.getHabits().size.toString(), stringResource(R.string.profile_habits))
             }
 
