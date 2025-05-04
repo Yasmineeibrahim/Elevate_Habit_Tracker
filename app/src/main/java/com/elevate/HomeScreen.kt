@@ -1,6 +1,5 @@
 package com.elevate
 
-import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
