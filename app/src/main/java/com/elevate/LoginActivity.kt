@@ -42,8 +42,8 @@ class LoginActivity : AppCompatActivity() {
                 Firebase.auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            // Navigate to TakeOffActivity
-                            val intent = Intent(this, AchievementsActivity::class.java)
+                            // Navigate to TakeoffActivity
+                            val intent = Intent(this, TakeoffActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
