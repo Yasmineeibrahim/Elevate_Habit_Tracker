@@ -147,4 +147,20 @@
     <string name="achievements_collect">Collect</string>
     <string name="achievements_completed_missions">Completed Missions</string>
     <string name="achievements_collected">Collected ✔</string>
+    <string name="new_habit_title">New Habit</string>
+    <string name="new_habit_subtitle">Lets plan your new habit!</string>
+    <string name="habit_name_label">Whats the name of the habit? *</string>
+    <string name="habit_name_hint">e.g. Drink Water</string>
+    <string name="habit_name_error">Please enter a habit name</string>
+    <string name="times_per_day_label">How many times a day *</string>
+    <string name="times_per_day_hint">e.g. 3</string>
+    <string name="times_per_day_error">Please enter how many times per day</string>
+    <string name="start_time_label">Which time of the day will you be ready to start? *</string>
+    <string name="start_time_hint">e.g. 9:00 AM</string>
+    <string name="start_time_error">Please select a start time</string>
+    <string name="end_time_label">Which time of the day will you be off this habit?</string>
+    <string name="end_time_hint">e.g. 10:00 PM</string>
+    <string name="preferred_time_label">Is there a preferred time you plan to practice?</string>
+    <string name="preferred_time_hint">e.g. Evening</string>
+    <string name="continued">Continue</string>
 </resources>

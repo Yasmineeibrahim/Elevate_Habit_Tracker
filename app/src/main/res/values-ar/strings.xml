@@ -148,4 +148,20 @@
     <string name="achievements_collect">اجمع</string>
     <string name="achievements_completed_missions">المهام المكتملة</string>
     <string name="achievements_collected">تم الجمع ✔</string>
+    <string name="new_habit_title">عادة جديدة</string>
+    <string name="new_habit_subtitle">لنخطط لعادتك الجديدة!</string>
+    <string name="habit_name_label">ما اسم العادة؟ *</string>
+    <string name="habit_name_hint">مثال: شرب الماء</string>
+    <string name="habit_name_error">يرجى إدخال اسم العادة</string>
+    <string name="times_per_day_label">كم مرة في اليوم *</string>
+    <string name="times_per_day_hint">مثال: ٣</string>
+    <string name="times_per_day_error">يرجى إدخال عدد المرات في اليوم</string>
+    <string name="start_time_label">في أي وقت من اليوم ستبدأ؟ *</string>
+    <string name="start_time_hint">مثال: ٩:٠٠ ص</string>
+    <string name="start_time_error">يرجى اختيار وقت البدء</string>
+    <string name="end_time_label">في أي وقت من اليوم ستتوقف عن هذه العادة؟</string>
+    <string name="end_time_hint">مثال: ١٠:٠٠ م</string>
+    <string name="preferred_time_label">هل هناك وقت مفضل لممارسة العادة؟</string>
+    <string name="preferred_time_hint">مثال: المساء</string>
+    <string name="continued">استمرار</string>
 </resources> 

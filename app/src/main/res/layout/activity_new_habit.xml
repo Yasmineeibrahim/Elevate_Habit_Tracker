@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:contentDescription="Habit image" />
+                    android:contentDescription="@string/habit_name_hint" />
 
                 <ImageButton
                     android:id="@+id/arrowLeft"
@@ -40,7 +40,7 @@
                     android:layout_gravity="center_vertical|start"
                     android:background="@android:color/transparent"
                     android:src="@drawable/baseline_arrow_left_24"
-                    android:contentDescription="Previous image" />
+                    android:contentDescription="@string/previous" />
 
                 <ImageButton
                     android:id="@+id/arrowRight"
@@ -49,14 +49,14 @@
                     android:layout_gravity="center_vertical|end"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="Next image" />
+                    android:contentDescription="@string/next" />
             </FrameLayout>
 
             <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Habit"
+                android:text="@string/new_habit_title"
                 android:textSize="24sp"
                 android:fontFamily="@font/poppins_bold"
                 android:layout_marginTop="24dp"
@@ -66,7 +66,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Let's plan your new habit!"
+                android:text="@string/new_habit_subtitle"
                 android:textSize="14sp"
                 android:textColor="#888888"
                 android:fontFamily="@font/poppins_regular"
@@ -88,7 +88,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Whats the name of the habit? *"
+                    android:text="@string/habit_name_label"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="14sp"
                     android:textColor="#333333" />
@@ -105,7 +105,7 @@
                         android:id="@+id/inputHabitName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="e.g. Drink Water"
+                        android:hint="@string/habit_name_hint"
                         android:paddingHorizontal="16dp"
                         android:textColor="#000000"
                         android:textColorHint="#999999"
@@ -129,7 +129,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="how many times a day *"
+                    android:text="@string/times_per_day_label"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="14sp"
                     android:textColor="#333333" />
@@ -146,7 +146,7 @@
                         android:id="@+id/inputTimesPerDay"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="e.g. 3"
+                        android:hint="@string/times_per_day_hint"
                         android:inputType="number"
                         android:paddingHorizontal="16dp"
                         android:textColor="#000000"
@@ -169,7 +169,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Which time of the day will you be ready to start? *"
+                    android:text="@string/start_time_label"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="14sp"
                     android:textColor="#333333" />
@@ -186,7 +186,7 @@
                         android:id="@+id/inputStartTime"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="e.g. 9:00 AM"
+                        android:hint="@string/start_time_hint"
                         android:inputType="time"
                         android:paddingHorizontal="16dp"
                         android:textColor="#000000"
@@ -209,7 +209,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Which time of the day will you be off this habit?"
+                    android:text="@string/end_time_label"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="14sp"
                     android:textColor="#333333" />
@@ -226,7 +226,7 @@
                         android:id="@+id/inputEndTime"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="e.g. 10:00 PM"
+                        android:hint="@string/end_time_hint"
                         android:inputType="time"
                         android:paddingHorizontal="16dp"
                         android:textColor="#000000"
@@ -249,7 +249,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="is there a preffered time you plan to practice?"
+                    android:text="@string/preferred_time_label"
                     android:fontFamily="@font/poppins_regular"
                     android:textSize="14sp"
                     android:textColor="#333333" />
@@ -266,7 +266,7 @@
                         android:id="@+id/inputPreferredTime"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="e.g. Evening"
+                        android:hint="@string/preferred_time_hint"
                         android:paddingHorizontal="16dp"
                         android:textColor="#000000"
                         android:textColorHint="#999999"
@@ -285,7 +285,7 @@
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/gradient_button"
                 android:fontFamily="@font/poppins_medium"
-                android:text="Continue"
+                android:text="@string/continued"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 app:backgroundTint="@null" />
