@@ -1,5 +1,7 @@
 package com.elevate
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,8 +29,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
-import androidx.compose.ui.platform.LocalContext
-import android.content.Intent
 
 @Composable
 fun HomeScreen() {
@@ -35,18 +36,25 @@ fun HomeScreen() {
     val preferences = remember { SharedPreferencesHelper(context) }
     var expandedHabit by remember { mutableStateOf<HabitUiData?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
-    val habits = listOf(
-        HabitUiData(
-            name = "Excercise",
-            frequency = "2 times a day",
-            imageRes = R.drawable.exercise // Replace with your drawable
-        ),
-        HabitUiData(
-            name = "Reading",
-            frequency = "2 times a day",
-            imageRes = R.drawable.reading_illustration // Replace with your drawable
+    
+    // Get saved habits or use default list if none exist
+    val savedHabits = remember { preferences.getHabits() }
+    val habits = if (savedHabits.isEmpty()) {
+        listOf(
+            HabitUiData(
+                name = "Exercise",
+                frequency = "2 times a day",
+                imageRes = R.drawable.exercise
+            ),
+            HabitUiData(
+                name = "Reading",
+                frequency = "2 times a day",
+                imageRes = R.drawable.reading_illustration
+            )
         )
-    )
+    } else {
+        savedHabits
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
