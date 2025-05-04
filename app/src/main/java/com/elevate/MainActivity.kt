@@ -13,28 +13,20 @@ import com.facebook.appevents.AppEventsLogger
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ProfileViewModel(applicationContext)
+        enableEdgeToEdge()
 
-        setContent {
-            ->
-            MaterialTheme {
-                ProfileScreen(viewModel)
-                enableEdgeToEdge()
-                setContentView(R.layout.activity_main)
+        // Move navigation logic here, before setContent
+        startActivity(Intent(this, SplashScreen1::class.java))
+        finish()
+        // Do not call setContent if navigating away
+        // setContent {
+        //     MaterialTheme {
+        //         // Your Compose content
+        //     }
+        // }
 
-                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                    v.setPadding(
-                        systemBars.left,
-                        systemBars.top,
-                        systemBars.right,
-                        systemBars.bottom
-                    )
-                    insets
-                }
-                val intent = Intent(this, AchievementsActivity::class.java)
-                startActivity(intent)
-                FacebookSdk.sdkInitialize(applicationContext)
-                AppEventsLogger.activateApp(application)
-            }
-        }}}
+        // Initialize Facebook SDK
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(application)
+    }
+}
