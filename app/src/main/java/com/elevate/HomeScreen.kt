@@ -22,6 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.Poppins
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun HomeScreen() {
@@ -182,6 +186,89 @@ private fun MyHabitsSection(
 }
 
 @Composable
+private fun CalendarView() {
+    val currentDate = LocalDate.now()
+    val currentMonth = YearMonth.now()
+    val daysInMonth = currentMonth.lengthOfMonth()
+    val firstDayOfMonth = currentMonth.atDay(1)
+    val firstDayOfWeek = if (firstDayOfMonth.dayOfWeek.value == 7) 0 else firstDayOfMonth.dayOfWeek.value
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        // Month and Year header
+        Text(
+            text = "${currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.year}",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = Poppins,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        // Days of week header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat").forEach { day ->
+                Text(
+                    text = day,
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    fontFamily = Poppins,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+
+        // Calendar grid
+        val days = mutableListOf<Int>()
+        // Add empty spaces for days before the first day of the month
+        repeat(firstDayOfWeek) { days.add(0) }
+        // Add the days of the month
+        (1..daysInMonth).forEach { days.add(it) }
+
+        // Create rows of 7 days each
+        days.chunked(7).forEach { week ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                week.forEach { day ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                            .padding(4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (day > 0) {
+                            val isToday = day == currentDate.dayOfMonth
+                            Text(
+                                text = day.toString(),
+                                fontSize = 14.sp,
+                                color = if (isToday) Color.White else Color.Black,
+                                fontFamily = Poppins,
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(
+                                        if (isToday) Color(0xFFD983BB)
+                                        else Color.Transparent
+                                    )
+                                    .padding(4.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun HabitCard(
     habit: HabitUiData,
     expanded: Boolean,
@@ -242,32 +329,36 @@ private fun HabitCard(
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        progress = 0.5f,
-                        color = Color(0xFFF3B6D2),
-                        strokeWidth = 8.dp,
-                        modifier = Modifier.size(100.dp)
-                    )
+                if (selectedTab == 0) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            progress = 0.5f,
+                            color = Color(0xFFF3B6D2),
+                            strokeWidth = 8.dp,
+                            modifier = Modifier.size(100.dp)
+                        )
+                        Text(
+                            text = "50%",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 32.sp,
+                            color = Color(0xFF222222),
+                            fontFamily = Poppins
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "50%",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp,
+                        text = "1/2 times completed",
+                        fontSize = 14.sp,
                         color = Color(0xFF222222),
-                        fontFamily = Poppins
+                        fontFamily = Poppins,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
+                } else {
+                    CalendarView()
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "1/2 times completed",
-                    fontSize = 14.sp,
-                    color = Color(0xFF222222),
-                    fontFamily = Poppins,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
             }
         }
     }
