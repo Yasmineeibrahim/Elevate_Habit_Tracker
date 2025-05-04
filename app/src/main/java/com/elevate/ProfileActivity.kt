@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,16 +58,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
-import com.elevate.utils.updateLocale
+import com.elevate.utils.LocaleUtils
 import com.elevate.components.BottomNavigationBar
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val preferences = SharedPreferencesHelper(this)
+        val savedLanguage = preferences.getSelectedLanguage()
+        if (savedLanguage == "Arabic") {
+            com.elevate.utils.LocaleUtils.setLocale(this, "ar")
+        } else {
+            com.elevate.utils.LocaleUtils.setLocale(this, "en")
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        
         val viewModel = ProfileViewModel(applicationContext)
-        
         setContent {
             ElevateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -82,8 +88,9 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
     val context = LocalContext.current
     val preferences = remember { SharedPreferencesHelper(context) }
     var notificationsEnabled by remember { mutableStateOf(viewModel?.notificationsEnabled ?: true) }
+    var selectedLanguage by remember { mutableStateOf(preferences.getSelectedLanguage()) }
     var languageExpanded by remember { mutableStateOf(false) }
-    var selectedLanguage by remember { mutableStateOf("English") }
+    val currentLocale = context.resources.configuration.locales[0].language
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -121,8 +128,8 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("Lillie Brown", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text("🏆 Ambassador", color = Color.Gray, fontSize = 14.sp)
+            Text(stringResource(R.string.profile_title), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(stringResource(R.string.profile_ambassador), color = Color.Gray, fontSize = 14.sp)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -130,9 +137,9 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                StatItem("112", "Total Stars")
-                StatItem("627", "Streaks")
-                StatItem("8", "Habits")
+                StatItem("112", stringResource(R.string.profile_total_stars))
+                StatItem("627", stringResource(R.string.profile_streaks))
+                StatItem("8", stringResource(R.string.profile_habits))
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -150,7 +157,7 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                         .background(Color(0xFFFF7EB6), shape = CircleShape)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text("Notifications", fontSize = 16.sp)
+                Text(stringResource(R.string.profile_notifications), fontSize = 16.sp)
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = notificationsEnabled,
@@ -182,7 +189,7 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                             .background(Color(0xFF9F7AEA), shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text("Language", fontSize = 16.sp)
+                    Text(stringResource(R.string.language), fontSize = 16.sp)
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(
                         imageVector = if (languageExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
@@ -199,29 +206,31 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                             .padding(8.dp)
                     ) {
                         Text(
-                            text = "Arabic",
-                            fontWeight = if (selectedLanguage == "Arabic") FontWeight.Bold else FontWeight.Normal,
+                            text = stringResource(R.string.arabic),
+                            fontWeight = if (currentLocale == "ar") FontWeight.Bold else FontWeight.Normal,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp)
                                 .clickable {
                                     selectedLanguage = "Arabic"
                                     preferences.setSelectedLanguage("Arabic")
-                                    context.updateLocale("ar")
+                                    LocaleUtils.setLocale(context, "ar")
                                     languageExpanded = false
+                                    (context as? android.app.Activity)?.let { LocaleUtils.recreateActivity(it) }
                                 }
                         )
                         Text(
-                            text = "English",
-                            fontWeight = if (selectedLanguage == "English") FontWeight.Bold else FontWeight.Normal,
+                            text = stringResource(R.string.english),
+                            fontWeight = if (currentLocale == "en") FontWeight.Bold else FontWeight.Normal,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp)
                                 .clickable {
                                     selectedLanguage = "English"
                                     preferences.setSelectedLanguage("English")
-                                    context.updateLocale("en")
+                                    LocaleUtils.setLocale(context, "en")
                                     languageExpanded = false
+                                    (context as? android.app.Activity)?.let { LocaleUtils.recreateActivity(it) }
                                 }
                         )
                     }
@@ -261,7 +270,7 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        "Logout",
+                        stringResource(R.string.profile_logout),
                         color = Color.White,
                         fontFamily = Poppins,
                         fontWeight = FontWeight.Bold,

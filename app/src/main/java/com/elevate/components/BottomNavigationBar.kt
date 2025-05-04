@@ -11,6 +11,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +42,7 @@ fun BottomNavigationBar(
         ) {
             NavigationItem(
                 icon = R.drawable.ic_home,
-                label = "Home",
+                label = stringResource(com.elevate.R.string.dashboard),
                 isSelected = selectedIndex == 0
             ) {
                 selectedIndex = 0
@@ -50,7 +51,7 @@ fun BottomNavigationBar(
             
             NavigationItem(
                 icon = R.drawable.ic_achievements,
-                label = "Achievements",
+                label = stringResource(com.elevate.R.string.achievements_title),
                 isSelected = selectedIndex == 1
             ) {
                 selectedIndex = 1
@@ -59,7 +60,7 @@ fun BottomNavigationBar(
             
             NavigationItem(
                 icon = R.drawable.person_icon,
-                label = "Profile",
+                label = stringResource(com.elevate.R.string.profile_title),
                 isSelected = selectedIndex == 2
             ) {
                 selectedIndex = 2

@@ -85,7 +85,7 @@ class NewHabitActivity : AppCompatActivity() {
         // Create new habit
         val newHabit = HabitUiData(
             name = habitName,
-            frequency = "$timesPerDay times a day",
+            timesPerDay = timesPerDay.toIntOrNull() ?: 1,
             imageRes = R.drawable.exercise // Default image, you can change this based on habit type
         )
 

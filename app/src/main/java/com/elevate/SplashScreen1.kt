@@ -42,6 +42,13 @@ class SplashScreen1 : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val preferences = SharedPreferencesHelper(this)
+        val savedLanguage = preferences.getSelectedLanguage()
+        if (savedLanguage == "Arabic") {
+            com.elevate.utils.LocaleUtils.setLocale(this, "ar")
+        } else {
+            com.elevate.utils.LocaleUtils.setLocale(this, "en")
+        }
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {

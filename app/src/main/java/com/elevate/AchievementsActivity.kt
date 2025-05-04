@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -125,14 +127,14 @@ fun AchievementsScreen() {
 
                     if (availableMissions.isNotEmpty()) {
                         Text(
-                            "Missions",
+                            stringResource(R.string.achievements_missions),
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             modifier = Modifier.padding(bottom = 8.dp),
                             fontFamily = Poppins
                         )
                         availableMissions.forEach { (title, starsLabel, starsValue) ->
-                            MissionCard(title, starsLabel, false) {
+                            MissionCard(title, stringResource(R.string.achievements_get_stars, starsLabel), false) {
                                 onMissionCollected(title, starsValue)
                             }
                         }
@@ -162,15 +164,14 @@ fun AchievementsScreen() {
 
 @Composable
 fun MonthHeader() {
-    val months =
-        listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    val months = stringArrayResource(R.array.months)
     val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH)
     val currentMonth = months[currentMonthIndex]
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         Text(
-            "Month",
+            stringResource(R.string.achievements_month),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
@@ -218,7 +219,7 @@ fun ProductivitySection(starsCount: Int) {
     ) {
         Column {
             Text(
-                "Collect the stars and let's see how productive you are!",
+                stringResource(R.string.achievements_collect_stars),
                 fontSize = 11.sp,
                 color = Color.White,
                 fontFamily = Poppins,
@@ -240,7 +241,7 @@ fun ProductivitySection(starsCount: Int) {
                     )
                     Column {
                         Text(
-                            "My Stars",
+                            stringResource(R.string.achievements_my_stars),
                             fontSize = 15.sp,
                             color = Color.White,
                             fontFamily = Poppins,
@@ -261,17 +262,18 @@ fun ProductivitySection(starsCount: Int) {
                         .width(1.dp)
                         .background(Color.White.copy(alpha = 0.5f))
                 )
-                Column(modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 12.dp)) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 12.dp)) {
                     Text(
-                        "Your productivity\nlevel is still low",
+                        stringResource(R.string.achievements_productivity_low),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Text(
-                        "You still have time,\nkeep up the spirit!",
+                        stringResource(R.string.achievements_keep_spirit),
                         fontSize = 12.sp,
                         color = Color.White.copy(alpha = 0.8f),
                         fontFamily = Poppins,
@@ -303,7 +305,7 @@ fun MissionCard(title: String, stars: String, collected: Boolean, onCollect: () 
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(title, fontWeight = FontWeight.Medium, fontSize = 14.sp)
-                Text("Get $stars", fontSize = 12.sp, color = Color.Gray)
+                Text(stars, fontSize = 12.sp, color = Color.Gray)
             }
             if (!collected) {
                 OutlinedButton(
@@ -315,7 +317,7 @@ fun MissionCard(title: String, stars: String, collected: Boolean, onCollect: () 
                         contentColor = Color(0xFFD983BB)
                     )
                 ) {
-                    Text("Collect", fontSize = 14.sp)
+                    Text(stringResource(R.string.achievements_collect), fontSize = 14.sp)
                 }
             }
         }
@@ -326,14 +328,14 @@ fun MissionCard(title: String, stars: String, collected: Boolean, onCollect: () 
 fun CompletedMissionsSection(collected: Set<String>) {
     if (collected.isNotEmpty()) {
         Text(
-            "Completed Missions",
+            stringResource(R.string.achievements_completed_missions),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             fontFamily = Poppins
         )
         Spacer(modifier = Modifier.height(8.dp))
         for (title in collected) {
-            MissionCard(title, "✔", collected = true) { }
+            MissionCard(title, stringResource(R.string.achievements_collected), collected = true) { }
         }
     }
 }

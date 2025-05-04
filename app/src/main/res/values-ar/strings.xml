@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">إليفيت</string>
+    <string name="title_activity_splash_screen1">شاشة البداية 1</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="dashboard">لوحة التحكم</string>
+    <string name="progress">التقدم</string>
+    <string name="active_habits">العادات النشطة</string>
+    <string name="daily_motivation">التحفيز اليومي</string>
+    <string name="your_goals">أهدافك</string>
+    <string name="make_streak">حقق سلسلة</string>
+    <string name="habit">عادة</string>
+    <string name="exercise">تمرين</string>
+    <string name="reading">قراءة</string>
+    <string name="journaling">تدوين</string>
+    <string name="prayer">صلاة</string>
+    <string name="drinking_water">شرب الماء</string>
+    <string name="sleeping_schedule">جدول النوم</string>
+    <string name="add_new_habit">أضف عادة جديدة</string>
+    <string name="habit_details">تفاصيل العادة</string>
+    <string name="focus">التركيز</string>
+    <string name="energy">الطاقة</string>
+    <string name="stars">نجوم</string>
+    <string name="streak">سلسلة</string>
+    <string name="completed_missions">المهام المكتملة</string>
+    <string name="collected_stars">النجوم المجمعة</string>
+    <string name="mission">مهمة</string>
+    <string name="collect">جمع</string>
+    <string name="congratulations">تهانينا!</string>
+    <string name="you_completed_mission">لقد أكملت المهمة</string>
+    <string name="ok">حسناً</string>
+    <string name="cancel">إلغاء</string>
+    <string name="save">حفظ</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">حذف</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="settings">الإعدادات</string>
+    <string name="choose_gender">اختر الجنس</string>
+    <string name="male">ذكر</string>
+    <string name="female">أنثى</string>
+    <string name="other">آخر</string>
+    <string name="birth_date">تاريخ الميلاد</string>
+    <string name="country">البلد</string>
+    <string name="next_button">التالي</string>
+    <string name="back">رجوع</string>
+    <string name="ambassador_badge">شارة السفير</string>
+    <string name="habit_added_successfully">تمت إضافة العادة بنجاح</string>
+    <string name="habit_deleted_successfully">تم حذف العادة بنجاح</string>
+    <string name="habit_updated_successfully">تم تحديث العادة بنجاح</string>
+    <string name="mission_completed">تم إكمال المهمة</string>
+    <string name="mission_failed">فشلت المهمة</string>
+    <string name="try_again">حاول مرة أخرى</string>
+    <string name="good_morning">صباح الخير</string>
+    <string name="good_evening">مساء الخير</string>
+    <string name="good_night">تصبح على خير</string>
+    <string name="reminder">تذكير</string>
+    <string name="reminder_set">تم ضبط التذكير</string>
+    <string name="reminder_time">وقت التذكير</string>
+    <string name="choose_time">اختر الوقت</string>
+    <string name="add_reminder">إضافة تذكير</string>
+    <string name="remove_reminder">إزالة التذكير</string>
+    <string name="edit_reminder">تعديل التذكير</string>
+    <string name="habit_name">اسم العادة</string>
+    <string name="habit_description">وصف العادة</string>
+    <string name="habit_time">وقت العادة</string>
+    <string name="habit_duration">مدة العادة</string>
+    <string name="habit_goal">هدف العادة</string>
+    <string name="habit_progress">تقدم العادة</string>
+    <string name="habit_streak">سلسلة العادة</string>
+    <string name="habit_notes">ملاحظات العادة</string>
+    <string name="add_note">إضافة ملاحظة</string>
+    <string name="edit_note">تعديل الملاحظة</string>
+    <string name="delete_note">حذف الملاحظة</string>
+    <string name="note">ملاحظة</string>
+    <string name="notes">ملاحظات</string>
+    <string name="no_habits">لا توجد عادات بعد</string>
+    <string name="no_missions">لا توجد مهام بعد</string>
+    <string name="no_notes">لا توجد ملاحظات بعد</string>
+    <string name="no_reminders">لا توجد تذكيرات بعد</string>
+    <string name="add_first_habit">أضف عادتك الأولى!</string>
+    <string name="add_first_mission">أضف مهمتك الأولى!</string>
+    <string name="add_first_note">أضف أول ملاحظة!</string>
+    <string name="add_first_reminder">أضف أول تذكير!</string>
+    <string-array name="yes_no_options">
+        <item>نعم</item>
+        <item>لا</item>
+    </string-array>
+    <string name="today">اليوم</string>
+    <string name="this_month">هذا الشهر</string>
+    <string name="language">اللغة</string>
+    <string name="arabic">العربية</string>
+    <string name="english">english</string>
+    <string name="forgot_your_password">نسيت كلمة المرور</string>
+    <string name="next">التالي</string>
+    <string name="lorem_ipsum">لوريم ايبسوم</string>
+    <string name="previous">السابق</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="hi_user">مرحبًا %1$s،</string>
+    <string name="lets_be_productive_today">لنكن منتجين اليوم!</string>
+    <string name="habit_times_per_day">%1$d مرات في اليوم</string>
+    <string name="make_30_days_streak">حقق&#10;سلسلة 30 يومًا!</string>
+    <string name="my_habits">عاداتي</string>
+    <string name="add_habit">+ إضافة عادة</string>
+    <string-array name="months">
+        <item>يناير</item>
+        <item>فبراير</item>
+        <item>مارس</item>
+        <item>أبريل</item>
+        <item>مايو</item>
+        <item>يونيو</item>
+        <item>يوليو</item>
+        <item>أغسطس</item>
+        <item>سبتمبر</item>
+        <item>أكتوبر</item>
+        <item>نوفمبر</item>
+        <item>ديسمبر</item>
+    </string-array>
+    <string-array name="days_of_week">
+        <item>الأحد</item>
+        <item>الاثنين</item>
+        <item>الثلاثاء</item>
+        <item>الأربعاء</item>
+        <item>الخميس</item>
+        <item>الجمعة</item>
+        <item>السبت</item>
+    </string-array>
+    <string name="facebook_app_id" tools:ignore="DuplicateDefinition">123456789012345</string>
+    <string name="facebook_client_token" tools:ignore="DuplicateDefinition">your_facebook_client_token</string>
+    <string name="fb_login_protocol_scheme">fb123456789012345</string>
+    <string name="times_completed">%1$d/%2$d مرات مكتملة</string>
+    <string name="profile_title">الملف الشخصي</string>
+    <string name="profile_ambassador">سفير</string>
+    <string name="profile_total_stars">إجمالي النجوم</string>
+    <string name="profile_streaks">السلاسل</string>
+    <string name="profile_habits">العادات</string>
+    <string name="profile_notifications">الإشعارات</string>
+    <string name="profile_logout">تسجيل الخروج</string>
+    <string name="achievements_title">الإنجازات</string>
+    <string name="achievements_month">الشهر</string>
+    <string name="achievements_collect_stars">اجمع النجوم ودعنا نرى مدى إنتاجيتك!</string>
+    <string name="achievements_my_stars">نجومي</string>
+    <string name="achievements_productivity_low">مستوى إنتاجيتك لا يزال منخفضًا</string>
+    <string name="achievements_keep_spirit">لا يزال لديك وقت، حافظ على روحك!</string>
+    <string name="achievements_missions">المهام</string>
+    <string name="achievements_get_stars">احصل على %1$s</string>
+    <string name="achievements_collect">اجمع</string>
+    <string name="achievements_completed_missions">المهام المكتملة</string>
+    <string name="achievements_collected">تم الجمع ✔</string>
+</resources> 

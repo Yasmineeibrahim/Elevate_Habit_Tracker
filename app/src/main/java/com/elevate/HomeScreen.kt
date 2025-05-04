@@ -18,6 +18,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,12 +44,12 @@ fun HomeScreen() {
         listOf(
             HabitUiData(
                 name = "Exercise",
-                frequency = "2 times a day",
+                timesPerDay = 2,
                 imageRes = R.drawable.exercise
             ),
             HabitUiData(
                 name = "Reading",
-                frequency = "2 times a day",
+                timesPerDay = 2,
                 imageRes = R.drawable.reading_illustration
             )
         )
@@ -94,20 +96,20 @@ fun HomeScreen() {
     }
 }
 
-data class HabitUiData(val name: String, val frequency: String, val imageRes: Int)
+data class HabitUiData(val name: String, val timesPerDay: Int, val imageRes: Int)
 
 @Composable
 private fun GreetingSection(userName: String) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Hi $userName,",
+            text = stringResource(R.string.hi_user, userName),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
             color = Color(0xFF222222)
         )
         Text(
-            text = "Lets be productive Today!",
+            text = stringResource(R.string.lets_be_productive_today),
             fontSize = 16.sp,
             fontFamily = Poppins,
             color = Color(0xFF737373)
@@ -130,19 +132,18 @@ private fun GoalsCard() {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Your Goals",
+                    text = stringResource(R.string.your_goals),
                     fontSize = 16.sp,
                     color = Color.White.copy(alpha = 0.7f),
                     fontFamily = Poppins
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Make\n30 days\nstreak!",
+                    text = stringResource(R.string.make_30_days_streak),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     fontFamily = Poppins,
-
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -169,7 +170,7 @@ private fun MyHabitsSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "My Habits",
+            text = stringResource(R.string.my_habits),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
@@ -180,7 +181,7 @@ private fun MyHabitsSection(
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD983BB)),
             shape = RoundedCornerShape(50)
         ) {
-            Text("+ Add Habit", color = Color.White, fontFamily = Poppins)
+            Text(stringResource(R.string.add_habit), color = Color.White, fontFamily = Poppins)
         }
     }
     Spacer(modifier = Modifier.height(12.dp))
@@ -206,6 +207,11 @@ private fun CalendarView() {
     val firstDayOfMonth = currentMonth.atDay(1)
     val firstDayOfWeek = if (firstDayOfMonth.dayOfWeek.value == 7) 0 else firstDayOfMonth.dayOfWeek.value
 
+    // Do NOT use remember here, so it updates with locale
+    val months = stringArrayResource(R.array.months)
+    val monthName = months[currentMonth.monthValue - 1]
+    val daysOfWeek = stringArrayResource(R.array.days_of_week)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -213,7 +219,7 @@ private fun CalendarView() {
     ) {
         // Month and Year header
         Text(
-            text = "${currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.year}",
+            text = "$monthName ${currentMonth.year}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
@@ -225,7 +231,7 @@ private fun CalendarView() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat").forEach { day ->
+            daysOfWeek.forEach { day ->
                 Text(
                     text = day,
                     fontSize = 12.sp,
@@ -316,7 +322,7 @@ private fun HabitCard(
                         fontFamily = Poppins
                     )
                     Text(
-                        text = habit.frequency,
+                        text = stringResource(R.string.habit_times_per_day, habit.timesPerDay),
                         fontSize = 14.sp,
                         color = Color(0xFF737373),
                         fontFamily = Poppins
@@ -336,9 +342,9 @@ private fun HabitCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Row {
-                        TabButton("Today", selectedTab == 0) { onTabSelected(0) }
+                        TabButton(stringResource(R.string.today), selectedTab == 0) { onTabSelected(0) }
                         Spacer(modifier = Modifier.width(8.dp))
-                        TabButton("This Month", selectedTab == 1) { onTabSelected(1) }
+                        TabButton(stringResource(R.string.this_month), selectedTab == 1) { onTabSelected(1) }
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -363,7 +369,7 @@ private fun HabitCard(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "1/2 times completed",
+                        text = stringResource(R.string.times_completed, 1, 2),
                         fontSize = 14.sp,
                         color = Color(0xFF222222),
                         fontFamily = Poppins,
