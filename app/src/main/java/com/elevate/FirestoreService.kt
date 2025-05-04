@@ -1,12 +1,12 @@
 package com.elevate
 
 import android.util.Log
+import com.elevate.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 
 class FirestoreService {
     private val db = FirebaseFirestore.getInstance()
 
-    // Add a document
     fun addUser(userId: String, userName: String, userEmail: String) {
         val user = hashMapOf(
             "userId" to userId,
@@ -25,45 +25,36 @@ class FirestoreService {
             }
     }
 
-    // Get a document
-    fun getUser(userId: String, function: () -> Unit) {
+    fun getUser(userId: String, onResult: (User?) -> Unit) {
         db.collection("users").document(userId)
             .get()
             .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d("Firestore", "DocumentSnapshot data: ${document.data}")
+                if (document.exists()) {
+                    val user = document.toObject(User::class.java)
+                    onResult(user)
                 } else {
-                    Log.d("Firestore", "No such document")
+                    onResult(null)
                 }
             }
             .addOnFailureListener { exception ->
                 Log.w("Firestore", "Error getting document", exception)
+                onResult(null)
             }
     }
 
-    // Update a document
-    fun updateUser(userId: String, newEmail: String) {
-        val user = hashMapOf("userEmail" to newEmail)
+    fun updateUser(userId: String, user: User) {
+        val updates = mapOf(
+            "userName" to user.userName,
+            "userEmail" to user.userEmail
+        )
 
         db.collection("users").document(userId)
-            .update(user)
+            .update(updates)
             .addOnSuccessListener {
-                Log.d("Firestore", "DocumentSnapshot successfully updated!")
+                Log.d("Firestore", "Document updated!")
             }
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error updating document", e)
-            }
-    }
-
-    // Delete a document
-    fun deleteUser(userId: String) {
-        db.collection("users").document(userId)
-            .delete()
-            .addOnSuccessListener {
-                Log.d("Firestore", "DocumentSnapshot successfully deleted!")
-            }
-            .addOnFailureListener { e ->
-                Log.w("Firestore", "Error deleting document", e)
             }
     }
 }
