@@ -20,13 +20,37 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <!-- Illustration -->
-            <ImageView
+            <!-- Illustration Carousel -->
+            <FrameLayout
+                android:id="@+id/imageCarouselContainer"
                 android:layout_width="306dp"
-                android:layout_height="306dp"
-                android:src="@drawable/curly"
-                android:contentDescription="Drinking water"
-                android:scaleType="fitXY" />
+                android:layout_height="306dp">
+
+                <ImageView
+                    android:id="@+id/habitImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:contentDescription="Habit image" />
+
+                <ImageButton
+                    android:id="@+id/arrowLeft"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_arrow_left_24"
+                    android:contentDescription="Previous image" />
+
+                <ImageButton
+                    android:id="@+id/arrowRight"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Next image" />
+            </FrameLayout>
 
             <!-- Title -->
             <TextView
