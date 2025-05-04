@@ -20,7 +20,7 @@ class NewHabitActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_habit) // Replace with your actual XML filename if different
+        setContentView(R.layout.activity_new_habit)
 
         habitNameInput = findViewById(R.id.inputHabitName)
         timesPerDayInput = findViewById(R.id.inputTimesPerDay)
@@ -82,9 +82,23 @@ class NewHabitActivity : AppCompatActivity() {
             return
         }
 
+        // Create new habit
+        val newHabit = HabitUiData(
+            name = habitName,
+            frequency = "$timesPerDay times a day",
+            imageRes = R.drawable.exercise // Default image, you can change this based on habit type
+        )
 
-        Toast.makeText(this, "Habit saved successfully", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, WelcomeActivity::class.java)
+        // Save the habit
+        val preferences = SharedPreferencesHelper(this)
+        preferences.addHabit(newHabit)
+
+        Toast.makeText(this, "Habit added successfully", Toast.LENGTH_SHORT).show()
+        
+        // Return to MainActivity which hosts the HomeScreen
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
+        finish()
     }
 }

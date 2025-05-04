@@ -59,10 +59,12 @@ class RegisterActivity : AppCompatActivity() {
 
         // Email/Password Registration
         binding.registerButton.setOnClickListener {
+            val firstName = binding.firstName.text.toString()
+            val lastName = binding.lastName.text.toString()
             val email = binding.email.editText?.text.toString()
             val password = binding.password.editText?.text.toString()
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -75,6 +77,10 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        // Save user's name
+                        val preferences = SharedPreferencesHelper(this)
+                        preferences.setUserName(firstName, lastName)
+                        
                         Toast.makeText(this, "Registration successful! Please login", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, LoginActivity::class.java))
                         finish()

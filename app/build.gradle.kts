@@ -82,7 +82,6 @@ dependencies {
 
     implementation ("com.facebook.android:facebook-login:[8,9)")
 
-
-
-
+    // Gson for JSON serialization
+    implementation("com.google.code.gson:gson:2.10.1")
 }
