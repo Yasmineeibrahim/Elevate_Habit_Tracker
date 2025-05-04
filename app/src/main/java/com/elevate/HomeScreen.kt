@@ -30,6 +30,14 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 
 @Composable
 fun HomeScreen() {
@@ -156,6 +164,7 @@ private fun GoalsCard() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun MyHabitsSection(
     habits: List<HabitUiData>,
@@ -165,6 +174,10 @@ private fun MyHabitsSection(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit
 ) {
+    val context = LocalContext.current
+    val preferences = remember { SharedPreferencesHelper(context) }
+    var habitList by remember { mutableStateOf(habits.toMutableList()) }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -186,15 +199,56 @@ private fun MyHabitsSection(
     }
     Spacer(modifier = Modifier.height(12.dp))
     Column {
-        habits.forEach { habit ->
-            HabitCard(
-                habit = habit,
-                expanded = expandedHabit == habit,
-                onClick = { onHabitClick(habit) },
-                selectedTab = selectedTab,
-                onTabSelected = onTabSelected
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+        habitList.forEach { habit ->
+            key(habit.name) {
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        if (it == DismissValue.DismissedToStart) {
+                            habitList = habitList.filter { h -> h != habit }.toMutableList()
+                            preferences.saveHabits(habitList)
+                            true
+                        } else false
+                    }
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    background = {
+                        val progress = dismissState.progress.fraction
+                        if (progress > 0f) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(Color.Red)
+                                    .padding(horizontal = 20.dp),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                IconButton(onClick = {
+                                    habitList = habitList.filter { h -> h != habit }.toMutableList()
+                                    preferences.saveHabits(habitList)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = stringResource(R.string.delete),
+                                        tint = Color.White
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    dismissContent = {
+                        HabitCard(
+                            habit = habit,
+                            expanded = expandedHabit == habit,
+                            onClick = { onHabitClick(habit) },
+                            selectedTab = selectedTab,
+                            onTabSelected = onTabSelected
+                        )
+                    }
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
     }
 }
