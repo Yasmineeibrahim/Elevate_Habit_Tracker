@@ -20,7 +20,21 @@ class SharedPreferencesHelper(context: Context) {
 
     fun getSelectedLanguage(): String {
         return prefs.getString("selected_language", "English") ?: "English"
-        return prefs.getString("selected_language", "Arabic") ?: "Arabic"
+    }
+
+    fun setUserName(firstName: String, lastName: String) {
+        prefs.edit().putString("user_first_name", firstName).apply()
+        prefs.edit().putString("user_last_name", lastName).apply()
+    }
+
+    fun getUserName(): String {
+        val firstName = prefs.getString("user_first_name", "") ?: ""
+        val lastName = prefs.getString("user_last_name", "") ?: ""
+        return if (firstName.isNotEmpty() || lastName.isNotEmpty()) {
+            "$firstName $lastName".trim()
+        } else {
+            "User"
+        }
     }
 
     fun clearAll() {

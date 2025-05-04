@@ -26,9 +26,13 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import androidx.compose.ui.platform.LocalContext
+import android.content.Intent
 
 @Composable
 fun HomeScreen() {
+    val context = LocalContext.current
+    val preferences = remember { SharedPreferencesHelper(context) }
     var expandedHabit by remember { mutableStateOf<HabitUiData?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
     val habits = listOf(
@@ -53,14 +57,16 @@ fun HomeScreen() {
                 .padding(24.dp)
                 .padding(bottom = 72.dp)
         ) {
-            GreetingSection()
+            GreetingSection(preferences.getUserName())
             Spacer(modifier = Modifier.height(16.dp))
             GoalsCard()
             Spacer(modifier = Modifier.height(16.dp))
             MyHabitsSection(
                 habits = habits,
                 expandedHabit = expandedHabit,
-                onAddHabit = { /* TODO: Add Habit */ },
+                onAddHabit = { 
+                    context.startActivity(Intent(context, NewHabitActivity::class.java))
+                },
                 onHabitClick = { habit ->
                     expandedHabit = if (expandedHabit == habit) null else habit
                 },
@@ -84,10 +90,10 @@ fun HomeScreen() {
 data class HabitUiData(val name: String, val frequency: String, val imageRes: Int)
 
 @Composable
-private fun GreetingSection() {
+private fun GreetingSection(userName: String) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Hi User,",
+            text = "Hi $userName,",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
