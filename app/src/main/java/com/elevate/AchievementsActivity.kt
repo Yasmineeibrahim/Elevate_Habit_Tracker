@@ -134,7 +134,11 @@ fun AchievementsScreen() {
                             fontFamily = Poppins
                         )
                         availableMissions.forEach { (title, starsLabel, starsValue) ->
-                            MissionCard(title, stringResource(R.string.achievements_get_stars, starsLabel), false) {
+                            MissionCard(
+                                title,
+                                stringResource(R.string.achievements_get_stars, starsLabel),
+                                false
+                            ) {
                                 onMissionCollected(title, starsValue)
                             }
                         }
@@ -144,6 +148,7 @@ fun AchievementsScreen() {
                     CompletedMissionsSection(collectedMissions.value)
                 }
             }
+
             "profile" -> ProfileScreen(null)
         }
 
@@ -178,9 +183,11 @@ fun MonthHeader() {
             modifier = Modifier.padding(top = 22.dp, bottom = 16.dp),
             fontFamily = Poppins
         )
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp), contentAlignment = Alignment.Center
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.pink_icon),
                 contentDescription = null,
@@ -265,7 +272,8 @@ fun ProductivitySection(starsCount: Int) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 12.dp)) {
+                        .padding(start = 12.dp)
+                ) {
                     Text(
                         stringResource(R.string.achievements_productivity_low),
                         fontSize = 14.sp,
@@ -335,7 +343,11 @@ fun CompletedMissionsSection(collected: Set<String>) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         for (title in collected) {
-            MissionCard(title, stringResource(R.string.achievements_collected), collected = true) { }
+            MissionCard(
+                title,
+                stringResource(R.string.achievements_collected),
+                collected = true
+            ) { }
         }
     }
 }

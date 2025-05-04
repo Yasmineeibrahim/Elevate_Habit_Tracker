@@ -5,11 +5,11 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
-import android.widget.ImageButton
 
 class NewHabitActivity : AppCompatActivity() {
 
@@ -52,7 +52,8 @@ class NewHabitActivity : AppCompatActivity() {
         updateHabitImage()
 
         arrowLeft.setOnClickListener {
-            currentImageIndex = if (currentImageIndex - 1 < 0) habitImages.size - 1 else currentImageIndex - 1
+            currentImageIndex =
+                if (currentImageIndex - 1 < 0) habitImages.size - 1 else currentImageIndex - 1
             updateHabitImage()
         }
         arrowRight.setOnClickListener {
@@ -129,7 +130,7 @@ class NewHabitActivity : AppCompatActivity() {
         preferences.addHabit(newHabit)
 
         Toast.makeText(this, "Habit added successfully", Toast.LENGTH_SHORT).show()
-        
+
         // Return to MainActivity which hosts the HomeScreen
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

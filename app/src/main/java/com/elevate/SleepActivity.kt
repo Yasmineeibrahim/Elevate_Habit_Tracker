@@ -125,6 +125,7 @@ fun SleepScreen(onNextClicked: () -> Unit = {}) {
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SleepActivityPreview() {

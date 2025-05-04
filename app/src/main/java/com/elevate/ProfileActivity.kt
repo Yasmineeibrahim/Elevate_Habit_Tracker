@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,23 +42,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.elevate.utils.LocaleUtils
-import com.elevate.components.BottomNavigationBar
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,9 +131,9 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                StatItem("112", stringResource(R.string.profile_total_stars))
+                StatItem(loadStarsCount(context).toString(), stringResource(R.string.profile_total_stars))
                 StatItem("627", stringResource(R.string.profile_streaks))
-                StatItem("8", stringResource(R.string.profile_habits))
+                StatItem(preferences.getHabits().size.toString(), stringResource(R.string.profile_habits))
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -216,7 +210,11 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                                     preferences.setSelectedLanguage("Arabic")
                                     LocaleUtils.setLocale(context, "ar")
                                     languageExpanded = false
-                                    (context as? android.app.Activity)?.let { LocaleUtils.recreateActivity(it) }
+                                    (context as? android.app.Activity)?.let {
+                                        LocaleUtils.recreateActivity(
+                                            it
+                                        )
+                                    }
                                 }
                         )
                         Text(
@@ -230,7 +228,11 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
                                     preferences.setSelectedLanguage("English")
                                     LocaleUtils.setLocale(context, "en")
                                     languageExpanded = false
-                                    (context as? android.app.Activity)?.let { LocaleUtils.recreateActivity(it) }
+                                    (context as? android.app.Activity)?.let {
+                                        LocaleUtils.recreateActivity(
+                                            it
+                                        )
+                                    }
                                 }
                         )
                     }
@@ -241,10 +243,10 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
 
             Button(
                 onClick = {
-                        preferences.clearAll()
-                        val intent = Intent(context, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        context.startActivity(intent)
+                    preferences.clearAll()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    context.startActivity(intent)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

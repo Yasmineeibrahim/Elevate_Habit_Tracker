@@ -5,21 +5,51 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,16 +58,6 @@ import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.Poppins
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.TextStyle
-import java.util.Locale
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.rememberDismissState
-import androidx.compose.material3.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 
 @Composable
 fun HomeScreen() {
@@ -45,7 +65,7 @@ fun HomeScreen() {
     val preferences = remember { SharedPreferencesHelper(context) }
     var expandedHabit by remember { mutableStateOf<HabitUiData?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
-    
+
     // Get saved habits or use default list if none exist
     val savedHabits = remember { preferences.getHabits() }
     val habits = if (savedHabits.isEmpty()) {
@@ -81,7 +101,7 @@ fun HomeScreen() {
             MyHabitsSection(
                 habits = habits,
                 expandedHabit = expandedHabit,
-                onAddHabit = { 
+                onAddHabit = {
                     context.startActivity(Intent(context, NewHabitActivity::class.java))
                 },
                 onHabitClick = { habit ->
@@ -135,7 +155,9 @@ private fun GoalsCard() {
         shape = RoundedCornerShape(24.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
@@ -259,7 +281,8 @@ private fun CalendarView() {
     val currentMonth = YearMonth.now()
     val daysInMonth = currentMonth.lengthOfMonth()
     val firstDayOfMonth = currentMonth.atDay(1)
-    val firstDayOfWeek = if (firstDayOfMonth.dayOfWeek.value == 7) 0 else firstDayOfMonth.dayOfWeek.value
+    val firstDayOfWeek =
+        if (firstDayOfMonth.dayOfWeek.value == 7) 0 else firstDayOfMonth.dayOfWeek.value
 
     // Do NOT use remember here, so it updates with locale
     val months = stringArrayResource(R.array.months)
@@ -396,9 +419,16 @@ private fun HabitCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Row {
-                        TabButton(stringResource(R.string.today), selectedTab == 0) { onTabSelected(0) }
+                        TabButton(stringResource(R.string.today), selectedTab == 0) {
+                            onTabSelected(
+                                0
+                            )
+                        }
                         Spacer(modifier = Modifier.width(8.dp))
-                        TabButton(stringResource(R.string.this_month), selectedTab == 1) { onTabSelected(1) }
+                        TabButton(
+                            stringResource(R.string.this_month),
+                            selectedTab == 1
+                        ) { onTabSelected(1) }
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
