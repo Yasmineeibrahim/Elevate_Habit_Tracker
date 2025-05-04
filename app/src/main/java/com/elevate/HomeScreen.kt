@@ -69,7 +69,18 @@ fun HomeScreen() {
     // Get saved habits or use default list if none exist
     val savedHabits = remember { preferences.getHabits() }
     val habits = if (savedHabits.isEmpty()) {
-        emptyList()
+        listOf(
+            HabitUiData(
+                name = "Exercise",
+                timesPerDay = 2,
+                imageRes = R.drawable.exercise
+            ),
+            HabitUiData(
+                name = "Reading",
+                timesPerDay = 2,
+                imageRes = R.drawable.reading_illustration
+            )
+        )
     } else {
         savedHabits
     }
