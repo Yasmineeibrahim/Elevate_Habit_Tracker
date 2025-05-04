@@ -9,13 +9,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
-import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel = ProfileViewModel(applicationContext)
-        FirebaseFirestore.setLoggingEnabled(true)
+
         setContent {
             ->
             MaterialTheme {

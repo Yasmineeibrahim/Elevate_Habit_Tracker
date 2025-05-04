@@ -54,18 +54,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.elevate.utils.updateLocale
+import com.elevate.components.BottomNavigationBar
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        
+        val viewModel = ProfileViewModel(applicationContext)
+        
         setContent {
             ElevateTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    val viewModel = null
                     ProfileScreen(viewModel)
                 }
             }
@@ -74,11 +78,10 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfileScreen(viewModel: Unit) {
-    var selectedIndex by remember { mutableStateOf(2) }
+fun ProfileScreen(viewModel: ProfileViewModel?) {
     val context = LocalContext.current
     val preferences = remember { SharedPreferencesHelper(context) }
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    var notificationsEnabled by remember { mutableStateOf(viewModel?.notificationsEnabled ?: true) }
     var languageExpanded by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf("English") }
 
@@ -151,8 +154,11 @@ fun ProfileScreen(viewModel: Unit) {
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it
-                        preferences.setNotificationsEnabled(it) },
+                    onCheckedChange = { enabled ->
+                        notificationsEnabled = enabled
+                        viewModel?.toggleNotifications(enabled)
+                        preferences.setNotificationsEnabled(enabled)
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color(0xFFFF7EB6),
                         uncheckedThumbColor = Color.Gray,
@@ -168,10 +174,7 @@ fun ProfileScreen(viewModel: Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 12.dp)
-                        .clickable {  selectedLanguage = "Arabic"
-                            preferences.setSelectedLanguage("Arabic")
-                            context.updateLocale("ar") // or "en" for English
-                             }
+                        .clickable { languageExpanded = !languageExpanded }
                 ) {
                     Box(
                         modifier = Modifier
@@ -188,7 +191,13 @@ fun ProfileScreen(viewModel: Unit) {
                 }
 
                 if (languageExpanded) {
-                    Column(modifier = Modifier.padding(start = 40.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 40.dp)
+                            .background(Color.White, RoundedCornerShape(8.dp))
+                            .padding(8.dp)
+                    ) {
                         Text(
                             text = "Arabic",
                             fontWeight = if (selectedLanguage == "Arabic") FontWeight.Bold else FontWeight.Normal,
@@ -197,6 +206,9 @@ fun ProfileScreen(viewModel: Unit) {
                                 .padding(vertical = 8.dp)
                                 .clickable {
                                     selectedLanguage = "Arabic"
+                                    preferences.setSelectedLanguage("Arabic")
+                                    context.updateLocale("ar")
+                                    languageExpanded = false
                                 }
                         )
                         Text(
@@ -207,6 +219,9 @@ fun ProfileScreen(viewModel: Unit) {
                                 .padding(vertical = 8.dp)
                                 .clickable {
                                     selectedLanguage = "English"
+                                    preferences.setSelectedLanguage("English")
+                                    context.updateLocale("en")
+                                    languageExpanded = false
                                 }
                         )
                     }
@@ -262,55 +277,13 @@ fun ProfileScreen(viewModel: Unit) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(16.dp)
         ) {
-            AnimatedNavigationBar(
-                selectedIndex = selectedIndex,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp)
-                    .background(Color(0xFFD983BB), RoundedCornerShape(36.dp))
-                    .shadow(8.dp, RoundedCornerShape(36.dp), spotColor = Color(0xFFD983BB).copy(alpha = 0.5f)),
-                ballColor = Color.White,
-                barColor = Color(0xFFD983BB)
-            ) {
-                BottomNavItem(
-                    selected = selectedIndex == 0,
-                    iconId = R.drawable.ic_home,
-                    label = "Home"
-                ) {
-                    selectedIndex = 0
-                }
-                BottomNavItem(
-                    selected = selectedIndex == 1,
-                    iconId = R.drawable.ic_achievements,
-                    label = "Achievements"
-                ) {
-                    selectedIndex = 1
-                    val intent = Intent(context, AchievementsActivity::class.java)
-                    context.startActivity(intent)
-                }
-                BottomNavItem(
-                    selected = selectedIndex == 2,
-                    iconId = R.drawable.person_icon,
-                    label = "Profile"
-                ) {
-                    selectedIndex = 2
-                }
-            }
+            BottomNavigationBar(
+                currentScreen = "profile",
+                onNavigate = { /* Handle navigation if needed */ }
+            )
         }
     }
-}
-
-@Composable
-fun AnimatedNavigationBar(
-    selectedIndex: Int,
-    modifier: Modifier,
-    ballColor: Color,
-    barColor: Color,
-    content: @Composable () -> Unit
-) {
-    TODO("Not yet implemented")
 }
 
 @Composable
@@ -331,36 +304,10 @@ fun StatItem(value: String, label: String) {
     }
 }
 
-@Composable
-fun BottomNavItem(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = iconId),
-                contentDescription = label,
-                modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(
-                    if (selected) Color.White else Color.White.copy(alpha = 0.7f)
-                )
-            )
-            Text(
-                text = label,
-                fontSize = 12.sp,
-                color = if (selected) Color.White else Color.White.copy(alpha = 0.7f)
-            )
-        }
-    }
-}
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ProfileScreenPreview() {
     ElevateTheme {
-        ProfileScreen(viewModel = ViewModel)
+        ProfileScreen(viewModel = null)
     }
 }

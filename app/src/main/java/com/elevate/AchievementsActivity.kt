@@ -1,14 +1,12 @@
 package com.elevate
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,10 +41,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
-import com.exyte.animatednavbar.AnimatedNavigationBar
-import com.exyte.animatednavbar.utils.noRippleClickable
 import java.util.Calendar
 
 class AchievementsActivity : ComponentActivity() {
@@ -90,7 +87,7 @@ fun loadStarsCount(context: Context): Int {
 @Composable
 fun AchievementsScreen() {
     val context = LocalContext.current
-    var selectedIndex by remember { mutableStateOf(1) }
+    var currentScreen by remember { mutableStateOf("achievements") }
     var starsCount by remember { mutableStateOf(loadStarsCount(context)) }
     val collectedMissions = remember { mutableStateOf(loadCompletedMissions(context)) }
 
@@ -110,114 +107,58 @@ fun AchievementsScreen() {
     ).filterNot { collectedMissions.value.contains(it.first) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(Color(0xFFFFF0F5))
-                .padding(16.dp)
-                .padding(bottom = 72.dp)
-        ) {
-            MonthHeader()
-            Spacer(modifier = Modifier.height(12.dp))
-            ProductivitySection(starsCount)
-            Spacer(modifier = Modifier.height(16.dp))
+        when (currentScreen) {
+            "home" -> HomeScreen()
+            "achievements" -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .background(Color(0xFFFFF0F5))
+                        .padding(16.dp)
+                        .padding(bottom = 72.dp)
+                ) {
+                    MonthHeader()
+                    Spacer(modifier = Modifier.height(12.dp))
+                    ProductivitySection(starsCount)
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            if (availableMissions.isNotEmpty()) {
-                Text(
-                    "Missions",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    fontFamily = Poppins
-                )
-                availableMissions.forEach { (title, starsLabel, starsValue) ->
-                    MissionCard(title, starsLabel, false) {
-                        onMissionCollected(title, starsValue)
+                    if (availableMissions.isNotEmpty()) {
+                        Text(
+                            "Missions",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            fontFamily = Poppins
+                        )
+                        availableMissions.forEach { (title, starsLabel, starsValue) ->
+                            MissionCard(title, starsLabel, false) {
+                                onMissionCollected(title, starsValue)
+                            }
+                        }
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    CompletedMissionsSection(collectedMissions.value)
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-            CompletedMissionsSection(collectedMissions.value)
+            "profile" -> ProfileScreen(null)
         }
 
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            AnimatedNavigationBar(
-                selectedIndex = selectedIndex,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp)
-                    .background(Color(0xFFD983BB), RoundedCornerShape(36.dp))
-                    .shadow(
-                        8.dp,
-                        RoundedCornerShape(36.dp),
-                        spotColor = Color(0xFFD983BB).copy(alpha = 0.5f)
-                    ),
-                ballColor = Color.White,
-                barColor = Color(0xFFD983BB)
-            ) {
-                BottomNavItemForAchievements(
-                    selected = selectedIndex == 0,
-                    iconId = R.drawable.ic_home,
-                    label = "Home"
-                ) {
-                    selectedIndex = 0
+            BottomNavigationBar(
+                currentScreen = currentScreen,
+                onNavigate = { screen ->
+                    currentScreen = screen
                 }
-                BottomNavItemForAchievements(
-                    selected = selectedIndex == 1,
-                    iconId = R.drawable.ic_achievements,
-                    label = "Achievements"
-                ) {
-                    selectedIndex = 1
-                }
-                BottomNavItemForAchievements(
-                    selected = selectedIndex == 2,  // Updated this to match the Profile index
-                    iconId = R.drawable.person_icon,
-                    label = "Profile"
-                ) {
-                    selectedIndex = 2
-                    // Navigate to ProfileActivity when Profile tab is selected
-                    val intent = Intent(context, ProfileActivity::class.java)
-                    context.startActivity(intent)
-                }
-            }
-        }
-    }
-}
-
-// In AchievementsActivity.kt
-@Composable
-fun BottomNavItemForAchievements(selected: Boolean, iconId: Int, label: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable { onClick() }, // fallback clickable
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = iconId),
-                contentDescription = label,
-                modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(
-                    if (selected) Color.White else Color.White.copy(alpha = 0.7f)
-                )
-            )
-            Text(
-                text = label,
-                fontSize = 12.sp,
-                color = if (selected) Color.White else Color.White.copy(alpha = 0.7f)
             )
         }
     }
 }
-
 
 @Composable
 fun MonthHeader() {
