@@ -54,6 +54,11 @@ import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.elevate.utils.LocaleUtils
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,19 +109,24 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            val composition by rememberLottieComposition(
+                LottieCompositionSpec.Url("https://lottie.host/3493e215-7855-4434-8d57-13b8e91fafcb/hKS6lUDY5n.lottie")
+            )
+            val progress by animateLottieCompositionAsState(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+                speed = 0.5f
+            )
             Box(
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(150.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFFD983BB))
+                    .background(Color.Transparent)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(50.dp)
+                LottieAnimation(
+                    composition = composition,
+                    progress = { progress },
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
