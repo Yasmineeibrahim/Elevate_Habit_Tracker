@@ -128,7 +128,7 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text(stringResource(R.string.profile_title), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(preferences.getUserName(), fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Text(stringResource(R.string.profile_ambassador), color = Color.Gray, fontSize = 14.sp)
 
             Spacer(modifier = Modifier.height(16.dp))
