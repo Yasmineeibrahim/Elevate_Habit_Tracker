@@ -58,6 +58,11 @@ import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.Poppins
 import java.time.LocalDate
 import java.time.YearMonth
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun HomeScreen() {
@@ -69,18 +74,7 @@ fun HomeScreen() {
     // Get saved habits or use default list if none exist
     val savedHabits = remember { preferences.getHabits() }
     val habits = if (savedHabits.isEmpty()) {
-        listOf(
-            HabitUiData(
-                name = "Exercise",
-                timesPerDay = 2,
-                imageRes = R.drawable.exercise
-            ),
-            HabitUiData(
-                name = "Reading",
-                timesPerDay = 2,
-                imageRes = R.drawable.reading_illustration
-            )
-        )
+        emptyList()
     } else {
         savedHabits
     }
@@ -220,56 +214,75 @@ private fun MyHabitsSection(
         }
     }
     Spacer(modifier = Modifier.height(12.dp))
-    Column {
-        habitList.forEach { habit ->
-            key(habit.name) {
-                val dismissState = rememberDismissState(
-                    confirmStateChange = {
-                        if (it == DismissValue.DismissedToStart) {
-                            habitList = habitList.filter { h -> h != habit }.toMutableList()
-                            preferences.saveHabits(habitList)
-                            true
-                        } else false
-                    }
-                )
-                SwipeToDismiss(
-                    state = dismissState,
-                    directions = setOf(DismissDirection.EndToStart),
-                    background = {
-                        val progress = dismissState.progress.fraction
-                        if (progress > 0f) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(Color.Red)
-                                    .padding(horizontal = 20.dp),
-                                contentAlignment = Alignment.CenterEnd
-                            ) {
-                                IconButton(onClick = {
-                                    habitList = habitList.filter { h -> h != habit }.toMutableList()
-                                    preferences.saveHabits(habitList)
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = stringResource(R.string.delete),
-                                        tint = Color.White
-                                    )
+    
+    if (habitList.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            val composition by rememberLottieComposition(
+                LottieCompositionSpec.Url("https://lottie.host/8a4b60ad-7cae-4600-96ae-0933ce1078d1/9uu0862eDC.lottie")
+            )
+            LottieAnimation(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+                modifier = Modifier.size(200.dp)
+            )
+        }
+    } else {
+        Column {
+            habitList.forEach { habit ->
+                key(habit.name) {
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                habitList = habitList.filter { h -> h != habit }.toMutableList()
+                                preferences.saveHabits(habitList)
+                                true
+                            } else false
+                        }
+                    )
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        background = {
+                            val progress = dismissState.progress.fraction
+                            if (progress > 0f) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(Color.Red)
+                                        .padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    IconButton(onClick = {
+                                        habitList = habitList.filter { h -> h != habit }.toMutableList()
+                                        preferences.saveHabits(habitList)
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = stringResource(R.string.delete),
+                                            tint = Color.White
+                                        )
+                                    }
                                 }
                             }
+                        },
+                        dismissContent = {
+                            HabitCard(
+                                habit = habit,
+                                expanded = expandedHabit == habit,
+                                onClick = { onHabitClick(habit) },
+                                selectedTab = selectedTab,
+                                onTabSelected = onTabSelected
+                            )
                         }
-                    },
-                    dismissContent = {
-                        HabitCard(
-                            habit = habit,
-                            expanded = expandedHabit == habit,
-                            onClick = { onHabitClick(habit) },
-                            selectedTab = selectedTab,
-                            onTabSelected = onTabSelected
-                        )
-                    }
-                )
-                Spacer(modifier = Modifier.height(12.dp))
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
         }
     }
