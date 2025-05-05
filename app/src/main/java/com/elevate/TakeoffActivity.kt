@@ -8,12 +8,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TakeoffActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var nextButton: Button
-    private val selectedHabitsInOrder = mutableListOf<Habit>()  // Stores selected habits in the order chosen
+    private lateinit var fab: FloatingActionButton
+    private val selectedHabitsInOrder = mutableListOf<Habit>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +23,7 @@ class TakeoffActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.habitsRecyclerView)
         nextButton = findViewById(R.id.nextButton)
+        fab = findViewById(R.id.fab)
 
         // List of all available habits
         val habitList = listOf(
@@ -43,9 +46,13 @@ class TakeoffActivity : AppCompatActivity() {
         }
 
 
-        recyclerView.layoutManager = GridLayoutManager(this, 2) // 2 columns
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
+        onClicks()
+    }
+
+    private fun onClicks() {
         nextButton.setOnClickListener {
             if (selectedHabitsInOrder.isEmpty()) {
                 Toast.makeText(this, "Please select at least one habit", Toast.LENGTH_SHORT).show()
@@ -53,38 +60,36 @@ class TakeoffActivity : AppCompatActivity() {
             }
 
             // Start showing habits in the order selected
-            showSelectedHabits(0)
+            showSelectedHabits()
+        }
+
+        fab.setOnClickListener {
+            val intent = Intent(this, NewHabitActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
-    private fun showSelectedHabits(index: Int) {
-        if (index >= selectedHabitsInOrder.size) {
-            // Once all habits are completed, navigate to the WelcomeActivity
-            startActivity(Intent(this, WelcomeActivity::class.java))
-            finish()
-            return
-        }
-
-        val currentHabit = selectedHabitsInOrder[index]
+    private fun showSelectedHabits() {
+        val currentHabit = selectedHabitsInOrder.first()
 
         // Show the habit screen for the current habit
         when (currentHabit.title) {
-            "Exercise" -> showHabitScreen(ExerciseActivity::class.java, index)
-            "Reading" -> showHabitScreen(ReadingInitActivity::class.java, index)
-            "Journaling" -> showHabitScreen(JournalingActivity::class.java, index)
-            "Prayer" -> showHabitScreen(PrayerActivity::class.java, index)
-            "Drinking water" -> showHabitScreen(DrinkingWaterActivity::class.java, index)
-            "Sleeping Schedule" -> showHabitScreen(SleepingScheduleActivity::class.java, index)
-            else -> showSelectedHabits(index + 1)
+            "Exercise" -> showHabitScreen(ExerciseActivity::class.java)
+            "Reading" -> showHabitScreen(ReadingInitActivity::class.java)
+            "Journaling" -> showHabitScreen(JournalingActivity::class.java)
+            "Prayer" -> showHabitScreen(PrayerActivity::class.java)
+            "Drinking water" -> showHabitScreen(DrinkingWaterActivity::class.java)
+            "Sleeping Schedule" -> showHabitScreen(SleepingScheduleActivity::class.java)
+            else -> Unit
         }
     }
 
-    private fun showHabitScreen(activityClass: Class<*>, index: Int) {
+    private fun showHabitScreen(activityClass: Class<*>) {
         val intent = Intent(this, activityClass)
-        intent.putExtra("NEXT_INDEX", index + 1)
+        intent.putExtra("NEXT_INDEX", 1)
         intent.putParcelableArrayListExtra("SELECTED_HABITS", ArrayList(selectedHabitsInOrder))
         startActivity(intent)
-        finish()
     }
 }
 

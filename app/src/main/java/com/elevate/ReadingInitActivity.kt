@@ -1,19 +1,31 @@
 package com.elevate
 
-import android.content.Intent
-import android.graphics.drawable.GradientDrawable
+import Habit
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.elevate.databinding.ActivityReadingInitBinding
+import com.elevate.utils.Util.onNavigationToNextActivity
 
 class ReadingInitActivity : AppCompatActivity() {
+
+    private var nextIndex = -1
+    private lateinit var selectedHabits: ArrayList<Habit>
+    private lateinit var binding: ActivityReadingInitBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_reading_init)
+        binding = ActivityReadingInitBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
+        selectedHabits =
+            intent.getParcelableArrayListExtra<Habit>("SELECTED_HABITS") ?: arrayListOf()
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -21,31 +33,12 @@ class ReadingInitActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<Button>(R.id.continue_button).setOnClickListener {
+        binding.continueButton.setOnClickListener {
             continueToNext()
         }
     }
 
     private fun continueToNext() {
-        val nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
-        val habitTitles = intent.getStringArrayListExtra("HABIT_LIST")
-
-        if (habitTitles != null && nextIndex < habitTitles.size) {
-            val nextTitle = habitTitles[nextIndex]
-            val nextIntent = when (nextTitle) {
-                "Reading" -> Intent(this, ReadingInitActivity::class.java)
-                "Drinking water" -> Intent(this, DrinkingWaterActivity::class.java)
-                "Sleeping Schedule" -> Intent(this, SleepingScheduleActivity::class.java)
-                else -> Intent(this, WelcomeActivity::class.java)
-            }
-
-            nextIntent.putExtra("NEXT_INDEX", nextIndex + 1)
-            nextIntent.putExtra("HABIT_LIST", habitTitles)
-            startActivity(nextIntent)
-        } else {
-            startActivity(Intent(this, WelcomeActivity::class.java))
-        }
-
-        finish()
+        onNavigationToNextActivity(nextIndex, selectedHabits)
     }
 }

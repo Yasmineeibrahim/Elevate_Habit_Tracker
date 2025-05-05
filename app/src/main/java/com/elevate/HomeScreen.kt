@@ -5,19 +5,51 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,8 +58,11 @@ import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.Poppins
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.TextStyle
-import java.util.Locale
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun HomeScreen() {
@@ -35,22 +70,11 @@ fun HomeScreen() {
     val preferences = remember { SharedPreferencesHelper(context) }
     var expandedHabit by remember { mutableStateOf<HabitUiData?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
-    
+
     // Get saved habits or use default list if none exist
     val savedHabits = remember { preferences.getHabits() }
     val habits = if (savedHabits.isEmpty()) {
-        listOf(
-            HabitUiData(
-                name = "Exercise",
-                frequency = "2 times a day",
-                imageRes = R.drawable.exercise
-            ),
-            HabitUiData(
-                name = "Reading",
-                frequency = "2 times a day",
-                imageRes = R.drawable.reading_illustration
-            )
-        )
+        emptyList()
     } else {
         savedHabits
     }
@@ -71,7 +95,7 @@ fun HomeScreen() {
             MyHabitsSection(
                 habits = habits,
                 expandedHabit = expandedHabit,
-                onAddHabit = { 
+                onAddHabit = {
                     context.startActivity(Intent(context, NewHabitActivity::class.java))
                 },
                 onHabitClick = { habit ->
@@ -94,20 +118,20 @@ fun HomeScreen() {
     }
 }
 
-data class HabitUiData(val name: String, val frequency: String, val imageRes: Int)
+data class HabitUiData(val name: String, val timesPerDay: Int, val imageRes: Int)
 
 @Composable
 private fun GreetingSection(userName: String) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Hi $userName,",
+            text = stringResource(R.string.hi_user, userName),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
             color = Color(0xFF222222)
         )
         Text(
-            text = "Lets be productive Today!",
+            text = stringResource(R.string.lets_be_productive_today),
             fontSize = 16.sp,
             fontFamily = Poppins,
             color = Color(0xFF737373)
@@ -125,24 +149,25 @@ private fun GoalsCard() {
         shape = RoundedCornerShape(24.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Your Goals",
+                    text = stringResource(R.string.your_goals),
                     fontSize = 16.sp,
                     color = Color.White.copy(alpha = 0.7f),
                     fontFamily = Poppins
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Make\n30 days\nstreak!",
+                    text = stringResource(R.string.make_30_days_streak),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     fontFamily = Poppins,
-
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -155,6 +180,7 @@ private fun GoalsCard() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun MyHabitsSection(
     habits: List<HabitUiData>,
@@ -164,12 +190,16 @@ private fun MyHabitsSection(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit
 ) {
+    val context = LocalContext.current
+    val preferences = remember { SharedPreferencesHelper(context) }
+    var habitList by remember { mutableStateOf(habits.toMutableList()) }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "My Habits",
+            text = stringResource(R.string.my_habits),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
@@ -180,20 +210,80 @@ private fun MyHabitsSection(
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD983BB)),
             shape = RoundedCornerShape(50)
         ) {
-            Text("+ Add Habit", color = Color.White, fontFamily = Poppins)
+            Text(stringResource(R.string.add_habit), color = Color.White, fontFamily = Poppins)
         }
     }
     Spacer(modifier = Modifier.height(12.dp))
-    Column {
-        habits.forEach { habit ->
-            HabitCard(
-                habit = habit,
-                expanded = expandedHabit == habit,
-                onClick = { onHabitClick(habit) },
-                selectedTab = selectedTab,
-                onTabSelected = onTabSelected
+    
+    if (habitList.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            val composition by rememberLottieComposition(
+                LottieCompositionSpec.Url("https://lottie.host/8a4b60ad-7cae-4600-96ae-0933ce1078d1/9uu0862eDC.lottie")
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            LottieAnimation(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+                modifier = Modifier.size(200.dp)
+            )
+        }
+    } else {
+        Column {
+            habitList.forEach { habit ->
+                key(habit.name) {
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                habitList = habitList.filter { h -> h != habit }.toMutableList()
+                                preferences.saveHabits(habitList)
+                                true
+                            } else false
+                        }
+                    )
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        background = {
+                            val progress = dismissState.progress.fraction
+                            if (progress > 0f) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(Color.Red)
+                                        .padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    IconButton(onClick = {
+                                        habitList = habitList.filter { h -> h != habit }.toMutableList()
+                                        preferences.saveHabits(habitList)
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = stringResource(R.string.delete),
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+                            }
+                        },
+                        dismissContent = {
+                            HabitCard(
+                                habit = habit,
+                                expanded = expandedHabit == habit,
+                                onClick = { onHabitClick(habit) },
+                                selectedTab = selectedTab,
+                                onTabSelected = onTabSelected
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
         }
     }
 }
@@ -204,7 +294,13 @@ private fun CalendarView() {
     val currentMonth = YearMonth.now()
     val daysInMonth = currentMonth.lengthOfMonth()
     val firstDayOfMonth = currentMonth.atDay(1)
-    val firstDayOfWeek = if (firstDayOfMonth.dayOfWeek.value == 7) 0 else firstDayOfMonth.dayOfWeek.value
+    val firstDayOfWeek =
+        if (firstDayOfMonth.dayOfWeek.value == 7) 0 else firstDayOfMonth.dayOfWeek.value
+
+    // Do NOT use remember here, so it updates with locale
+    val months = stringArrayResource(R.array.months)
+    val monthName = months[currentMonth.monthValue - 1]
+    val daysOfWeek = stringArrayResource(R.array.days_of_week)
 
     Column(
         modifier = Modifier
@@ -213,7 +309,7 @@ private fun CalendarView() {
     ) {
         // Month and Year header
         Text(
-            text = "${currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.year}",
+            text = "$monthName ${currentMonth.year}",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
@@ -225,7 +321,7 @@ private fun CalendarView() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat").forEach { day ->
+            daysOfWeek.forEach { day ->
                 Text(
                     text = day,
                     fontSize = 12.sp,
@@ -316,7 +412,7 @@ private fun HabitCard(
                         fontFamily = Poppins
                     )
                     Text(
-                        text = habit.frequency,
+                        text = stringResource(R.string.habit_times_per_day, habit.timesPerDay),
                         fontSize = 14.sp,
                         color = Color(0xFF737373),
                         fontFamily = Poppins
@@ -336,9 +432,16 @@ private fun HabitCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Row {
-                        TabButton("Today", selectedTab == 0) { onTabSelected(0) }
+                        TabButton(stringResource(R.string.today), selectedTab == 0) {
+                            onTabSelected(
+                                0
+                            )
+                        }
                         Spacer(modifier = Modifier.width(8.dp))
-                        TabButton("This Month", selectedTab == 1) { onTabSelected(1) }
+                        TabButton(
+                            stringResource(R.string.this_month),
+                            selectedTab == 1
+                        ) { onTabSelected(1) }
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -363,7 +466,7 @@ private fun HabitCard(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "1/2 times completed",
+                        text = stringResource(R.string.times_completed, 1, 2),
                         fontSize = 14.sp,
                         color = Color(0xFF222222),
                         fontFamily = Poppins,

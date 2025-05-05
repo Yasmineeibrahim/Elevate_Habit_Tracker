@@ -1,4 +1,5 @@
 package com.elevate
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Update streak count
+        val preferences = SharedPreferencesHelper(this)
+        preferences.updateStreak()
 
         // Move navigation logic here, before setContent
         startActivity(Intent(this, TakeoffActivity::class.java))

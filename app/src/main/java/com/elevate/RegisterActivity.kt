@@ -5,11 +5,16 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.elevate.databinding.ActivityRegister2Binding
-import com.facebook.*
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -18,11 +23,15 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegister2Binding
     private lateinit var auth: FirebaseAuth
     private lateinit var callbackManager: CallbackManager
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 9001
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegister2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         auth = Firebase.auth
         callbackManager = CallbackManager.Factory.create()
@@ -49,11 +58,19 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 override fun onCancel() {
-                    Toast.makeText(this@RegisterActivity, "Facebook login canceled", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Facebook login canceled",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
                 override fun onError(error: FacebookException) {
-                    Toast.makeText(this@RegisterActivity, "Facebook login failed: ${error.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Facebook login failed: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
 
@@ -70,7 +87,8 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             if (password.length < 6) {
-                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
@@ -80,25 +98,33 @@ class RegisterActivity : AppCompatActivity() {
                         // Save user's name
                         val preferences = SharedPreferencesHelper(this)
                         preferences.setUserName(firstName, lastName)
-                        
-                        Toast.makeText(this, "Registration successful! Please login", Toast.LENGTH_SHORT).show()
+
+                        Toast.makeText(
+                            this,
+                            "Registration successful! Please login",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         startActivity(Intent(this, LoginActivity::class.java))
                         finish()
                     } else {
                         val errorMessage = when {
                             task.exception?.message?.contains("email address is badly formatted") == true ->
                                 "Invalid email format"
+
                             task.exception?.message?.contains("password is invalid") == true ->
                                 "Password must be at least 6 characters"
+
                             task.exception?.message?.contains("email address is already in use") == true ->
                                 "Email is already registered"
+
                             else -> "Signup failed: ${task.exception?.message}"
                         }
                         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, "Registration failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Registration failed: ${e.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
         }
     }
@@ -107,7 +133,23 @@ class RegisterActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
+
+
     }
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Google login success", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, TakeoffActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Google auth failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
 
     // Link Facebook login to Firebase Auth
     private fun handleFacebookAccessToken(token: AccessToken) {
@@ -119,7 +161,11 @@ class RegisterActivity : AppCompatActivity() {
                     startActivity(Intent(this, TakeoffActivity::class.java))
                     finish()
                 } else {
-                    Toast.makeText(this, "Facebook auth failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Facebook auth failed: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }

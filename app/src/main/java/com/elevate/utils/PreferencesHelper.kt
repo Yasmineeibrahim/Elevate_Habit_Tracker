@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.*
 
 class SharedPreferencesHelper(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -63,5 +64,49 @@ class SharedPreferencesHelper(context: Context) {
 
     fun clearAll() {
         prefs.edit().clear().apply()
+    }
+
+    fun updateStreak() {
+        val lastOpenDate = prefs.getLong("last_open_date", 0)
+        val currentStreak = prefs.getInt("current_streak", 0)
+        val currentTime = System.currentTimeMillis()
+        
+        // If this is the first time opening the app
+        if (lastOpenDate == 0L) {
+            prefs.edit()
+                .putLong("last_open_date", currentTime)
+                .putInt("current_streak", 1)
+                .apply()
+            return
+        }
+
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = lastOpenDate
+        val lastOpenDay = calendar.get(Calendar.DAY_OF_YEAR)
+        val lastOpenYear = calendar.get(Calendar.YEAR)
+
+        calendar.timeInMillis = currentTime
+        val currentDay = calendar.get(Calendar.DAY_OF_YEAR)
+        val currentYear = calendar.get(Calendar.YEAR)
+
+        // Check if it's the next day
+        if ((currentYear == lastOpenYear && currentDay == lastOpenDay + 1) ||
+            (currentYear == lastOpenYear + 1 && currentDay == 1 && lastOpenDay == calendar.getActualMaximum(Calendar.DAY_OF_YEAR))) {
+            // Consecutive day, increment streak
+            prefs.edit()
+                .putLong("last_open_date", currentTime)
+                .putInt("current_streak", currentStreak + 1)
+                .apply()
+        } else if (currentDay != lastOpenDay || currentYear != lastOpenYear) {
+            // Not consecutive, reset streak
+            prefs.edit()
+                .putLong("last_open_date", currentTime)
+                .putInt("current_streak", 1)
+                .apply()
+        }
+    }
+
+    fun getCurrentStreak(): Int {
+        return prefs.getInt("current_streak", 0)
     }
 }

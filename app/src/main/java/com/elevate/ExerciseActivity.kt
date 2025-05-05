@@ -1,11 +1,12 @@
 package com.elevate
 
+import Habit
 import android.app.TimePickerDialog
-import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.elevate.utils.Util.onNavigationToNextActivity
 import com.google.android.material.button.MaterialButton
 
 class ExerciseActivity : AppCompatActivity() {
@@ -15,10 +16,16 @@ class ExerciseActivity : AppCompatActivity() {
     private lateinit var endTimeInput: EditText
     private lateinit var preferredTimeInput: EditText
     private lateinit var continueButton: MaterialButton
+    private var nextIndex = -1
+    private lateinit var selectedHabits: ArrayList<Habit>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_habit) // Replace with your actual XML filename if different
+        setContentView(R.layout.activity_exercise)
+
+        nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
+        selectedHabits = intent.getParcelableArrayListExtra<Habit>("SELECTED_HABITS") ?: arrayListOf()
+
 
         timesPerDayInput = findViewById(R.id.inputTimesPerDay)
         startTimeInput = findViewById(R.id.inputStartTime)
@@ -75,10 +82,6 @@ class ExerciseActivity : AppCompatActivity() {
         }
 
 
-        val nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
-        val intent = Intent(this, TakeoffActivity::class.java)
-        intent.putExtra("NEXT_INDEX", nextIndex)
-        startActivity(intent)
-        finish()
+        onNavigationToNextActivity(nextIndex, selectedHabits)
     }
 }
