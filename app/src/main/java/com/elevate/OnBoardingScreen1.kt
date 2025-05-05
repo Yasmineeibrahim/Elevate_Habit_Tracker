@@ -83,7 +83,8 @@ fun OnboardingContent1(activity: ComponentActivity? = null) {
                 Text(
                     text = "Stay motivated and achieve your goals with ease! Our app helps you track your progress, stay organized, and push yourself to be the best version of you. Set personal milestones, monitor your achievements, and stay inspired every step of the way. Your journey to self-improvement starts here!",
                     textAlign = TextAlign.Start,
-                    style = TextStyle(fontSize = 16.sp,
+                    style = TextStyle(
+                        fontSize = 16.sp,
                         color = Color.DarkGray,
                         fontFamily = Poppins,
 

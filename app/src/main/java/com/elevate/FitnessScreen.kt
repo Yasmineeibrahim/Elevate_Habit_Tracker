@@ -100,10 +100,11 @@ fun FitnessScreenContent(activity: ComponentActivity? = null) {
                 Spacer(modifier = Modifier.height(80.dp)) // Adjust this value as needed
 
                 IconButton(
-                    onClick = {  activity?.let {
-                        val intent = Intent(it, OnboardingScreen::class.java)
-                        it.startActivity(intent)
-                    }
+                    onClick = {
+                        activity?.let {
+                            val intent = Intent(it, OnboardingScreen::class.java)
+                            it.startActivity(intent)
+                        }
                     },
                     modifier = Modifier
                         .size(50.dp)
@@ -122,6 +123,7 @@ fun FitnessScreenContent(activity: ComponentActivity? = null) {
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun FitnessScreenPreview() {

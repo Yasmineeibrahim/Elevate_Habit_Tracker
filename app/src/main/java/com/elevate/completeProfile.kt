@@ -25,35 +25,35 @@ class completeProfile : AppCompatActivity() {
         }
 
 
-                // ربط العناصر بـ XML
-                val genderSpinner: Spinner = findViewById(R.id.spinnerGender)
-                val birthDateEditText: EditText = findViewById(R.id.editTextBirthDate)
-                val countryEditText: EditText = findViewById(R.id.editTextCountry)
-                val nextButton: MaterialButton = findViewById(R.id.nextButton)
+        // ربط العناصر بـ XML
+        val genderSpinner: Spinner = findViewById(R.id.spinnerGender)
+        val birthDateEditText: EditText = findViewById(R.id.editTextBirthDate)
+        val countryEditText: EditText = findViewById(R.id.editTextCountry)
+        val nextButton: MaterialButton = findViewById(R.id.nextButton)
 
-                // إعداد الـ Spinner لعرض الاختيارات (مثل "Male" و "Female")
-                val genderOptions = listOf("Male", "Female", "Other")
-                val genderAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, genderOptions)
-                genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                genderSpinner.adapter = genderAdapter
+        // إعداد الـ Spinner لعرض الاختيارات (مثل "Male" و "Female")
+        val genderOptions = listOf("Male", "Female", "Other")
+        val genderAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, genderOptions)
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        genderSpinner.adapter = genderAdapter
 
-                // تعيين حدث للـ Button (زر "Next")
-                nextButton.setOnClickListener {
-                    val gender = genderSpinner.selectedItem.toString()
-                    val birthDate = birthDateEditText.text.toString()
-                    val country = countryEditText.text.toString()
+        // تعيين حدث للـ Button (زر "Next")
+        nextButton.setOnClickListener {
+            val gender = genderSpinner.selectedItem.toString()
+            val birthDate = birthDateEditText.text.toString()
+            val country = countryEditText.text.toString()
 
-                    // تحقق من صحة البيانات المدخلة
-                    if (gender.isEmpty() || birthDate.isEmpty() || country.isEmpty()) {
-                        // عرض رسالة إذا كانت البيانات غير مكتملة
-                        Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-                    } else {
-                        // إذا كانت البيانات صحيحة، إظهار رسالة أو الانتقال للـ Activity التالية
-                        Toast.makeText(this, "Profile completed", Toast.LENGTH_SHORT).show()
+            // تحقق من صحة البيانات المدخلة
+            if (gender.isEmpty() || birthDate.isEmpty() || country.isEmpty()) {
+                // عرض رسالة إذا كانت البيانات غير مكتملة
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            } else {
+                // إذا كانت البيانات صحيحة، إظهار رسالة أو الانتقال للـ Activity التالية
+                Toast.makeText(this, "Profile completed", Toast.LENGTH_SHORT).show()
 
-                        // هنا يمكن أن تضيف المنطق للانتقال إلى Activity أخرى
-                        // مثلاً: startActivity(Intent(this, NextActivity::class.java))
-                    }
-                }
+                // هنا يمكن أن تضيف المنطق للانتقال إلى Activity أخرى
+                // مثلاً: startActivity(Intent(this, NextActivity::class.java))
             }
         }
+    }
+}

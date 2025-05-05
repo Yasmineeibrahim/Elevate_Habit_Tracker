@@ -37,10 +37,16 @@ class PrayerActivity : AppCompatActivity() {
 
         // Spinner 1 selection listener
         spinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val selected = yesNoOptions[position]
                 if (position != 0) {
-                    Toast.makeText(this@PrayerActivity, "You chose: $selected", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PrayerActivity, "You chose: $selected", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
@@ -49,10 +55,16 @@ class PrayerActivity : AppCompatActivity() {
 
         // Spinner 2 selection listener
         spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val selected = yesNoOptions[position]
                 if (position != 0) {
-                    Toast.makeText(this@PrayerActivity, "You chose: $selected", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PrayerActivity, "You chose: $selected", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
@@ -61,10 +73,16 @@ class PrayerActivity : AppCompatActivity() {
 
         // Spinner 3 selection listener
         spinner3.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val selected = yesNoOptions[position]
                 if (position != 0) {
-                    Toast.makeText(this@PrayerActivity, "You chose: $selected", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PrayerActivity, "You chose: $selected", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
@@ -83,7 +101,10 @@ class PrayerActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please answer all questions.", Toast.LENGTH_SHORT).show()
             } else {
                 // If all choices are selected, log them and proceed
-                Log.d("PrayerChoices", "Track prayers: $choice1, Daily reminders: $choice2, Missed prayer reminders: $choice3")
+                Log.d(
+                    "PrayerChoices",
+                    "Track prayers: $choice1, Daily reminders: $choice2, Missed prayer reminders: $choice3"
+                )
                 // You can add code here to save or pass this data for further use
                 val nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
                 val intent = Intent(this, TakeoffActivity::class.java)

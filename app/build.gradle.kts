@@ -65,6 +65,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("androidx.compose.ui:ui:1.5.4")
+    implementation ("androidx.compose.material:material:1.5.0")// or the version you need
+
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
@@ -84,4 +86,7 @@ dependencies {
 
     // Gson for JSON serialization
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation ("com.airbnb.android:lottie:6.4.0")
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
+
 }
