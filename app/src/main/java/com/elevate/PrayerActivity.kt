@@ -1,5 +1,7 @@
 package com.elevate
 
+
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -83,6 +85,11 @@ class PrayerActivity : AppCompatActivity() {
                 // If all choices are selected, log them and proceed
                 Log.d("PrayerChoices", "Track prayers: $choice1, Daily reminders: $choice2, Missed prayer reminders: $choice3")
                 // You can add code here to save or pass this data for further use
+                val nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
+                val intent = Intent(this, TakeoffActivity::class.java)
+                intent.putExtra("NEXT_INDEX", nextIndex)
+                startActivity(intent)
+                finish()
             }
         }
     }

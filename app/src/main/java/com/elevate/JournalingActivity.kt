@@ -1,13 +1,14 @@
 package com.elevate
 
+
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+
 
 class JournalingActivity : AppCompatActivity() {
 
@@ -76,8 +77,12 @@ class JournalingActivity : AppCompatActivity() {
         }
 
 
-        Toast.makeText(this, "Habit saved successfully", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, WelcomeActivity::class.java)
+        val nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
+        val intent = Intent(this, TakeoffActivity::class.java)
+        intent.putExtra("NEXT_INDEX", nextIndex)
         startActivity(intent)
+        finish()
+
+
     }
 }

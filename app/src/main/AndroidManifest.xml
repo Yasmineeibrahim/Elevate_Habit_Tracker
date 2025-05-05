@@ -59,7 +59,9 @@
         <activity android:name=".FitnessScreen" android:exported="false" />
         <activity android:name=".OnboardingScreen" android:exported="false" />
         <activity android:name=".SleepActivity" android:exported="false" />
-
+        <activity android:name=".PrayerActivity" android:exported="false" />
+        <activity android:name=".JournalingActivity" android:exported="false"/>
+        <activity android:name=".ExerciseActivity" android:exported="false"/>
         <!-- Main launcher -->
         <activity
             android:name=".MainActivity"

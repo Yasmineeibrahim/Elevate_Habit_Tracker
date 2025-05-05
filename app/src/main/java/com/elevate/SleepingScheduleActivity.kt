@@ -1,6 +1,7 @@
 package com.elevate
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -35,6 +36,11 @@ class SleepingScheduleActivity :AppCompatActivity(){
                 Toast.makeText(this, "\"Saved:$hours hrs,wake:$wakeTime\"", Toast.LENGTH_SHORT).show();
             }
         }
+        val nextIndex = intent.getIntExtra("NEXT_INDEX", -1)
+        val intent = Intent(this, TakeoffActivity::class.java)
+        intent.putExtra("NEXT_INDEX", nextIndex)
+        startActivity(intent)
+        finish()
     }
 
     private fun showTimePickerDialog() {
