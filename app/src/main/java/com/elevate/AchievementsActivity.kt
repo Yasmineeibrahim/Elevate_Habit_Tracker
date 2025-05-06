@@ -111,10 +111,13 @@ fun AchievementsScreen() {
         }
     }
 
+    // Define missions with their star values
     val availableMissions = listOf(
         Triple("Complete 7 habits", "1 star", 1),
-        Triple("Make 15 days streak", "2 star", 2),
-        Triple("Make 30 day streak", "3 star", 3)
+        Triple("Make 15 days streak", "2 stars", 2),
+        Triple("Make 30 day streak", "3 stars", 3),
+        Triple("Complete 5 habits in one day", "2 stars", 2),
+        Triple("Maintain a 7-day streak", "2 stars", 2)
     ).filterNot { collectedMissions.contains(it.first) }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -157,7 +160,6 @@ fun AchievementsScreen() {
                     CompletedMissionsSection(collectedMissions)
                 }
             }
-
             "profile" -> ProfileScreen(null)
         }
 

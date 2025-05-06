@@ -49,6 +49,12 @@ class LoginActivity : AppCompatActivity() {
                             val userId = Firebase.auth.currentUser?.uid ?: ""
                             preferences.setUserId(userId)
                             
+                            // Save user's name from Firebase
+                            val displayName = Firebase.auth.currentUser?.displayName ?: ""
+                            if (displayName.isNotEmpty()) {
+                                preferences.setUserName(displayName)
+                            }
+                            
                             // Navigate to TakeoffActivity
                             val intent = Intent(this, TakeoffActivity::class.java)
                             startActivity(intent)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.elevate.databinding.ActivityRegister2Binding
+import com.elevate.utils.SharedPreferencesHelper
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -25,16 +26,16 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var callbackManager: CallbackManager
     private lateinit var googleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 9001
-
+    private lateinit var preferences: SharedPreferencesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegister2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         auth = Firebase.auth
         callbackManager = CallbackManager.Factory.create()
+        preferences = SharedPreferencesHelper(this)
 
         // Navigate to LoginActivity
         binding.loginText.setOnClickListener {
@@ -96,16 +97,26 @@ class RegisterActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         // Save user's name
-                        val preferences = SharedPreferencesHelper(this)
-                        preferences.setUserName(firstName, lastName)
-
-                        Toast.makeText(
-                            this,
-                            "Registration successful! Please login",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        startActivity(Intent(this, LoginActivity::class.java))
-                        finish()
+                        val fullName = "$firstName $lastName".trim()
+                        preferences.setUserName(fullName)
+                        
+                        // Update Firebase profile
+                        val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
+                            .setDisplayName(fullName)
+                            .build()
+                        
+                        auth.currentUser?.updateProfile(profileUpdates)
+                            ?.addOnCompleteListener { profileTask ->
+                                if (profileTask.isSuccessful) {
+                                    Toast.makeText(
+                                        this,
+                                        "Registration successful! Please login",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    startActivity(Intent(this, LoginActivity::class.java))
+                                    finish()
+                                }
+                            }
                     } else {
                         val errorMessage = when {
                             task.exception?.message?.contains("email address is badly formatted") == true ->
@@ -133,9 +144,8 @@ class RegisterActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
-
-
     }
+
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
@@ -149,7 +159,6 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
     }
-
 
     // Link Facebook login to Firebase Auth
     private fun handleFacebookAccessToken(token: AccessToken) {

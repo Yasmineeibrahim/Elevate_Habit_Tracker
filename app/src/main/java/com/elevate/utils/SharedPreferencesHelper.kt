@@ -16,11 +16,24 @@ class SharedPreferencesHelper(context: Context) {
     }
 
     fun getUserName(): String {
-        return sharedPreferences.getString("user_name", "") ?: ""
+        val firstName = sharedPreferences.getString("user_first_name", "") ?: ""
+        val lastName = sharedPreferences.getString("user_last_name", "") ?: ""
+        return if (firstName.isNotEmpty() || lastName.isNotEmpty()) {
+            "$firstName $lastName".trim()
+        } else {
+            "User"
+        }
     }
 
     fun setUserName(name: String) {
-        sharedPreferences.edit().putString("user_name", name).apply()
+        val nameParts = name.split(" ")
+        val firstName = nameParts.firstOrNull() ?: ""
+        val lastName = nameParts.drop(1).joinToString(" ")
+        
+        sharedPreferences.edit()
+            .putString("user_first_name", firstName)
+            .putString("user_last_name", lastName)
+            .apply()
     }
 
     fun getSelectedLanguage(): String {
@@ -40,24 +53,29 @@ class SharedPreferencesHelper(context: Context) {
     }
 
     fun getStarsCount(): Int {
+        // Get stars from achievements
         val achievementsStars = achievementsPreferences.getInt("stars_count", 0)
-        val totalStars = sharedPreferences.getInt("total_stars", 0)
-        val maxStars = maxOf(achievementsStars, totalStars)
         
-        // Sync both values to the maximum
-        if (maxStars > achievementsStars) {
-            achievementsPreferences.edit().putInt("stars_count", maxStars).apply()
-        }
-        if (maxStars > totalStars) {
-            sharedPreferences.edit().putInt("total_stars", maxStars).apply()
-        }
+        // Get stars from completed habits
+        val completedHabitsStars = sharedPreferences.getInt("completed_habits_stars", 0)
         
-        return maxStars
+        // Calculate total stars
+        val totalStars = achievementsStars + completedHabitsStars
+        
+        // Update both preferences to keep them in sync
+        achievementsPreferences.edit().putInt("stars_count", totalStars).apply()
+        sharedPreferences.edit().putInt("total_stars", totalStars).apply()
+        
+        return totalStars
     }
 
     fun setStarsCount(count: Int) {
         sharedPreferences.edit().putInt("total_stars", count).apply()
         achievementsPreferences.edit().putInt("stars_count", count).apply()
+    }
+
+    fun setCompletedHabitsStars(count: Int) {
+        sharedPreferences.edit().putInt("completed_habits_stars", count).apply()
     }
 
     fun getNotificationsEnabled(): Boolean {

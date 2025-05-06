@@ -29,7 +29,12 @@ class HabitViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun calculateAndUpdateTotalStars() {
         repository.getHabitsForUser(userId).collect { habits ->
-            val totalStars = habits.count { it.isCompleted } * 5
+            // Calculate stars from completed habits (5 stars per completed habit)
+            val completedHabitsStars = habits.count { it.isCompleted } * 5
+            preferences.setCompletedHabitsStars(completedHabitsStars)
+            
+            // Update total stars count
+            val totalStars = preferences.getStarsCount()
             preferences.setStarsCount(totalStars)
         }
     }
@@ -45,17 +50,13 @@ class HabitViewModel(application: Application) : AndroidViewModel(application) {
     fun saveHabit(habit: HabitEntity) {
         viewModelScope.launch {
             repository.insertHabit(habit)
+            calculateAndUpdateTotalStars()
         }
     }
 
     fun saveHabits(habits: List<HabitEntity>) {
         viewModelScope.launch {
             repository.insertHabits(habits)
-        }
-    }
-
-    private fun updateStarsCount(habit: HabitEntity) {
-        viewModelScope.launch {
             calculateAndUpdateTotalStars()
         }
     }
