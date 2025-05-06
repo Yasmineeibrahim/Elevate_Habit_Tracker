@@ -17,14 +17,8 @@ class MainActivity : AppCompatActivity() {
         preferences.updateStreak()
 
         // Move navigation logic here, before setContent
-        startActivity(Intent(this, AchievementsActivity::class.java))
+        startActivity(Intent(this, SplashScreen1::class.java))
         finish()
-        // Do not call setContent if navigating away
-        // setContent {
-        //     MaterialTheme {
-        //         // Your Compose content
-        //     }
-        // }
 
         // Initialize Facebook SDK
         FacebookSdk.sdkInitialize(applicationContext)

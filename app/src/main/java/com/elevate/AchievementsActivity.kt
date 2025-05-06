@@ -29,6 +29,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -46,6 +48,7 @@ import androidx.compose.ui.zIndex
 import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
+import com.elevate.utils.SharedPreferencesHelper
 import java.util.Calendar
 
 class AchievementsActivity : ComponentActivity() {
@@ -89,16 +92,22 @@ fun loadStarsCount(context: Context): Int {
 @Composable
 fun AchievementsScreen() {
     val context = LocalContext.current
+    val preferences = remember { SharedPreferencesHelper(context) }
     var currentScreen by remember { mutableStateOf("achievements") }
-    var starsCount by remember { mutableStateOf(loadStarsCount(context)) }
-    val collectedMissions = remember { mutableStateOf(loadCompletedMissions(context)) }
+    var starsCount by remember { mutableStateOf(preferences.getStarsCount()) }
+    val collectedMissionsState = remember { mutableStateOf(loadCompletedMissions(context)) }
+    val collectedMissions = collectedMissionsState.value
 
     fun onMissionCollected(title: String, stars: Int) {
-        if (!collectedMissions.value.contains(title)) {
-            starsCount += stars
-            collectedMissions.value.add(title)
-            saveCompletedMissions(context, collectedMissions.value)
-            saveStarsCount(context, starsCount)
+        if (!collectedMissions.contains(title)) {
+            val newStarsCount = starsCount + stars
+            val newCollectedMissions = collectedMissions.toMutableSet().apply {
+                add(title)
+            }
+            starsCount = newStarsCount
+            collectedMissionsState.value = newCollectedMissions
+            saveCompletedMissions(context, newCollectedMissions)
+            preferences.setStarsCount(newStarsCount)
         }
     }
 
@@ -106,7 +115,7 @@ fun AchievementsScreen() {
         Triple("Complete 7 habits", "1 star", 1),
         Triple("Make 15 days streak", "2 star", 2),
         Triple("Make 30 day streak", "3 star", 3)
-    ).filterNot { collectedMissions.value.contains(it.first) }
+    ).filterNot { collectedMissions.contains(it.first) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (currentScreen) {
@@ -145,7 +154,7 @@ fun AchievementsScreen() {
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
-                    CompletedMissionsSection(collectedMissions.value)
+                    CompletedMissionsSection(collectedMissions)
                 }
             }
 

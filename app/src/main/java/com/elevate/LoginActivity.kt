@@ -8,16 +8,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.elevate.databinding.ActivityLoginBinding
+import com.elevate.utils.SharedPreferencesHelper
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var preferences: SharedPreferencesHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        preferences = SharedPreferencesHelper(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -37,11 +41,14 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.email.editText?.text.toString()
             val password = binding.password.editText?.text.toString()
 
-
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 Firebase.auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
+                            // Save user ID to SharedPreferences
+                            val userId = Firebase.auth.currentUser?.uid ?: ""
+                            preferences.setUserId(userId)
+                            
                             // Navigate to TakeoffActivity
                             val intent = Intent(this, TakeoffActivity::class.java)
                             startActivity(intent)
@@ -59,6 +66,5 @@ class LoginActivity : AppCompatActivity() {
                     .show()
             }
         }
-
     }
 }

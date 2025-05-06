@@ -44,6 +44,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.elevate.viewmodels.HabitViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,16 +80,15 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
     var languageExpanded by remember { mutableStateOf(false) }
     val currentLocale = context.resources.configuration.locales[0].language
     
-    // Add state for stars count with initial value
+    // Add state for stars count with initial value from achievements
     var starsCount by remember { mutableStateOf(0) }
     
-    // Effect to update stars count when habits change
+    // Effect to update stars count when the screen is first displayed
     LaunchedEffect(Unit) {
-        // Initial load
         starsCount = preferences.getStarsCount()
     }
     
-    // Effect to update stars count periodically
+    // Effect to update stars count when habits change
     LaunchedEffect(habits) {
         starsCount = preferences.getStarsCount()
     }
@@ -255,7 +255,13 @@ fun ProfileScreen(viewModel: ProfileViewModel?) {
 
             Button(
                 onClick = {
+                    // Clear all user data
                     preferences.clearAll()
+                    
+                    // Sign out from Firebase
+                    FirebaseAuth.getInstance().signOut()
+                    
+                    // Navigate to login screen
                     val intent = Intent(context, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     context.startActivity(intent)

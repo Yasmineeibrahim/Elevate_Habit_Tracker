@@ -5,6 +5,15 @@ import android.content.SharedPreferences
 
 class SharedPreferencesHelper(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    private val achievementsPreferences: SharedPreferences = context.getSharedPreferences("achievements", Context.MODE_PRIVATE)
+
+    fun setUserId(userId: String) {
+        sharedPreferences.edit().putString("user_id", userId).apply()
+    }
+
+    fun getUserId(): String {
+        return sharedPreferences.getString("user_id", "") ?: ""
+    }
 
     fun getUserName(): String {
         return sharedPreferences.getString("user_name", "") ?: ""
@@ -31,11 +40,24 @@ class SharedPreferencesHelper(context: Context) {
     }
 
     fun getStarsCount(): Int {
-        return sharedPreferences.getInt("total_stars", 0)
+        val achievementsStars = achievementsPreferences.getInt("stars_count", 0)
+        val totalStars = sharedPreferences.getInt("total_stars", 0)
+        val maxStars = maxOf(achievementsStars, totalStars)
+        
+        // Sync both values to the maximum
+        if (maxStars > achievementsStars) {
+            achievementsPreferences.edit().putInt("stars_count", maxStars).apply()
+        }
+        if (maxStars > totalStars) {
+            sharedPreferences.edit().putInt("total_stars", maxStars).apply()
+        }
+        
+        return maxStars
     }
 
     fun setStarsCount(count: Int) {
         sharedPreferences.edit().putInt("total_stars", count).apply()
+        achievementsPreferences.edit().putInt("stars_count", count).apply()
     }
 
     fun getNotificationsEnabled(): Boolean {
@@ -48,5 +70,6 @@ class SharedPreferencesHelper(context: Context) {
 
     fun clearAll() {
         sharedPreferences.edit().clear().apply()
+        achievementsPreferences.edit().clear().apply()
     }
 } 
