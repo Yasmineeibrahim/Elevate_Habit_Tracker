@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.elevate.data.HabitEntity
+import com.elevate.viewmodels.HabitViewModel
 
 class TakeoffActivity : AppCompatActivity() {
 
@@ -16,10 +19,13 @@ class TakeoffActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var fab: FloatingActionButton
     private val selectedHabitsInOrder = mutableListOf<Habit>()
+    private lateinit var habitViewModel: HabitViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_takeoff)
+
+        habitViewModel = ViewModelProvider(this)[HabitViewModel::class.java]
 
         recyclerView = findViewById(R.id.habitsRecyclerView)
         nextButton = findViewById(R.id.nextButton)
@@ -45,7 +51,6 @@ class TakeoffActivity : AppCompatActivity() {
             }
         }
 
-
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
@@ -59,6 +64,20 @@ class TakeoffActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Save selected habits to database
+            val habits = selectedHabitsInOrder.map { habit ->
+                HabitEntity(
+                    userId = getUserId(),
+                    habitName = habit.title,
+                    practiceTimes = 1, // Default value, will be updated in individual habit screens
+                    startTime = "10:00 PM", // Default value
+                    endTime = "10:00 PM",   // Default value
+                    preferredTime = null,    // Will be set in individual habit screens
+                    isActive = true         // Explicitly set isActive to true
+                )
+            }
+            habitViewModel.saveHabits(habits)
+
             // Start showing habits in the order selected
             showSelectedHabits()
         }
@@ -68,6 +87,11 @@ class TakeoffActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    private fun getUserId(): String {
+        return getSharedPreferences("user_prefs", 0)
+            .getString("user_id", "") ?: ""
     }
 
     private fun showSelectedHabits() {

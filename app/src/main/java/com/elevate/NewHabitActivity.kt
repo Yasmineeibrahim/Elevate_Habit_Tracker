@@ -9,6 +9,9 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.elevate.data.HabitEntity
+import com.elevate.viewmodels.HabitViewModel
 import com.google.android.material.button.MaterialButton
 
 class NewHabitActivity : AppCompatActivity() {
@@ -22,6 +25,9 @@ class NewHabitActivity : AppCompatActivity() {
     private lateinit var habitImage: ImageView
     private lateinit var arrowLeft: ImageButton
     private lateinit var arrowRight: ImageButton
+    private lateinit var habitViewModel: HabitViewModel
+    private var currentImageIndex = 0
+    private var habitName = ""
 
     // Add your drawable resource IDs here
     private val habitImages = arrayOf(
@@ -33,7 +39,6 @@ class NewHabitActivity : AppCompatActivity() {
         R.drawable.sleeping,
         R.drawable.drinking
     )
-    private var currentImageIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +53,8 @@ class NewHabitActivity : AppCompatActivity() {
         habitImage = findViewById(R.id.habitImage)
         arrowLeft = findViewById(R.id.arrowLeft)
         arrowRight = findViewById(R.id.arrowRight)
+
+        habitViewModel = ViewModelProvider(this)[HabitViewModel::class.java]
 
         updateHabitImage()
 
@@ -69,8 +76,12 @@ class NewHabitActivity : AppCompatActivity() {
             showTimePickerDialog(endTimeInput)
         }
 
+        preferredTimeInput.setOnClickListener {
+            showTimePickerDialog(preferredTimeInput)
+        }
+
         continueButton.setOnClickListener {
-            validateAndProceed()
+            validateAndSave()
         }
     }
 
@@ -98,10 +109,12 @@ class NewHabitActivity : AppCompatActivity() {
         timePickerDialog.show()
     }
 
-    private fun validateAndProceed() {
+    private fun validateAndSave() {
         val habitName = habitNameInput.text.toString()
         val timesPerDay = timesPerDayInput.text.toString()
         val startTime = startTimeInput.text.toString()
+        val endTime = endTimeInput.text.toString()
+        val preferredTime = preferredTimeInput.text.toString()
 
         if (habitName.isEmpty()) {
             habitNameInput.error = "Please enter a habit name"
@@ -118,23 +131,29 @@ class NewHabitActivity : AppCompatActivity() {
             return
         }
 
-        // Create new habit with selected image
-        val newHabit = HabitUiData(
-            name = habitName,
-            timesPerDay = timesPerDay.toIntOrNull() ?: 1,
-            imageRes = habitImages[currentImageIndex]
+        // Save the habit to the Room database
+        val habit = HabitEntity(
+            userId = getUserId(),
+            habitName = habitName,
+            practiceTimes = timesPerDay.toIntOrNull() ?: 1,
+            startTime = startTime,
+            endTime = endTime.ifEmpty { "10:00 PM" },
+            preferredTime = preferredTime.ifEmpty { null },
+            isActive = true
         )
-
-        // Save the habit
-        val preferences = SharedPreferencesHelper(this)
-        preferences.addHabit(newHabit)
+        habitViewModel.saveHabit(habit)
 
         Toast.makeText(this, "Habit added successfully", Toast.LENGTH_SHORT).show()
 
-        // Return to MainActivity which hosts the HomeScreen
+        // Return to HomeScreen
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
+    }
+
+    private fun getUserId(): String {
+        return getSharedPreferences("user_prefs", 0)
+            .getString("user_id", "") ?: ""
     }
 }

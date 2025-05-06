@@ -1,5 +1,6 @@
 package com.elevate
 
+import android.app.Application
 import android.content.Intent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -56,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.elevate.components.BottomNavigationBar
 import com.elevate.ui.theme.Poppins
+import com.elevate.viewmodels.HabitViewModel
 import java.time.LocalDate
 import java.time.YearMonth
 import com.airbnb.lottie.compose.LottieAnimation
@@ -63,6 +65,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.elevate.data.HabitEntity
 
 @Composable
 fun HomeScreen() {
@@ -70,14 +75,12 @@ fun HomeScreen() {
     val preferences = remember { SharedPreferencesHelper(context) }
     var expandedHabit by remember { mutableStateOf<HabitUiData?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
-
-    // Get saved habits or use default list if none exist
-    val savedHabits = remember { preferences.getHabits() }
-    val habits = if (savedHabits.isEmpty()) {
-        emptyList()
-    } else {
-        savedHabits
+    
+    val application = context.applicationContext as Application
+    val habitViewModel = remember {
+        HabitViewModel(application)
     }
+    val habits by habitViewModel.getActiveHabits().collectAsStateWithLifecycle(initialValue = emptyList())
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -93,7 +96,14 @@ fun HomeScreen() {
             GoalsCard()
             Spacer(modifier = Modifier.height(16.dp))
             MyHabitsSection(
-                habits = habits,
+                habits = habits.map { habit ->
+                    HabitUiData(
+                        id = habit.id,
+                        name = habit.habitName,
+                        timesPerDay = habit.practiceTimes,
+                        imageRes = getHabitImageResource(habit.habitName)
+                    )
+                },
                 expandedHabit = expandedHabit,
                 onAddHabit = {
                     context.startActivity(Intent(context, NewHabitActivity::class.java))
@@ -118,7 +128,7 @@ fun HomeScreen() {
     }
 }
 
-data class HabitUiData(val name: String, val timesPerDay: Int, val imageRes: Int)
+data class HabitUiData(val id: Long, val name: String, val timesPerDay: Int, val imageRes: Int)
 
 @Composable
 private fun GreetingSection(userName: String) {
@@ -191,8 +201,8 @@ private fun MyHabitsSection(
     onTabSelected: (Int) -> Unit
 ) {
     val context = LocalContext.current
-    val preferences = remember { SharedPreferencesHelper(context) }
-    var habitList by remember { mutableStateOf(habits.toMutableList()) }
+    val application = context.applicationContext as Application
+    val habitViewModel = remember { HabitViewModel(application) }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -215,7 +225,7 @@ private fun MyHabitsSection(
     }
     Spacer(modifier = Modifier.height(12.dp))
     
-    if (habitList.isEmpty()) {
+    if (habits.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -233,13 +243,21 @@ private fun MyHabitsSection(
         }
     } else {
         Column {
-            habitList.forEach { habit ->
-                key(habit.name) {
+            habits.forEach { habit ->
+                key(habit.id) {
                     val dismissState = rememberDismissState(
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
-                                habitList = habitList.filter { h -> h != habit }.toMutableList()
-                                preferences.saveHabits(habitList)
+                                // Delete the habit
+                                val habitEntity = HabitEntity(
+                                    id = habit.id,
+                                    userId = context.getSharedPreferences("user_prefs", 0)
+                                        .getString("user_id", "") ?: "",
+                                    habitName = habit.name,
+                                    practiceTimes = habit.timesPerDay,
+                                    isActive = false
+                                )
+                                habitViewModel.deleteHabit(habitEntity)
                                 true
                             } else false
                         }
@@ -259,8 +277,15 @@ private fun MyHabitsSection(
                                     contentAlignment = Alignment.CenterEnd
                                 ) {
                                     IconButton(onClick = {
-                                        habitList = habitList.filter { h -> h != habit }.toMutableList()
-                                        preferences.saveHabits(habitList)
+                                        val habitEntity = HabitEntity(
+                                            id = habit.id,
+                                            userId = context.getSharedPreferences("user_prefs", 0)
+                                                .getString("user_id", "") ?: "",
+                                            habitName = habit.name,
+                                            practiceTimes = habit.timesPerDay,
+                                            isActive = false
+                                        )
+                                        habitViewModel.deleteHabit(habitEntity)
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.Delete,
@@ -499,4 +524,16 @@ private fun TabButton(text: String, selected: Boolean, onClick: () -> Unit) {
 @Composable
 fun HomeScreenPreview() {
     HomeScreen()
+}
+
+private fun getHabitImageResource(habitName: String): Int {
+    return when (habitName.lowercase()) {
+        "exercise" -> R.drawable.exercise
+        "reading" -> R.drawable.reading
+        "journaling" -> R.drawable.journaling
+        "prayer" -> R.drawable.prayer
+        "drinking water" -> R.drawable.drinking_water
+        "sleeping schedule" -> R.drawable.sleeping_schedule
+        else -> R.drawable.curly // Default image
+    }
 }

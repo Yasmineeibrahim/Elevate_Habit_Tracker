@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         preferences.updateStreak()
 
         // Move navigation logic here, before setContent
-        startActivity(Intent(this, TakeoffActivity::class.java))
+        startActivity(Intent(this, AchievementsActivity::class.java))
         finish()
         // Do not call setContent if navigating away
         // setContent {
