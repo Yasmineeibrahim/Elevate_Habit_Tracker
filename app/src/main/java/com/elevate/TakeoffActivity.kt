@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.elevate.data.HabitEntity
 import com.elevate.viewmodels.HabitViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TakeoffActivity : AppCompatActivity() {
 
@@ -20,6 +24,7 @@ class TakeoffActivity : AppCompatActivity() {
     private lateinit var fab: FloatingActionButton
     private val selectedHabitsInOrder = mutableListOf<Habit>()
     private lateinit var habitViewModel: HabitViewModel
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,31 +59,17 @@ class TakeoffActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
-        onClicks()
+        setupClickListeners()
     }
 
-    private fun onClicks() {
+    private fun setupClickListeners() {
         nextButton.setOnClickListener {
             if (selectedHabitsInOrder.isEmpty()) {
                 Toast.makeText(this, "Please select at least one habit", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Save selected habits to database
-            val habits = selectedHabitsInOrder.map { habit ->
-                HabitEntity(
-                    userId = getUserId(),
-                    habitName = habit.title,
-                    practiceTimes = 1, // Default value, will be updated in individual habit screens
-                    startTime = "10:00 PM", // Default value
-                    endTime = "10:00 PM",   // Default value
-                    preferredTime = null,    // Will be set in individual habit screens
-                    isActive = true         // Explicitly set isActive to true
-                )
-            }
-            habitViewModel.saveHabits(habits)
-
-            // Start showing habits in the order selected
+            // Do NOT save habits here. Only show the configuration screens.
             showSelectedHabits()
         }
 
