@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +51,7 @@ import com.elevate.ui.theme.ElevateTheme
 import com.elevate.ui.theme.Poppins
 import com.elevate.utils.SharedPreferencesHelper
 import java.util.Calendar
+import kotlin.random.Random
 
 class AchievementsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,14 +113,109 @@ fun AchievementsScreen() {
         }
     }
 
-    // Define missions with their star values
-    val availableMissions = listOf(
-        Triple("Complete 7 habits", "1 star", 1),
-        Triple("Make 15 days streak", "2 stars", 2),
-        Triple("Make 30 day streak", "3 stars", 3),
-        Triple("Complete 5 habits in one day", "2 stars", 2),
-        Triple("Maintain a 7-day streak", "2 stars", 2)
-    ).filterNot { collectedMissions.contains(it.first) }
+    // --- 85 Unique, Meaningful Missions List ---
+    val missionTemplates = listOf(
+        // General Habit Completions
+        Triple("Complete 5 habits", 1, "easy"),
+        Triple("Complete 10 habits", 2, "medium"),
+        Triple("Complete 20 habits", 3, "hard"),
+        Triple("Complete 5 habits in one day", 2, "medium"),
+        Triple("Complete 10 habits in one day", 3, "hard"),
+        Triple("Try a new habit", 1, "easy"),
+        Triple("Complete a habit for 3 consecutive days", 1, "easy"),
+        Triple("Complete a habit for 7 consecutive days", 2, "medium"),
+        Triple("Complete a habit for 14 consecutive days", 3, "hard"),
+        Triple("Complete all habits for a week", 3, "hard"),
+        Triple("Complete a habit before 8am", 1, "easy"),
+        Triple("Complete a habit after 8pm", 1, "easy"),
+        Triple("Complete a habit without reminders", 2, "medium"),
+        Triple("Complete a habit for 21 days", 3, "hard"),
+        Triple("Complete a habit for 30 days", 3, "hard"),
+        Triple("Complete a habit for 60 days", 3, "hard"),
+        Triple("Complete a habit for 90 days", 3, "hard"),
+        Triple("Complete a habit for 6 months", 3, "hard"),
+        Triple("Complete a habit for 1 year", 3, "hard"),
+        Triple("Complete a habit during the weekend", 1, "easy"),
+        Triple("Complete a habit during the weekday", 1, "easy"),
+        Triple("Complete a habit in the morning", 1, "easy"),
+        Triple("Complete a habit at bedtime", 1, "easy"),
+        // Streaks
+        Triple("Maintain a 3-day streak", 1, "easy"),
+        Triple("Maintain a 5-day streak", 1, "easy"),
+        Triple("Maintain a 7-day streak", 2, "medium"),
+        Triple("Maintain a 10-day streak", 2, "medium"),
+        Triple("Maintain a 14-day streak", 2, "medium"),
+        Triple("Maintain a 21-day streak", 3, "hard"),
+        Triple("Maintain a 30-day streak", 3, "hard"),
+        Triple("Maintain a 60-day streak", 3, "hard"),
+        Triple("Maintain a 90-day streak", 3, "hard"),
+        Triple("Maintain a 6-month streak", 3, "hard"),
+        Triple("Maintain a 1-year streak", 3, "hard"),
+        Triple("Start a new streak after breaking one", 2, "medium"),
+        Triple("Double your previous best streak", 3, "hard"),
+        // Star Milestones
+        Triple("Collect 10 stars", 1, "easy"),
+        Triple("Collect 25 stars", 2, "medium"),
+        Triple("Collect 50 stars", 3, "hard"),
+        Triple("Collect 75 stars", 3, "hard"),
+        Triple("Collect 100 stars", 3, "hard"),
+        Triple("Collect 150 stars", 3, "hard"),
+        Triple("Collect 200 stars", 3, "hard"),
+        Triple("Collect 300 stars", 3, "hard"),
+        Triple("Collect 400 stars", 3, "hard"),
+        Triple("Collect 500 stars", 3, "hard"),
+        // Wellness & Productivity
+        Triple("Drink 2L of water every day for a week", 1, "easy"),
+        Triple("Read for 20 minutes daily for 10 days", 2, "medium"),
+        Triple("Journal every day for 14 days", 2, "medium"),
+        Triple("Go to bed before 11pm for 10 days", 2, "medium"),
+        Triple("Exercise 3 times a week for a month", 3, "hard"),
+        Triple("Pray every day for a week", 1, "easy"),
+        Triple("Wake up before 7am for 5 days", 1, "easy"),
+        Triple("Meditate for 10 minutes daily for 10 days", 2, "medium"),
+        Triple("No social media for 3 days", 2, "medium"),
+        Triple("Write a gratitude list for 7 days", 1, "easy"),
+        Triple("Plan your day every morning for 10 days", 2, "medium"),
+        Triple("Spend a day without complaining", 2, "medium"),
+        Triple("Write a letter to your future self", 1, "easy"),
+        Triple("Unplug from all screens for a day", 2, "medium"),
+        Triple("Set a new personal goal", 1, "easy"),
+        Triple("Complete a habit with a friend", 1, "easy"),
+        Triple("Complete a habit outdoors", 1, "easy"),
+        Triple("Complete a habit indoors", 1, "easy"),
+        Triple("Complete a habit on a holiday", 1, "easy"),
+        Triple("Complete a habit while traveling", 2, "medium"),
+        Triple("Complete a habit at lunchtime", 1, "easy"),
+        Triple("Complete a habit after 8pm", 1, "easy"),
+        Triple("Complete two habits in a day", 2, "medium"),
+        Triple("Track your habit without missing a day", 2, "medium"),
+        Triple("Complete a habit before 8am", 1, "easy"),
+
+        )
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    val shuffledMissions = remember(currentYear) {
+        missionTemplates.shuffled(Random(currentYear))
+    }
+    val allMissions = shuffledMissions.map { (name, stars, _) ->
+        Triple(name, "$stars star${if (stars > 1) "s" else ""}", stars)
+    }
+
+    // --- Calculate missions for the current month ---
+    val missionsPerMonth = 7
+    val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH) // 0-based
+    val startIdx = (currentMonthIndex * missionsPerMonth) % allMissions.size
+    val endIdx = (startIdx + missionsPerMonth)
+    val missionsForMonth = if (endIdx <= allMissions.size) {
+        allMissions.subList(startIdx, endIdx)
+    } else {
+        // Wrap around if needed
+        allMissions.subList(startIdx, allMissions.size) + allMissions.subList(0, endIdx - allMissions.size)
+    }
+    // Filter out collected missions for this month
+    val availableMissions = missionsForMonth.filterNot { collectedMissions.contains(it.first) }
+
+    var missionsExpanded by remember { mutableStateOf(false) }
+    val missionsToShow = if (missionsExpanded) availableMissions else availableMissions.take(3)
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (currentScreen) {
@@ -145,7 +242,7 @@ fun AchievementsScreen() {
                             modifier = Modifier.padding(bottom = 8.dp),
                             fontFamily = Poppins
                         )
-                        availableMissions.forEach { (title, starsLabel, starsValue) ->
+                        missionsToShow.forEach { (title, starsLabel, starsValue) ->
                             MissionCard(
                                 title,
                                 stringResource(R.string.achievements_get_stars, starsLabel),
@@ -153,6 +250,17 @@ fun AchievementsScreen() {
                             ) {
                                 onMissionCollected(title, starsValue)
                             }
+                        }
+                        if (availableMissions.size > 3) {
+                            Text(
+                                text = if (missionsExpanded) "Collapse" else "View",
+                                color = Color(0xFFD983BB),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .align(Alignment.CenterHorizontally)
+                                    .clickable{ missionsExpanded = !missionsExpanded }
+                            )
                         }
                     }
 

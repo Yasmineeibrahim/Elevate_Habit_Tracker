@@ -24,7 +24,6 @@ class completeProfile : AppCompatActivity() {
             insets
         }
 
-
         // ربط العناصر بـ XML
         val genderSpinner: Spinner = findViewById(R.id.spinnerGender)
         val birthDateEditText: EditText = findViewById(R.id.editTextBirthDate)
