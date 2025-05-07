@@ -412,8 +412,8 @@ private fun HabitCard(
                         CircularProgressIndicator(
                             progress = progress,
                             color = Color(0xFFF3B6D2),
-                            strokeWidth = 8.dp,
-                            modifier = Modifier.size(100.dp)
+                            strokeWidth = 10.dp,
+                            modifier = Modifier.size(120.dp)
                         )
                         Text(
                             text = "${(progress*100).toInt()}%",
@@ -425,7 +425,7 @@ private fun HabitCard(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${habit.currentCount}/${habit.timesPerDay}times completed",
+                        text = "${habit.currentCount}/${habit.timesPerDay} times completed",
                         fontSize = 14.sp,
                         color = Color(0xFF222222),
                         fontFamily = Poppins,
