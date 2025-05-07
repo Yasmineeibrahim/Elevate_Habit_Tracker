@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [ActivityEntity::class, HabitEntity::class], version = 2)
+@Database(entities = [ActivityEntity::class, HabitEntity::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
     abstract fun habitDao(): HabitDao
@@ -23,6 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -30,7 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "elevate_database"
                 )
-                .addMigrations(MIGRATION_1_2)
+                    .fallbackToDestructiveMigration()
                 .build()
                 INSTANCE = instance
                 instance

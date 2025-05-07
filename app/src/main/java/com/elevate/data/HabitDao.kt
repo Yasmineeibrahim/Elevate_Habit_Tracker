@@ -10,6 +10,9 @@ interface HabitDao {
 
     @Query("SELECT * FROM habits WHERE userId = :userId AND isActive = 1")
     fun getActiveHabits(userId: String): Flow<List<HabitEntity>>
+    //-------
+    @Query("SELECT * FROM habits WHERE id=:habitId")
+    suspend fun getHabitById(habitId:Long):HabitEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit: HabitEntity)
@@ -25,4 +28,8 @@ interface HabitDao {
 
     @Query("DELETE FROM habits WHERE userId = :userId")
     suspend fun deleteAllHabitsForUser(userId: String)
+
+    //------------
+    @Query("UPDATE habits SET currentCount=0 WHERE isActive=1")
+    suspend fun resetAllCounts()
 } 

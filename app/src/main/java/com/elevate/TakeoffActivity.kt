@@ -6,16 +6,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.elevate.data.HabitEntity
-import com.elevate.viewmodels.HabitViewModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class TakeoffActivity : AppCompatActivity() {
 
@@ -23,14 +16,10 @@ class TakeoffActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var fab: FloatingActionButton
     private val selectedHabitsInOrder = mutableListOf<Habit>()
-    private lateinit var habitViewModel: HabitViewModel
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_takeoff)
-
-        habitViewModel = ViewModelProvider(this)[HabitViewModel::class.java]
 
         recyclerView = findViewById(R.id.habitsRecyclerView)
         nextButton = findViewById(R.id.nextButton)
@@ -56,20 +45,21 @@ class TakeoffActivity : AppCompatActivity() {
             }
         }
 
+
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
-        setupClickListeners()
+        onClicks()
     }
 
-    private fun setupClickListeners() {
+    private fun onClicks() {
         nextButton.setOnClickListener {
             if (selectedHabitsInOrder.isEmpty()) {
                 Toast.makeText(this, "Please select at least one habit", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Do NOT save habits here. Only show the configuration screens.
+            // Start showing habits in the order selected
             showSelectedHabits()
         }
 
@@ -78,11 +68,6 @@ class TakeoffActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-    }
-
-    private fun getUserId(): String {
-        return getSharedPreferences("user_prefs", 0)
-            .getString("user_id", "") ?: ""
     }
 
     private fun showSelectedHabits() {

@@ -11,6 +11,11 @@ class HabitRepository(private val habitDao: HabitDao) {
         return habitDao.getActiveHabits(userId)
     }
 
+    suspend fun getHabitById(habitId: Long): HabitEntity?{
+        return habitDao.getHabitById(habitId)
+
+    }
+
     suspend fun insertHabit(habit: HabitEntity) {
         habitDao.insertHabit(habit)
     }
@@ -30,4 +35,10 @@ class HabitRepository(private val habitDao: HabitDao) {
     suspend fun deleteAllHabitsForUser(userId: String) {
         habitDao.deleteAllHabitsForUser(userId)
     }
+    //-------------
+    suspend fun resetAllHabitsCounts(){
+        habitDao.resetAllCounts()
+    }
+
+
 } 

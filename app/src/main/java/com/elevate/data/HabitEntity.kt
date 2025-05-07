@@ -15,5 +15,6 @@ data class HabitEntity(
     val preferredTime: String? = null,   // Nullable preferred time
     val isCompleted: Boolean = false,    // Track if the habit is completed
     val isActive: Boolean = true,        // Default to true for new habits
-    val createdAt: Long = System.currentTimeMillis()
-) 
+    val createdAt: Long = System.currentTimeMillis(),
+    val currentCount:Int=0
+)

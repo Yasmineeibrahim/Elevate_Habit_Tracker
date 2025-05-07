@@ -8,6 +8,7 @@ import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

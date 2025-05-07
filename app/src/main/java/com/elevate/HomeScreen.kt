@@ -66,6 +66,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.OffsetEffect
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.elevate.data.HabitEntity
 
@@ -75,13 +77,18 @@ fun HomeScreen() {
     val preferences = remember { SharedPreferencesHelper(context) }
     var expandedHabit by remember { mutableStateOf<HabitUiData?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
-    
+
     val application = context.applicationContext as Application
     val habitViewModel = remember {
         HabitViewModel(application)
     }
-    val habits by habitViewModel.getActiveHabits().collectAsStateWithLifecycle(initialValue = emptyList())
-
+    val habits by habitViewModel.getActiveHabits()
+        .collectAsStateWithLifecycle(initialValue = emptyList())
+    //دالة لتمييز العادة كمكتمله-----
+    val onMarkAsDone = { habitId: Long ->
+        habitViewModel.markHabitAsDone(habitId)
+    }
+    //-----
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -101,6 +108,7 @@ fun HomeScreen() {
                         id = habit.id,
                         name = habit.habitName,
                         timesPerDay = habit.practiceTimes,
+                        currentCount = habit.currentCount, //------
                         imageRes = getHabitImageResource(habit.habitName)
                     )
                 },
@@ -112,7 +120,8 @@ fun HomeScreen() {
                     expandedHabit = if (expandedHabit == habit) null else habit
                 },
                 selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it }
+                onTabSelected = { selectedTab = it },
+                onMarkAsDone = onMarkAsDone
             )
         }
         Box(
@@ -128,7 +137,13 @@ fun HomeScreen() {
     }
 }
 
-data class HabitUiData(val id: Long, val name: String, val timesPerDay: Int, val imageRes: Int)
+data class HabitUiData(
+    val id: Long,
+    val name: String,
+    val timesPerDay: Int,
+    val currentCount: Int = 0,
+    val imageRes: Int
+)
 
 @Composable
 private fun GreetingSection(userName: String) {
@@ -198,7 +213,8 @@ private fun MyHabitsSection(
     onAddHabit: () -> Unit,
     onHabitClick: (HabitUiData) -> Unit,
     selectedTab: Int,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
+    onMarkAsDone: (Long) -> Unit
 ) {
     val context = LocalContext.current
     val application = context.applicationContext as Application
@@ -224,7 +240,7 @@ private fun MyHabitsSection(
         }
     }
     Spacer(modifier = Modifier.height(12.dp))
-    
+
     if (habits.isEmpty()) {
         Box(
             modifier = Modifier
@@ -302,12 +318,140 @@ private fun MyHabitsSection(
                                 expanded = expandedHabit == habit,
                                 onClick = { onHabitClick(habit) },
                                 selectedTab = selectedTab,
-                                onTabSelected = onTabSelected
+                                onTabSelected = onTabSelected,
+                                onMarkAsDone = onMarkAsDone //----------
                             )
                         }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HabitCard(
+    habit: HabitUiData,
+    expanded: Boolean,
+    onClick: () -> Unit,
+    selectedTab: Int,
+    onTabSelected: (Int) -> Unit,
+    onMarkAsDone: (Long) -> Unit // --------إضافة الدالة التي ستتعامل مع الزر
+) {
+    val progress = if (habit.timesPerDay == 0)0f
+    else habit.currentCount.toFloat() / habit.timesPerDay.toFloat()
+
+    val isCompleted = habit.currentCount >= habit.timesPerDay
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .animateContentSize(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = habit.imageRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(52.dp)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = habit.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        fontFamily = Poppins
+                    )
+                    Text(
+                        text = stringResource(R.string.habit_times_per_day, habit.timesPerDay),
+                        fontSize = 14.sp,
+                        color = Color(0xFF737373),
+                        fontFamily = Poppins
+                    )
+                }
+                Icon(
+                    painter = painterResource(id = if (expanded) R.drawable.ic_dropdown else R.drawable.ic_arrow_right),
+                    contentDescription = null,
+                    tint = Color(0xFFB0B0B0),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            if (expanded) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row {
+                        TabButton(stringResource(R.string.today), selectedTab == 0) {
+                            onTabSelected(0)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TabButton(
+                            stringResource(R.string.this_month),
+                            selectedTab == 1
+                        ) { onTabSelected(1) }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                if (selectedTab == 0) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            progress = progress,
+                            color = Color(0xFFF3B6D2),
+                            strokeWidth = 8.dp,
+                            modifier = Modifier.size(100.dp)
+                        )
+                        Text(
+                            text = "${(progress*100).toInt()}%",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 32.sp,
+                            color = Color(0xFF222222),
+                            fontFamily = Poppins
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "${habit.currentCount}/${habit.timesPerDay}times completed",
+                        fontSize = 14.sp,
+                        color = Color(0xFF222222),
+                        fontFamily = Poppins,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = { onMarkAsDone(habit.id) },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isCompleted) Color.Gray else Color(0xFFD983BB),
+                        ),
+                        enabled = !isCompleted,
+                        shape = RoundedCornerShape(50)
+                    ) {
+                        Text(
+                            text = if (isCompleted) "Completed" else "Mark as Done",
+                            color = Color.White,
+                            fontFamily = Poppins,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                } else {
+                    CalendarView()
+                }
+
             }
         }
     }
@@ -396,109 +540,6 @@ private fun CalendarView() {
                             )
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun HabitCard(
-    habit: HabitUiData,
-    expanded: Boolean,
-    onClick: () -> Unit,
-    selectedTab: Int,
-    onTabSelected: (Int) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .animateContentSize(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = habit.imageRes),
-                    contentDescription = null,
-                    modifier = Modifier.size(52.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = habit.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        fontFamily = Poppins
-                    )
-                    Text(
-                        text = stringResource(R.string.habit_times_per_day, habit.timesPerDay),
-                        fontSize = 14.sp,
-                        color = Color(0xFF737373),
-                        fontFamily = Poppins
-                    )
-                }
-                Icon(
-                    painter = painterResource(id = if (expanded) R.drawable.ic_dropdown else R.drawable.ic_arrow_right),
-                    contentDescription = null,
-                    tint = Color(0xFFB0B0B0),
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            if (expanded) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row {
-                        TabButton(stringResource(R.string.today), selectedTab == 0) {
-                            onTabSelected(
-                                0
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        TabButton(
-                            stringResource(R.string.this_month),
-                            selectedTab == 1
-                        ) { onTabSelected(1) }
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                if (selectedTab == 0) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            progress = 0.5f,
-                            color = Color(0xFFF3B6D2),
-                            strokeWidth = 8.dp,
-                            modifier = Modifier.size(100.dp)
-                        )
-                        Text(
-                            text = "50%",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 32.sp,
-                            color = Color(0xFF222222),
-                            fontFamily = Poppins
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = stringResource(R.string.times_completed, 1, 2),
-                        fontSize = 14.sp,
-                        color = Color(0xFF222222),
-                        fontFamily = Poppins,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                } else {
-                    CalendarView()
                 }
             }
         }
