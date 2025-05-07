@@ -99,6 +99,7 @@ fun AchievementsScreen() {
     var starsCount by remember { mutableStateOf(preferences.getStarsCount()) }
     val collectedMissionsState = remember { mutableStateOf(loadCompletedMissions(context)) }
     val collectedMissions = collectedMissionsState.value
+    val currentStreak = preferences.getCurrentStreak()
 
     fun onMissionCollected(title: String, stars: Int) {
         if (!collectedMissions.contains(title)) {
@@ -243,10 +244,25 @@ fun AchievementsScreen() {
                             fontFamily = Poppins
                         )
                         missionsToShow.forEach { (title, starsLabel, starsValue) ->
+                            val isStarMission = title.startsWith("Collect") && title.contains("stars")
+                            val isStreakMission = title.contains("streak", ignoreCase = true)
+                            val requiredStars = if (isStarMission) {
+                                Regex("\\d+").find(title)?.value?.toIntOrNull() ?: 0
+                            } else 0
+                            val requiredStreak = if (isStreakMission) {
+                                Regex("\\d+").find(title)?.value?.toIntOrNull() ?: 0
+                            } else 0
+                            val canCollect = when {
+                                isStarMission -> starsCount >= requiredStars
+                                isStreakMission -> currentStreak >= requiredStreak
+                                else -> true
+                            }
+
                             MissionCard(
                                 title,
                                 stringResource(R.string.achievements_get_stars, starsLabel),
-                                false
+                                false,
+                                enabled = canCollect
                             ) {
                                 onMissionCollected(title, starsValue)
                             }
@@ -413,7 +429,7 @@ fun ProductivitySection(starsCount: Int) {
 }
 
 @Composable
-fun MissionCard(title: String, stars: String, collected: Boolean, onCollect: () -> Unit) {
+fun MissionCard(title: String, stars: String, collected: Boolean, enabled: Boolean = true, onCollect: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -436,12 +452,13 @@ fun MissionCard(title: String, stars: String, collected: Boolean, onCollect: () 
             }
             if (!collected) {
                 OutlinedButton(
-                    onClick = { onCollect() },
+                    onClick = { if (enabled) onCollect() },
+                    enabled = enabled,
                     shape = RoundedCornerShape(50),
-                    border = BorderStroke(1.dp, Color(0xFFD983BB)),
+                    border = BorderStroke(1.dp, if (enabled) Color(0xFFD983BB) else Color.Gray),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = Color.White,
-                        contentColor = Color(0xFFD983BB)
+                        containerColor = if (enabled) Color.White else Color.LightGray,
+                        contentColor = if (enabled) Color(0xFFD983BB) else Color.Gray
                     )
                 ) {
                     Text(stringResource(R.string.achievements_collect), fontSize = 14.sp)
