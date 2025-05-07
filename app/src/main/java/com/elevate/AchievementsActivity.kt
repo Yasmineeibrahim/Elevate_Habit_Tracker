@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -101,6 +102,12 @@ fun AchievementsScreen() {
     val collectedMissions = collectedMissionsState.value
     val currentStreak = preferences.getCurrentStreak()
 
+    // Get the user's completed habit count (total)
+    val application = context.applicationContext as android.app.Application
+    val habitViewModel = remember { com.elevate.viewmodels.HabitViewModel(application) }
+    val habits by habitViewModel.getHabits().collectAsState(initial = emptyList())
+    val completedHabitsCount = habits.count { it.isCompleted }
+
     fun onMissionCollected(title: String, stars: Int) {
         if (!collectedMissions.contains(title)) {
             val newStarsCount = starsCount + stars
@@ -116,89 +123,109 @@ fun AchievementsScreen() {
 
     // --- 85 Unique, Meaningful Missions List ---
     val missionTemplates = listOf(
-        // General Habit Completions
-        Triple("Complete 5 habits", 1, "easy"),
-        Triple("Complete 10 habits", 2, "medium"),
-        Triple("Complete 20 habits", 3, "hard"),
-        Triple("Complete 5 habits in one day", 2, "medium"),
-        Triple("Complete 10 habits in one day", 3, "hard"),
-        Triple("Try a new habit", 1, "easy"),
-        Triple("Complete a habit for 3 consecutive days", 1, "easy"),
-        Triple("Complete a habit for 7 consecutive days", 2, "medium"),
-        Triple("Complete a habit for 14 consecutive days", 3, "hard"),
-        Triple("Complete all habits for a week", 3, "hard"),
-        Triple("Complete a habit before 8am", 1, "easy"),
-        Triple("Complete a habit after 8pm", 1, "easy"),
-        Triple("Complete a habit without reminders", 2, "medium"),
-        Triple("Complete a habit for 21 days", 3, "hard"),
-        Triple("Complete a habit for 30 days", 3, "hard"),
-        Triple("Complete a habit for 60 days", 3, "hard"),
-        Triple("Complete a habit for 90 days", 3, "hard"),
-        Triple("Complete a habit for 6 months", 3, "hard"),
-        Triple("Complete a habit for 1 year", 3, "hard"),
-        Triple("Complete a habit during the weekend", 1, "easy"),
-        Triple("Complete a habit during the weekday", 1, "easy"),
-        Triple("Complete a habit in the morning", 1, "easy"),
-        Triple("Complete a habit at bedtime", 1, "easy"),
-        // Streaks
-        Triple("Maintain a 3-day streak", 1, "easy"),
-        Triple("Maintain a 5-day streak", 1, "easy"),
-        Triple("Maintain a 7-day streak", 2, "medium"),
-        Triple("Maintain a 10-day streak", 2, "medium"),
-        Triple("Maintain a 14-day streak", 2, "medium"),
-        Triple("Maintain a 21-day streak", 3, "hard"),
-        Triple("Maintain a 30-day streak", 3, "hard"),
-        Triple("Maintain a 60-day streak", 3, "hard"),
-        Triple("Maintain a 90-day streak", 3, "hard"),
-        Triple("Maintain a 6-month streak", 3, "hard"),
-        Triple("Maintain a 1-year streak", 3, "hard"),
-        Triple("Start a new streak after breaking one", 2, "medium"),
-        Triple("Double your previous best streak", 3, "hard"),
-        // Star Milestones
-        Triple("Collect 10 stars", 1, "easy"),
-        Triple("Collect 25 stars", 2, "medium"),
-        Triple("Collect 50 stars", 3, "hard"),
-        Triple("Collect 75 stars", 3, "hard"),
-        Triple("Collect 100 stars", 3, "hard"),
-        Triple("Collect 150 stars", 3, "hard"),
-        Triple("Collect 200 stars", 3, "hard"),
-        Triple("Collect 300 stars", 3, "hard"),
-        Triple("Collect 400 stars", 3, "hard"),
-        Triple("Collect 500 stars", 3, "hard"),
-        // Wellness & Productivity
-        Triple("Drink 2L of water every day for a week", 1, "easy"),
-        Triple("Read for 20 minutes daily for 10 days", 2, "medium"),
-        Triple("Journal every day for 14 days", 2, "medium"),
-        Triple("Go to bed before 11pm for 10 days", 2, "medium"),
-        Triple("Exercise 3 times a week for a month", 3, "hard"),
-        Triple("Pray every day for a week", 1, "easy"),
-        Triple("Wake up before 7am for 5 days", 1, "easy"),
-        Triple("Meditate for 10 minutes daily for 10 days", 2, "medium"),
-        Triple("No social media for 3 days", 2, "medium"),
-        Triple("Write a gratitude list for 7 days", 1, "easy"),
-        Triple("Plan your day every morning for 10 days", 2, "medium"),
-        Triple("Spend a day without complaining", 2, "medium"),
-        Triple("Write a letter to your future self", 1, "easy"),
-        Triple("Unplug from all screens for a day", 2, "medium"),
-        Triple("Set a new personal goal", 1, "easy"),
-        Triple("Complete a habit with a friend", 1, "easy"),
-        Triple("Complete a habit outdoors", 1, "easy"),
-        Triple("Complete a habit indoors", 1, "easy"),
-        Triple("Complete a habit on a holiday", 1, "easy"),
-        Triple("Complete a habit while traveling", 2, "medium"),
-        Triple("Complete a habit at lunchtime", 1, "easy"),
-        Triple("Complete a habit after 8pm", 1, "easy"),
-        Triple("Complete two habits in a day", 2, "medium"),
-        Triple("Track your habit without missing a day", 2, "medium"),
-        Triple("Complete a habit before 8am", 1, "easy"),
+        Triple(R.string.mission_complete_5_habits, 1, "easy"),
+        Triple(R.string.mission_complete_10_habits, 2, "medium"),
+        Triple(R.string.mission_complete_20_habits, 3, "hard"),
+        Triple(R.string.mission_complete_5_habits_one_day, 2, "medium"),
+        Triple(R.string.mission_complete_10_habits_one_day, 3, "hard"),
+        Triple(R.string.mission_try_new_habit, 1, "easy"),
+        Triple(R.string.mission_complete_habit_3_days, 1, "easy"),
+        Triple(R.string.mission_complete_habit_7_days, 2, "medium"),
+        Triple(R.string.mission_complete_habit_14_days, 3, "hard"),
+        Triple(R.string.mission_complete_all_habits_week, 3, "hard"),
+        Triple(R.string.mission_complete_habit_before_8am, 1, "easy"),
+        Triple(R.string.mission_complete_habit_after_8pm, 1, "easy"),
+        Triple(R.string.mission_complete_habit_without_reminders, 2, "medium"),
+        Triple(R.string.mission_complete_habit_21_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_30_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_60_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_90_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_6_months, 3, "hard"),
+        Triple(R.string.mission_complete_habit_1_year, 3, "hard"),
+        Triple(R.string.mission_complete_habit_weekend, 1, "easy"),
+        Triple(R.string.mission_complete_habit_weekday, 1, "easy"),
+        Triple(R.string.mission_complete_habit_morning, 1, "easy"),
+        Triple(R.string.mission_complete_habit_bedtime, 1, "easy"),
+        Triple(R.string.mission_complete_habit_with_friend, 1, "easy"),
+        Triple(R.string.mission_complete_habit_outdoors, 1, "easy"),
+        Triple(R.string.mission_complete_habit_indoors, 1, "easy"),
+        Triple(R.string.mission_complete_habit_on_holiday, 1, "easy"),
+        Triple(R.string.mission_complete_habit_while_traveling, 2, "medium"),
+        Triple(R.string.mission_complete_habit_lunchtime, 1, "easy"),
+        Triple(R.string.mission_complete_two_habits_one_day, 2, "medium"),
+        Triple(R.string.mission_track_habit_no_miss, 2, "medium"),
+        Triple(R.string.mission_complete_habit_21_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_30_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_60_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_90_days, 3, "hard"),
+        Triple(R.string.mission_complete_habit_6_months, 3, "hard"),
+        Triple(R.string.mission_complete_habit_1_year, 3, "hard"),
+        Triple(R.string.mission_complete_habit_weekend, 1, "easy"),
+        Triple(R.string.mission_complete_habit_weekday, 1, "easy"),
+        Triple(R.string.mission_complete_habit_morning, 1, "easy"),
+        Triple(R.string.mission_complete_habit_bedtime, 1, "easy"),
 
-        )
+// Streaks
+        Triple(R.string.mission_maintain_3_day_streak, 1, "easy"),
+        Triple(R.string.mission_maintain_5_day_streak, 1, "easy"),
+        Triple(R.string.mission_maintain_7_day_streak, 2, "medium"),
+        Triple(R.string.mission_maintain_10_day_streak, 2, "medium"),
+        Triple(R.string.mission_maintain_14_day_streak, 2, "medium"),
+        Triple(R.string.mission_maintain_21_day_streak, 3, "hard"),
+        Triple(R.string.mission_maintain_30_day_streak, 3, "hard"),
+        Triple(R.string.mission_maintain_60_day_streak, 3, "hard"),
+        Triple(R.string.mission_maintain_90_day_streak, 3, "hard"),
+        Triple(R.string.mission_maintain_6_month_streak, 3, "hard"),
+        Triple(R.string.mission_maintain_1_year_streak, 3, "hard"),
+        Triple(R.string.mission_start_new_streak, 2, "medium"),
+        Triple(R.string.mission_double_best_streak, 3, "hard"),
+
+// Star Milestones
+        Triple(R.string.mission_collect_10_stars, 1, "easy"),
+        Triple(R.string.mission_collect_25_stars, 2, "medium"),
+        Triple(R.string.mission_collect_50_stars, 3, "hard"),
+        Triple(R.string.mission_collect_75_stars, 3, "hard"),
+        Triple(R.string.mission_collect_100_stars, 3, "hard"),
+        Triple(R.string.mission_collect_150_stars, 3, "hard"),
+        Triple(R.string.mission_collect_200_stars, 3, "hard"),
+        Triple(R.string.mission_collect_300_stars, 3, "hard"),
+        Triple(R.string.mission_collect_400_stars, 3, "hard"),
+        Triple(R.string.mission_collect_500_stars, 3, "hard"),
+
+// Wellness & Productivity
+        Triple(R.string.mission_drink_water_week, 1, "easy"),
+        Triple(R.string.mission_read_20min_10days, 2, "medium"),
+        Triple(R.string.mission_journal_14_days, 2, "medium"),
+        Triple(R.string.mission_sleep_before_11pm_10days, 2, "medium"),
+        Triple(R.string.mission_exercise_3x_week_month, 3, "hard"),
+        Triple(R.string.mission_pray_week, 1, "easy"),
+        Triple(R.string.mission_wake_before_7am_5days, 1, "easy"),
+        Triple(R.string.mission_meditate_10min_10days, 2, "medium"),
+        Triple(R.string.mission_no_social_media_3days, 2, "medium"),
+        Triple(R.string.mission_gratitude_7days, 1, "easy"),
+        Triple(R.string.mission_plan_day_10days, 2, "medium"),
+        Triple(R.string.mission_no_complaining_day, 2, "medium"),
+        Triple(R.string.mission_write_letter_future_self, 1, "easy"),
+        Triple(R.string.mission_unplug_screens_day, 2, "medium"),
+        Triple(R.string.mission_set_new_goal, 1, "easy"),
+        Triple(R.string.mission_complete_habit_with_friend, 1, "easy"),
+        Triple(R.string.mission_complete_habit_outdoors, 1, "easy"),
+        Triple(R.string.mission_complete_habit_indoors, 1, "easy"),
+        Triple(R.string.mission_complete_habit_on_holiday, 1, "easy"),
+        Triple(R.string.mission_complete_habit_while_traveling, 2, "medium"),
+        Triple(R.string.mission_complete_habit_lunchtime, 1, "easy"),
+        Triple(R.string.mission_complete_habit_after_8pm, 1, "easy"),
+        Triple(R.string.mission_complete_two_habits_one_day, 2, "medium"),
+        Triple(R.string.mission_track_habit_no_miss, 2, "medium"),
+        Triple(R.string.mission_complete_habit_before_8am, 1, "easy")
+
+    )
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
     val shuffledMissions = remember(currentYear) {
         missionTemplates.shuffled(Random(currentYear))
     }
-    val allMissions = shuffledMissions.map { (name, stars, _) ->
-        Triple(name, "$stars star${if (stars > 1) "s" else ""}", stars)
+    val allMissions = shuffledMissions.map { (nameResId, stars, _) ->
+        Triple(stringResource(nameResId as Int), "$stars star${if (stars > 1) "s" else ""}", stars)
     }
 
     // --- Calculate missions for the current month ---
@@ -246,15 +273,20 @@ fun AchievementsScreen() {
                         missionsToShow.forEach { (title, starsLabel, starsValue) ->
                             val isStarMission = title.startsWith("Collect") && title.contains("stars")
                             val isStreakMission = title.contains("streak", ignoreCase = true)
+                            val isHabitMission = title.startsWith("Complete") && title.contains("habit", ignoreCase = true)
                             val requiredStars = if (isStarMission) {
                                 Regex("\\d+").find(title)?.value?.toIntOrNull() ?: 0
                             } else 0
                             val requiredStreak = if (isStreakMission) {
                                 Regex("\\d+").find(title)?.value?.toIntOrNull() ?: 0
                             } else 0
+                            val requiredHabits = if (isHabitMission) {
+                                Regex("\\d+").find(title)?.value?.toIntOrNull() ?: 0
+                            } else 0
                             val canCollect = when {
                                 isStarMission -> starsCount >= requiredStars
                                 isStreakMission -> currentStreak >= requiredStreak
+                                isHabitMission -> completedHabitsCount >= requiredHabits
                                 else -> true
                             }
 
@@ -269,13 +301,13 @@ fun AchievementsScreen() {
                         }
                         if (availableMissions.size > 3) {
                             Text(
-                                text = if (missionsExpanded) "Collapse" else "View",
+                                text = stringResource(if (missionsExpanded) R.string.collapse else R.string.view),
                                 color = Color(0xFFD983BB),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .padding(top = 8.dp)
                                     .align(Alignment.CenterHorizontally)
-                                    .clickable{ missionsExpanded = !missionsExpanded }
+                                    .clickable { missionsExpanded = !missionsExpanded }
                             )
                         }
                     }
@@ -353,6 +385,14 @@ fun MonthHeader() {
 
 @Composable
 fun ProductivitySection(starsCount: Int) {
+    val context = LocalContext.current
+    val resources = context.resources
+    val (productivityRes, motivationRes) = when {
+        starsCount > 100 -> R.string.achievements_productivity_high to R.string.achievements_motivation_high
+        starsCount > 50 -> R.string.achievements_productivity_moderate to R.string.achievements_motivation_moderate
+        else -> R.string.achievements_productivity_low to R.string.achievements_motivation_low
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -410,13 +450,13 @@ fun ProductivitySection(starsCount: Int) {
                         .padding(start = 12.dp)
                 ) {
                     Text(
-                        stringResource(R.string.achievements_productivity_low),
+                        stringResource(productivityRes),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Text(
-                        stringResource(R.string.achievements_keep_spirit),
+                        stringResource(motivationRes),
                         fontSize = 12.sp,
                         color = Color.White.copy(alpha = 0.8f),
                         fontFamily = Poppins,

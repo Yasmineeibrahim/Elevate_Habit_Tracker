@@ -141,11 +141,16 @@
     <string name="achievements_month">Month</string>
     <string name="achievements_collect_stars">Collect the stars and lets see how productive you are!</string>
     <string name="achievements_my_stars">My Stars</string>
-    <string name="achievements_productivity_low">Your productivity level is still low</string>
-    <string name="achievements_keep_spirit">You still have time, keep up the spirit!</string>
+    <string name="achievements_productivity_high">Productivity is high</string>
+    <string name="achievements_productivity_moderate">Productivity is moderate</string>
+    <string name="achievements_productivity_low">Productivity is low</string>
+    <string name="achievements_motivation_high">Youre on fire! Keep up the amazing work!</string>
+    <string name="achievements_motivation_moderate">Great progress! Push for even more!</string>
+    <string name="achievements_motivation_low">You still have time, keep your spirit up!</string>
     <string name="achievements_missions">Missions</string>
     <string name="achievements_get_stars">Get %1$s</string>
     <string name="achievements_collect">Collect</string>
+    <string name="achievements_completed">Completed</string>
     <string name="achievements_completed_missions">Completed Missions</string>
     <string name="achievements_collected">Collected ✔</string>
     <string name="new_habit_title">New Habit</string>
@@ -164,4 +169,83 @@
     <string name="preferred_time_label">Is there a preferred time you plan to practice?</string>
     <string name="preferred_time_hint">e.g. Evening</string>
     <string name="continued">Continue</string>
+    <string name="mission_complete_5_habits">Complete 5 habits</string>
+    <string name="mission_complete_10_habits">Complete 10 habits</string>
+    <string name="mission_complete_20_habits">Complete 20 habits</string>
+
+    <!-- Streaks -->
+    <string name="mission_maintain_3_day_streak">Maintain a 3-day streak</string>
+    <string name="mission_maintain_5_day_streak">Maintain a 5-day streak</string>
+    <string name="mission_maintain_7_day_streak">Maintain a 7-day streak</string>
+    <string name="mission_maintain_10_day_streak">Maintain a 10-day streak</string>
+    <string name="mission_maintain_14_day_streak">Maintain a 14-day streak</string>
+    <string name="mission_maintain_21_day_streak">Maintain a 21-day streak</string>
+    <string name="mission_maintain_30_day_streak">Maintain a 30-day streak</string>
+    <string name="mission_maintain_60_day_streak">Maintain a 60-day streak</string>
+    <string name="mission_maintain_90_day_streak">Maintain a 90-day streak</string>
+    <string name="mission_maintain_6_month_streak">Maintain a 6-month streak</string>
+    <string name="mission_maintain_1_year_streak">Maintain a 1-year streak</string>
+    <string name="mission_start_new_streak">Start a new streak after breaking one</string>
+    <string name="mission_double_best_streak">Double your previous best streak</string>
+
+    <!-- Star Milestones -->
+    <string name="mission_collect_10_stars">Collect 10 stars</string>
+    <string name="mission_collect_25_stars">Collect 25 stars</string>
+    <string name="mission_collect_50_stars">Collect 50 stars</string>
+    <string name="mission_collect_75_stars">Collect 75 stars</string>
+    <string name="mission_collect_100_stars">Collect 100 stars</string>
+    <string name="mission_collect_150_stars">Collect 150 stars</string>
+    <string name="mission_collect_200_stars">Collect 200 stars</string>
+    <string name="mission_collect_300_stars">Collect 300 stars</string>
+    <string name="mission_collect_400_stars">Collect 400 stars</string>
+    <string name="mission_collect_500_stars">Collect 500 stars</string>
+
+    <!-- Wellness & Productivity -->
+    <string name="mission_drink_water_week">Drink 2L of water daily for a week</string>
+    <string name="mission_read_20min_10days">Read for 20 minutes daily for 10 days</string>
+    <string name="mission_journal_14_days">Journal every day for 14 days</string>
+    <string name="mission_sleep_before_11pm_10days">Go to bed before 11pm for 10 days</string>
+    <string name="mission_exercise_3x_week_month">Exercise 3 times a week for a month</string>
+    <string name="mission_pray_week">Pray every day for a week</string>
+    <string name="mission_wake_before_7am_5days">Wake up before 7am for 5 days</string>
+    <string name="mission_meditate_10min_10days">Meditate for 10 minutes daily for 10 days</string>
+    <string name="mission_no_social_media_3days">No social media for 3 days</string>
+    <string name="mission_gratitude_7days">Write a gratitude list for 7 days</string>
+    <string name="mission_plan_day_10days">Plan your day every morning for 10 days</string>
+    <string name="mission_no_complaining_day">Spend a day without complaining</string>
+    <string name="mission_write_letter_future_self">Write a letter to your future self</string>
+    <string name="mission_unplug_screens_day">Unplug from all screens for a day</string>
+    <string name="mission_set_new_goal">Set a new personal goal</string>
+
+    <string name="mission_complete_5_habits_one_day">Complete 5 habits in one day</string>
+    <string name="mission_complete_10_habits_one_day">Complete 10 habits in one day</string>
+    <string name="mission_try_new_habit">Try a new habit</string>
+    <string name="mission_complete_habit_3_days">Complete a habit for 3 consecutive days</string>
+    <string name="mission_complete_habit_7_days">Complete a habit for 7 consecutive days</string>
+    <string name="mission_complete_habit_14_days">Complete a habit for 14 consecutive days</string>
+    <string name="mission_complete_all_habits_week">Complete all habits for a week</string>
+    <string name="mission_complete_habit_before_8am">Complete a habit before 8am</string>
+    <string name="mission_complete_habit_after_8pm">Complete a habit after 8pm</string>
+    <string name="mission_complete_habit_without_reminders">Complete a habit without reminders</string>
+    <string name="mission_complete_habit_21_days">Complete a habit for 21 days</string>
+    <string name="mission_complete_habit_30_days">Complete a habit for 30 days</string>
+    <string name="mission_complete_habit_60_days">Complete a habit for 60 days</string>
+    <string name="mission_complete_habit_90_days">Complete a habit for 90 days</string>
+    <string name="mission_complete_habit_6_months">Complete a habit for 6 months</string>
+    <string name="mission_complete_habit_1_year">Complete a habit for 1 year</string>
+    <string name="mission_complete_habit_weekend">Complete a habit during the weekend</string>
+    <string name="mission_complete_habit_weekday">Complete a habit during the weekday</string>
+    <string name="mission_complete_habit_morning">Complete a habit in the morning</string>
+    <string name="mission_complete_habit_bedtime">Complete a habit at bedtime</string>
+    <string name="mark_as_done">Mark as Done</string>
+    <string name="mission_complete_habit_with_friend">Complete a habit with a friend</string>
+    <string name="mission_complete_habit_outdoors">Complete a habit outdoors</string>
+    <string name="mission_complete_habit_indoors">Complete a habit indoors</string>
+    <string name="mission_complete_habit_on_holiday">Complete a habit on a holiday</string>
+    <string name="mission_complete_habit_while_traveling">Complete a habit while traveling</string>
+    <string name="mission_complete_habit_lunchtime">Complete a habit at lunchtime</string>
+    <string name="mission_complete_two_habits_one_day">Complete two habits in a day</string>
+    <string name="mission_track_habit_no_miss">Track your habit without missing a day</string>
+    <string name="view">View</string>
+    <string name="collapse">Collapse</string>
 </resources>

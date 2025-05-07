@@ -425,7 +425,7 @@ private fun HabitCard(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${habit.currentCount}/${habit.timesPerDay} times completed",
+                        text = stringResource(R.string.times_completed, habit.currentCount, habit.timesPerDay),
                         fontSize = 14.sp,
                         color = Color(0xFF222222),
                         fontFamily = Poppins,
@@ -442,7 +442,7 @@ private fun HabitCard(
                         shape = RoundedCornerShape(50)
                     ) {
                         Text(
-                            text = if (isCompleted) "Completed" else "Mark as Done",
+                            text = stringResource(if (isCompleted) R.string.achievements_completed else R.string.mark_as_done),
                             color = Color.White,
                             fontFamily = Poppins,
                             fontWeight = FontWeight.Bold,

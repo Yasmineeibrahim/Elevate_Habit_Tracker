@@ -130,6 +130,7 @@
     <string name="facebook_client_token" tools:ignore="DuplicateDefinition">your_facebook_client_token</string>
     <string name="fb_login_protocol_scheme">fb123456789012345</string>
     <string name="times_completed">%1$d/%2$d مرات مكتملة</string>
+    <string name="achievements_completed">مكتمل</string>
     <string name="profile_title">الملف الشخصي</string>
     <string name="profile_ambassador">سفير</string>
     <string name="profile_total_stars">إجمالي النجوم</string>
@@ -141,8 +142,12 @@
     <string name="achievements_month">الشهر</string>
     <string name="achievements_collect_stars">اجمع النجوم ودعنا نرى مدى إنتاجيتك!</string>
     <string name="achievements_my_stars">نجومي</string>
-    <string name="achievements_productivity_low">مستوى إنتاجيتك لا يزال منخفضًا</string>
-    <string name="achievements_keep_spirit">لا يزال لديك وقت، حافظ على روحك!</string>
+    <string name="achievements_productivity_high">الإنتاجية عالية</string>
+    <string name="achievements_productivity_moderate">الإنتاجية متوسطة</string>
+    <string name="achievements_productivity_low">الإنتاجية منخفضة</string>
+    <string name="achievements_motivation_high">أنت متألق! واصل العمل الرائع!</string>
+    <string name="achievements_motivation_moderate">تقدم رائع! استمر لتحقيق المزيد!</string>
+    <string name="achievements_motivation_low">لا يزال لديك وقت، حافظ على روحك!</string>
     <string name="achievements_missions">المهام</string>
     <string name="achievements_get_stars">احصل على %1$s</string>
     <string name="achievements_collect">اجمع</string>
@@ -164,4 +169,82 @@
     <string name="preferred_time_label">هل هناك وقت مفضل لممارسة العادة؟</string>
     <string name="preferred_time_hint">مثال: المساء</string>
     <string name="continued">استمرار</string>
+    <string name="mission_complete_5_habits">أكمل 5 عادات</string>
+    <string name="mission_complete_10_habits">أكمل 10 عادات</string>
+    <string name="mission_complete_20_habits">أكمل 20 عادة</string>
+    <string name="mission_complete_5_habits_one_day">أكمل 5 عادات في يوم واحد</string>
+    <string name="mission_complete_10_habits_one_day">أكمل 10 عادات في يوم واحد</string>
+    <string name="mission_try_new_habit">جرب عادة جديدة</string>
+    <string name="mission_complete_habit_3_days">أكمل عادة لمدة 3 أيام متتالية</string>
+    <string name="mission_complete_habit_7_days">أكمل عادة لمدة 7 أيام متتالية</string>
+    <string name="mission_complete_habit_14_days">أكمل عادة لمدة 14 يومًا متتالية</string>
+    <string name="mission_complete_all_habits_week">أكمل جميع العادات لمدة أسبوع</string>
+    <string name="mission_complete_habit_without_reminders">أكمل عادة بدون تذكيرات</string>
+    <string name="mission_complete_habit_21_days">أكمل عادة لمدة 21 يومًا</string>
+    <string name="mission_complete_habit_30_days">أكمل عادة لمدة 30 يومًا</string>
+    <string name="mission_complete_habit_60_days">أكمل عادة لمدة 60 يومًا</string>
+    <string name="mission_complete_habit_90_days">أكمل عادة لمدة 90 يومًا</string>
+    <string name="mission_complete_habit_6_months">أكمل عادة لمدة 6 أشهر</string>
+    <string name="mission_complete_habit_1_year">أكمل عادة لمدة سنة</string>
+    <string name="mission_complete_habit_weekend">أكمل عادة في عطلة نهاية الأسبوع</string>
+    <string name="mission_complete_habit_weekday">أكمل عادة خلال أيام الأسبوع</string>
+    <string name="mission_complete_habit_morning">أكمل عادة في الصباح</string>
+    <string name="mission_complete_habit_bedtime">أكمل عادة وقت النوم</string>
+    <string name="mark_as_done">وضع علامة كمكتمل</string>
+    <!-- Streaks -->
+    <string name="mission_maintain_3_day_streak">حافظ على سلسلة لمدة 3 أيام</string>
+    <string name="mission_maintain_5_day_streak">حافظ على سلسلة لمدة 5 أيام</string>
+    <string name="mission_maintain_7_day_streak">حافظ على سلسلة لمدة 7 أيام</string>
+    <string name="mission_maintain_10_day_streak">حافظ على سلسلة لمدة 10 أيام</string>
+    <string name="mission_maintain_14_day_streak">حافظ على سلسلة لمدة 14 يومًا</string>
+    <string name="mission_maintain_21_day_streak">حافظ على سلسلة لمدة 21 يومًا</string>
+    <string name="mission_maintain_30_day_streak">حافظ على سلسلة لمدة 30 يومًا</string>
+    <string name="mission_maintain_60_day_streak">حافظ على سلسلة لمدة 60 يومًا</string>
+    <string name="mission_maintain_90_day_streak">حافظ على سلسلة لمدة 90 يومًا</string>
+    <string name="mission_maintain_6_month_streak">حافظ على سلسلة لمدة 6 أشهر</string>
+    <string name="mission_maintain_1_year_streak">حافظ على سلسلة لمدة سنة</string>
+    <string name="mission_start_new_streak">ابدأ سلسلة جديدة بعد كسر واحدة</string>
+    <string name="mission_double_best_streak">ضاعف أفضل سلسلة سابقة لك</string>
+
+    <!-- Star Milestones -->
+    <string name="mission_collect_10_stars">اجمع 10 نجوم</string>
+    <string name="mission_collect_25_stars">اجمع 25 نجمة</string>
+    <string name="mission_collect_50_stars">اجمع 50 نجمة</string>
+    <string name="mission_collect_75_stars">اجمع 75 نجمة</string>
+    <string name="mission_collect_100_stars">اجمع 100 نجمة</string>
+    <string name="mission_collect_150_stars">اجمع 150 نجمة</string>
+    <string name="mission_collect_200_stars">اجمع 200 نجمة</string>
+    <string name="mission_collect_300_stars">اجمع 300 نجمة</string>
+    <string name="mission_collect_400_stars">اجمع 400 نجمة</string>
+    <string name="mission_collect_500_stars">اجمع 500 نجمة</string>
+
+    <!-- Wellness & Productivity -->
+    <string name="mission_drink_water_week">اشرب 2 لتر من الماء يوميًا لمدة أسبوع</string>
+    <string name="mission_read_20min_10days">اقرأ لمدة 20 دقيقة يوميًا لمدة 10 أيام</string>
+    <string name="mission_journal_14_days">دوّن يوميًا لمدة 14 يومًا</string>
+    <string name="mission_sleep_before_11pm_10days">اذهب للنوم قبل 11 مساءً لمدة 10 أيام</string>
+    <string name="mission_exercise_3x_week_month">مارس الرياضة 3 مرات في الأسبوع لمدة شهر</string>
+    <string name="mission_pray_week">صلِّ كل يوم لمدة أسبوع</string>
+    <string name="mission_wake_before_7am_5days">استيقظ قبل 7 صباحًا لمدة 5 أيام</string>
+    <string name="mission_meditate_10min_10days">تأمل لمدة 10 دقائق يوميًا لمدة 10 أيام</string>
+    <string name="mission_no_social_media_3days">بدون وسائل التواصل الاجتماعي لمدة 3 أيام</string>
+    <string name="mission_gratitude_7days">اكتب قائمة امتنان لمدة 7 أيام</string>
+    <string name="mission_plan_day_10days">خطط ليومك كل صباح لمدة 10 أيام</string>
+    <string name="mission_no_complaining_day">اقضِ يومًا بدون تذمر</string>
+    <string name="mission_write_letter_future_self">اكتب رسالة لنفسك المستقبلية</string>
+    <string name="mission_unplug_screens_day">اقضِ يومًا بدون شاشات</string>
+    <string name="mission_set_new_goal">حدد هدفًا شخصيًا جديدًا</string>
+    <string name="mission_complete_habit_with_friend">أكمل عادة مع صديق</string>
+    <string name="mission_complete_habit_outdoors">أكمل عادة في الهواء الطلق</string>
+    <string name="mission_complete_habit_indoors">أكمل عادة في الداخل</string>
+    <string name="mission_complete_habit_on_holiday">أكمل عادة في يوم عطلة</string>
+    <string name="mission_complete_habit_while_traveling">أكمل عادة أثناء السفر</string>
+    <string name="mission_complete_habit_lunchtime">أكمل عادة في وقت الغداء</string>
+    <string name="mission_complete_two_habits_one_day">أكمل عادتين في يوم واحد</string>
+    <string name="mission_track_habit_no_miss">تابع عادتك دون أن تفوت يومًا</string>
+    <string name="mission_complete_habit_before_8am">أكمل عادة قبل الساعة 8 صباحًا</string>
+    <string name="mission_complete_habit_after_8pm">أكمل عادة بعد الساعة 8 مساءً</string>
+
+    <string name="view">عرض</string>
+    <string name="collapse">إخفاء</string>
 </resources> 
