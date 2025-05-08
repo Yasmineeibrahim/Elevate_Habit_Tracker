@@ -55,8 +55,8 @@ class LoginActivity : AppCompatActivity() {
                                 preferences.setUserName(displayName)
                             }
                             
-                            // Navigate to TakeoffActivity
-                            val intent = Intent(this, TakeoffActivity::class.java)
+                            // Navigate to completeProfile
+                            val intent = Intent(this, completeProfile::class.java)
                             startActivity(intent)
                             finish()
                         } else {

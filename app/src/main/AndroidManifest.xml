@@ -51,6 +51,7 @@
         <activity android:name=".DrinkingWaterActivity" android:exported="false" />
         <activity android:name=".LoginActivity" android:exported="false" />
         <activity android:name=".RegisterActivity" android:exported="false" />
+        <activity android:name=".completeProfile" android:exported="false" />
         <activity android:name=".ReadingInitActivity" android:exported="false" />
         <activity android:name=".TakeoffActivity" android:exported="false" />
         <activity android:name=".SplashScreen1" android:exported="false" />

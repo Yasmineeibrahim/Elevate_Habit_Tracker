@@ -449,7 +449,7 @@ private fun HabitCard(
                         )
                     }
                 } else {
-                    CalendarView()
+                    CalendarView(habit)
                 }
 
             }
@@ -458,7 +458,7 @@ private fun HabitCard(
 }
 
 @Composable
-private fun CalendarView() {
+private fun CalendarView(habit: HabitUiData? = null) {
     val currentDate = LocalDate.now()
     val currentMonth = YearMonth.now()
     val daysInMonth = currentMonth.lengthOfMonth()
@@ -524,20 +524,30 @@ private fun CalendarView() {
                     ) {
                         if (day > 0) {
                             val isToday = day == currentDate.dayOfMonth
-                            Text(
-                                text = day.toString(),
-                                fontSize = 14.sp,
-                                color = if (isToday) Color.White else Color.Black,
-                                fontFamily = Poppins,
+                            
+                            // Calculate color intensity based on completion progress
+                            val backgroundColor = if (isToday && habit != null) {
+                                val progress = habit.currentCount.toFloat() / habit.timesPerDay.toFloat()
+                                // Start with a very light pink and increase intensity with progress
+                                Color(0xFFD983BB).copy(alpha = 0.2f + (progress * 0.8f))
+                            } else {
+                                Color.Transparent
+                            }
+
+                            Box(
                                 modifier = Modifier
                                     .size(36.dp)
                                     .clip(CircleShape)
-                                    .background(
-                                        if (isToday) Color(0xFFD983BB)
-                                        else Color.Transparent
-                                    )
-                                    .padding(4.dp)
-                            )
+                                    .background(backgroundColor),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = day.toString(),
+                                    fontSize = 14.sp,
+                                    color = if (isToday) Color(0xFF222222) else Color.Black,
+                                    fontFamily = Poppins
+                                )
+                            }
                         }
                     }
                 }

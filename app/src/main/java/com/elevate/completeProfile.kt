@@ -1,6 +1,7 @@
 package com.elevate
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -11,13 +12,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
+import com.elevate.utils.SharedPreferencesHelper
 
 class completeProfile : AppCompatActivity() {
+    private lateinit var preferences: SharedPreferencesHelper
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_complete_profile)
+        preferences = SharedPreferencesHelper(this)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -47,11 +53,15 @@ class completeProfile : AppCompatActivity() {
                 // عرض رسالة إذا كانت البيانات غير مكتملة
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
-                // إذا كانت البيانات صحيحة، إظهار رسالة أو الانتقال للـ Activity التالية
-                Toast.makeText(this, "Profile completed", Toast.LENGTH_SHORT).show()
+                // Save profile data to SharedPreferences
+                preferences.setUserGender(gender)
+                preferences.setUserBirthDate(birthDate)
+                preferences.setUserCountry(country)
 
-                // هنا يمكن أن تضيف المنطق للانتقال إلى Activity أخرى
-                // مثلاً: startActivity(Intent(this, NextActivity::class.java))
+                // Navigate to TakeoffActivity
+                val intent = Intent(this, TakeoffActivity::class.java)
+                startActivity(intent)
+                finish()
             }
         }
     }

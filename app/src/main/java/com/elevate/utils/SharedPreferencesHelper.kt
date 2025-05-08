@@ -86,6 +86,30 @@ class SharedPreferencesHelper(context: Context) {
         sharedPreferences.edit().putBoolean("notifications_enabled", enabled).apply()
     }
 
+    fun setUserGender(gender: String) {
+        sharedPreferences.edit().putString("user_gender", gender).apply()
+    }
+
+    fun getUserGender(): String {
+        return sharedPreferences.getString("user_gender", "") ?: ""
+    }
+
+    fun setUserBirthDate(birthDate: String) {
+        sharedPreferences.edit().putString("user_birth_date", birthDate).apply()
+    }
+
+    fun getUserBirthDate(): String {
+        return sharedPreferences.getString("user_birth_date", "") ?: ""
+    }
+
+    fun setUserCountry(country: String) {
+        sharedPreferences.edit().putString("user_country", country).apply()
+    }
+
+    fun getUserCountry(): String {
+        return sharedPreferences.getString("user_country", "") ?: ""
+    }
+
     fun clearAll() {
         sharedPreferences.edit().clear().apply()
         achievementsPreferences.edit().clear().apply()
