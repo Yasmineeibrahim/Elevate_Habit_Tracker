@@ -36,6 +36,32 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
+        // Handle forgot password
+        binding.forgotPass.setOnClickListener {
+            val email = binding.email.editText?.text.toString()
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            Firebase.auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            this,
+                            "Password reset email sent. Please check your inbox.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Failed to send reset email: ${task.exception?.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        }
+
         // Sign in with email and password
         binding.loginButton.setOnClickListener {
             val email = binding.email.editText?.text.toString()

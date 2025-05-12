@@ -6,16 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.elevate.databinding.ActivityRegister2Binding
 import com.elevate.utils.SharedPreferencesHelper
-import com.facebook.AccessToken
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -23,9 +14,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegister2Binding
     private lateinit var auth: FirebaseAuth
-    private lateinit var callbackManager: CallbackManager
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private val RC_SIGN_IN = 9001
     private lateinit var preferences: SharedPreferencesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +22,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = Firebase.auth
-        callbackManager = CallbackManager.Factory.create()
         preferences = SharedPreferencesHelper(this)
 
         // Navigate to LoginActivity
@@ -43,37 +30,31 @@ class RegisterActivity : AppCompatActivity() {
             finish()
         }
 
-        // Facebook Login via MaterialCardView
-        binding.facebookCardView.setOnClickListener {
-            LoginManager.getInstance().logInWithReadPermissions(
-                this,
-                listOf("email", "public_profile")
-            )
+        // Handle forgot password
+        binding.forgotPass.setOnClickListener {
+            val email = binding.email.editText?.text.toString()
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            Firebase.auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            this,
+                            "Password reset email sent. Please check your inbox.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Failed to send reset email: ${task.exception?.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
-
-        // Handle Facebook Login result
-        LoginManager.getInstance().registerCallback(callbackManager,
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult) {
-                    handleFacebookAccessToken(result.accessToken)
-                }
-
-                override fun onCancel() {
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        "Facebook login canceled",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                override fun onError(error: FacebookException) {
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        "Facebook login failed: ${error.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
 
         // Email/Password Registration
         binding.registerButton.setOnClickListener {
@@ -138,44 +119,5 @@ class RegisterActivity : AppCompatActivity() {
                         .show()
                 }
         }
-    }
-
-    // Facebook login result must go to callbackManager
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        callbackManager.onActivityResult(requestCode, resultCode, data)
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Google login success", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, TakeoffActivity::class.java))
-                    finish()
-                } else {
-                    Toast.makeText(this, "Google auth failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
-
-    // Link Facebook login to Firebase Auth
-    private fun handleFacebookAccessToken(token: AccessToken) {
-        val credential = FacebookAuthProvider.getCredential(token.token)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Facebook login success", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, TakeoffActivity::class.java))
-                    finish()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Facebook auth failed: ${task.exception?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
     }
 }
