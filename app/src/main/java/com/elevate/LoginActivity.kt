@@ -81,8 +81,8 @@ class LoginActivity : AppCompatActivity() {
                                 preferences.setUserName(displayName)
                             }
                             
-                            // Navigate to AchievementsActivity (home screen)
-                            val intent = Intent(this, AchievementsActivity::class.java)
+                            // Navigate to TakeoffActivity
+                            val intent = Intent(this, TakeoffActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {

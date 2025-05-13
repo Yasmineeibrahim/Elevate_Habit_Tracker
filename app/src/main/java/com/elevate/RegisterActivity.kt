@@ -81,6 +81,10 @@ class RegisterActivity : AppCompatActivity() {
                         val fullName = "$firstName $lastName".trim()
                         preferences.setUserName(fullName)
                         
+                        // Save user ID
+                        val userId = auth.currentUser?.uid ?: ""
+                        preferences.setUserId(userId)
+                        
                         // Update Firebase profile
                         val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
                             .setDisplayName(fullName)
@@ -91,10 +95,11 @@ class RegisterActivity : AppCompatActivity() {
                                 if (profileTask.isSuccessful) {
                                     Toast.makeText(
                                         this,
-                                        "Registration successful! Please login",
+                                        "Registration successful!",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    startActivity(Intent(this, LoginActivity::class.java))
+                                    // Navigate to TakeoffActivity
+                                    startActivity(Intent(this, TakeoffActivity::class.java))
                                     finish()
                                 }
                             }
