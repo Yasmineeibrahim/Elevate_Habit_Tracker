@@ -81,8 +81,8 @@ class LoginActivity : AppCompatActivity() {
                                 preferences.setUserName(displayName)
                             }
                             
-                            // Navigate to completeProfile
-                            val intent = Intent(this, completeProfile::class.java)
+                            // Navigate to AchievementsActivity (home screen)
+                            val intent = Intent(this, AchievementsActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
